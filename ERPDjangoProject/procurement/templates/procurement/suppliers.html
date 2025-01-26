@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+</head>
+<body>
+<h1>Provedores</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Agregar</button>
+</form>
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>telefono</th>
+            <th>email</th>
+        </tr>
+        <tbody>
+        {% for supplier in suppliers %}
+            <tr>
+                <td>{{ supplier.name }}</td>
+                <td>{{ supplier.phone }}</td>
+                <td>{{ supplier.email }}</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+</body>
+</html>
