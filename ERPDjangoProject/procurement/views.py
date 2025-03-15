@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Product, Supplier, SupplierProductPrice
+from .models import Product, Supplier, SupplierProductPrice, SupplierProduct
 from .forms import ProductForm, SupplierForm, SupplierProductPriceSet
 from .filters import ProductFilter
+import logging
 
 # Create your views here.
 def suppliers(request):
@@ -46,13 +47,13 @@ def new_product(request):
         formset = SupplierProductPriceSet(request.POST)
         if product_form.is_valid() and formset.is_valid():
             product = product_form.save()
-            formset.instance = product
+            formset.product_instance = product
             formset.save()
 
             return redirect('products')
     else:
         product_form = ProductForm()
-        formset = SupplierProductPriceSet()
+        formset = SupplierProductPriceSet(queryset=SupplierProduct.objects.none())
 
     context = {'form': product_form,
                'formset': formset}
@@ -70,17 +71,22 @@ def update_product(request, product_id):
     if request.method == 'POST':
         product_form = ProductForm(request.POST, instance=product)
         formset = SupplierProductPriceSet(request.POST)
+        logging.info('info')
+        logging.info(request.POST)
+
+        logging.info("here update post")
+        logging.info(product_form.is_valid())
+        logging.info(formset.is_valid())
 
         if product_form.is_valid() and formset.is_valid():
-            print("here product form of update")
             product_form.save()
-            for form in formset:
-                form.instance.product = product
+            formset.product_instance = product
             formset.save()
         else:
+            logging.info("errors")
+            logging.info(product_form.errors)
             for form in formset:
-                print(form.errors)
-        #formset.save()
+                logging.info(form.errors)
 
         print("redirect update product")
 

@@ -13,11 +13,15 @@
         {{ product_form.price.label_tag }} {{ product_form.price}}
     </div>
     <div>
+        {{ product_form.code.label_tag }} {{ product_form.code}}
+    </div>
+    <div>
         <div>
             <h1>Proveedores</h1>
             {{ formset.management_form }}
             {% for f in formset %}
                 <div>
+                {{ f.id }}
                 {{ f.supplier.label_tag }}
                 {{ f.supplier }}
                 {{ f.price.label_tag }}

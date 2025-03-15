@@ -4,6 +4,9 @@ from django import forms
 from .models import Product, Supplier, SupplierProduct, SupplierProductPrice
 from django.core.validators import MinValueValidator
 from django.forms import inlineformset_factory
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class SupplierForm(ModelForm):
@@ -42,13 +45,33 @@ class SupplierProductForm(ModelForm):
 class BaseSupplierProductPriceSet(forms.BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        logging.info(args)
+        logging.info(kwargs)
+        logging.info(self.forms)
         select_suppliert = set()
+        logging.info("this is a log")
+
         for form in self.forms:
+            logging.info('forms in the init')
+            logging.info(form.fields['supplier'])
             if form.instance.pk:
                 select_suppliert.add(form.instance.supplier.pk)
-                form.fields['supplier'].disabled = True
+                form.fields['supplier'].widget.attrs['readonly'] = True
+                logging.info(form.instance)
             else:
+                logging.info(select_suppliert)
                 form.fields['supplier'].queryset = Supplier.objects.exclude(pk__in=select_suppliert)
+
+    @property
+    def product_instance(self):
+        return None
+
+    @product_instance.setter
+    def product_instance(self, product_instance):
+        for form in self.forms:
+            logging.info("forms instance product")
+            logging.info(form.instance)
+            form.instance.product = product_instance
 
 
 
@@ -64,7 +87,7 @@ class ProductForm(ModelForm):
 
     class Meta:
         model = Product
-        fields = ['product_name', 'product_description']
+        fields = ['product_name', 'product_description', 'code']
 
     def clean_product_name(self):
         product_name = self.cleaned_data.get('product_name')

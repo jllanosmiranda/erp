@@ -11,6 +11,7 @@
 <table>
     <tr>
         <th>Nombre</th>
+        <th>Codigo</th>
         <th>Proveedor</th>
         <th>Precio</th>
         <th>Detalles</th>
@@ -21,6 +22,7 @@
         {% for supplier_product in product.supplier_product.all %}
             <tr>
                 <td>{{ product.product_name }}</td>
+                <td>{{ product.code }}</td>
                 <td>{{ supplier_product.supplier.name }}</td>
                 <td>{{ supplier_product.prices.last.price }}</td>
                 <td><a href="{% url 'product_details' product_id=product.id %}">Detalles</a></td>
