@@ -1,0 +1,89 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="tab">
+        <button onclick="openTab(Event, 'details')">Detalles</button>
+        <button onclick="openTab(Event, 'contact-list')">Contactos</button>
+        <button onclick="openTab(Event, 'bank-list')">Cuentas Bancarias</button>
+        <button onclick="openTab(Event, 'products-list')">Productos</button>
+    </div>
+    <div id="details" class="tabcontent" style="display: block">
+        <h2>Proveedor</h2>
+        <table>
+            <tbody>
+            <tr>
+                <td>Nombre:</td>
+                <td>{{ supplier }}</td>
+            </tr>
+            <tr>
+                <td>RUC:</td>
+                <td>{{ supplier.ruc }}</td>
+            </tr>
+            <tr>
+                <td>Direccion:</td>
+                <td>{{ supplier.address }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div id="contact-list" class="tabcontent">
+        <h3>Contactos</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>WhatsApp</th>
+                <th>Puesto</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for contact in supplier.contacts.all %}
+                <tr>
+                    <td>{{contact.name}}</td>
+                    <td>{{contact.email}}</td>
+                    <td>{{contact.phone}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="bank-list" class="tabcontent">
+        <h3>Cuenta Bancarias</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Banco</th>
+                <th>Numero de cuenta</th>
+                <th>CCI</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="products-list" class="tabcontent">
+        <h3>Productos</h3>
+        <table>
+            <thead>
+            <tr>
+                <th> Nombre</th>
+                <th>Precio</th>
+                <th>Historial de precios</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for supplier_product in supplier.supplier_product.all %}
+                <tr>
+                    <td><a href="">{{ supplier_product.product }}</a></td>
+                    <td>{{ supplier_product.prices.last.price }}</td>
+                    <td><a href="">ver</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+    <button>Editar</button>
+    </div>
+    <script src="{% static 'procurement/js/suppliers.js' %}"></script>
+{% endblock %}

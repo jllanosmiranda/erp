@@ -1,0 +1,14 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+{% block content %}
+<form>
+   {{ form.supplier }}
+    <div id="items-list">
+
+    </div>
+</form>
+    <button onclick="handle_click(event, 'items-list', 'leo')">Agregar producto</button>
+    <button onclick="RemoveFormSet(event, 'items-list', 'leo')">Retirar producto</button>
+   <script type="module" src="{% static 'procurement/js/goodReceiptNote.js'%}"></script>
+   <script type="module" src="{% static 'procurement/js/suppliers.js'%}"></script>
+{% endblock %}

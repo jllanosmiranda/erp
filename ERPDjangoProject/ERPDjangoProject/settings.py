@@ -26,12 +26,13 @@ SECRET_KEY = 'django-insecure-!ho(ohd^-^qbr%5a#38w0yhbkry^mu5krb!u278_g+#icze%l@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'main.apps.MainConfig',
     'procurement.apps.ProcurementConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'ERPDjangoProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

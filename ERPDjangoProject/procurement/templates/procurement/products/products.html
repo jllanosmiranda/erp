@@ -1,0 +1,57 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+{% block content %}
+<h1>Catalogo de productos de los proveedores</h1>
+<form method="get" id="filter-form">
+    <div class="in">
+        {% for field in filter.form %}
+            <div>
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="submit">Filtrar</button>
+    <button type="button" onclick="clearFilters()">Limpiar</button>
+    <a href="{% url 'product_new' %}" class="btn btn-primary">Agregar nuevo producto</a>
+</form>
+<table class="local">
+    <tr>
+        <th class="product">Nombre</th>
+        <th>Codigo</th>
+        <th>Descripcion</th>
+        <th>Detalles</th>
+        <th>Editar</th>
+    </tr>
+    <tbody>
+    {% for product in products%}
+        <tr>
+            <td>{{ product.product_name }}</td>
+            <td>{{ product.code }}</td>
+            <td>{{ product.description }}</td>
+            <td><a href="{% url 'product_details' product_id=product.id %}">Detalles</a></td>
+            <td><a href="{% url 'product_update' product_id=product.id %}">Editar</a></td>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+    <div class="pagination">
+    <span class="step-links">
+       {% if supplier_products.has_previous %}
+           <a href="?page=1">&laquo;first</a>
+           <a href="?page={{ supplier_products.previous_page_number }}">previous</a>
+        {% endif %}
+    </span>
+    <span class="current">
+        Page {{ supplier_products.number }} of {{ supplier_products.paginator.num_pages }}
+    </span>
+    {% if supplier_products.has_next %}
+        <a href="?page={{ supplier_products.next_page_number }}">next</a>
+        <a href="?page={{ supplier_products.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+
+    </div>
+
+<script src="{% static 'procurement/js/clearFilter.js' %}?v=1.0"></script>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+{% block title %} Products {% endblock %}
+{% block content %}
+<div class="tab">
+    <button onclick="openTab(Event, 'detalles')">Detalles</button>
+    <button onclick="openTab(Event, 'contact-list')">Contactos</button>
+    <button onclick="openTab(Event, 'bank-list')">Cuentas Bancarias</button>
+    <button>Productos</button>
+</div>
+<div id='detalles' class="tabcontent" style="display: block">
+    <h3>detalles de proveedor</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+</div>
+<div id="contact-list" class="tabcontent">
+    <form>
+        <h3>Contactos</h3>
+        {{ supplier_contact_form_set.management_form }}
+        {% for contact_form in supplier_contact_form_set %}
+            <div class="dynamic-form">
+                {{ contact_form.as_p }}
+            </div>
+        {% endfor %}
+        <button type="submit">Guardar</button>
+    </form>
+    <button onclick="AddFormSet(Event, 'contact-list', 'contacts')">agregar contacto</button>
+    <button onclick="RemoveFormSet(Event, 'contact-list', 'contacts')">remover contacto</button>
+</div>
+<div id="bank-list" class="tabcontent">
+    <form>
+        <h3>Cuentas de bancos</h3>
+        {{ supplier_bank_form_set.management_form }}
+        {% for bank_form in supplier_bank_form_set %}
+            <div class="dynamic-form">
+                {{ bank_form.as_p }}
+            </div>
+        {% endfor %}
+        <button type="submit">Guardar</button>
+    </form>
+</div>
+<script src="{% static 'procurement/js/suppliers.js' %}"></script>
+{% endblock %}

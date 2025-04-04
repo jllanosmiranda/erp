@@ -1,8 +1,15 @@
 from django.shortcuts import render, redirect
 from .models import Product, Supplier, SupplierProductPrice, SupplierProduct
-from .forms import ProductForm, SupplierForm, SupplierProductPriceSet
+from .forms import (ProductForm,
+                    SupplierForm,
+                    SupplierProductPriceSet,
+                    SupplierContactSet,
+                    SupplierBankSet,
+                    GoodReceiptNoteForm,
+                    form_set, GoodReceiptNoteItemForm)
 from .filters import ProductFilter
 import logging
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
 def suppliers(request):
@@ -17,7 +24,7 @@ def suppliers(request):
 
     suppliers = Supplier.objects.all()
     context = {'suppliers': suppliers, 'form': supplierForm}
-    return render(request, 'procurement/suppliers.html', context=context)
+    return render(request, 'procurement/suppliers/suppliers.html', context=context)
 
 def products(request):
     if request.method == 'POST':
@@ -29,17 +36,25 @@ def products(request):
     else:
         productForm = ProductForm()
 
-    products = Product.objects.all()
+    products_list = Product.objects.all()
     product_filter = ProductFilter(request.GET,
-                                    queryset=products)
-    print(products)
-    print(product_filter.qs)
+                                    queryset=products_list)
 
-    context = {'products': product_filter.qs,
+    paginator = Paginator(product_filter.qs, 10)
+    page = request.GET.get('page')
+    try:
+        objects = paginator.page(page)
+    except PageNotAnInteger:
+        objects = paginator.page(1)
+
+    except EmptyPage:
+        objects = paginator.page(paginator.num_pages)
+
+    context = {'products': objects,
                'form': productForm,
                'filter': product_filter}
 
-    return render(request, 'procurement/products.html', context=context)
+    return render(request, 'procurement/products/products.html', context=context)
 
 def new_product(request):
     if request.method == 'POST':
@@ -58,12 +73,12 @@ def new_product(request):
     context = {'form': product_form,
                'formset': formset}
 
-    return render(request, 'procurement/productNew.html', context=context)
+    return render(request, 'procurement/products/productNew.html', context=context)
 
 def product_details(request, product_id):
     product = Product.objects.get(id=product_id)
-    context = {'product': product}
-    return render(request, 'procurement/productDetails.html', context=context)
+    context = {'products': product}
+    return render(request, 'procurement/products/productDetails.html', context=context)
 
 def update_product(request, product_id):
     product = Product.objects.get(id=product_id)
@@ -88,7 +103,7 @@ def update_product(request, product_id):
             for form in formset:
                 logging.info(form.errors)
 
-        print("redirect update product")
+        print("redirect update products")
 
         return redirect('product_details', product_id=product_id)
 
@@ -96,12 +111,45 @@ def update_product(request, product_id):
         product_form = ProductForm(instance=product)
 
         formset = SupplierProductPriceSet(queryset=product.supplier_product.all())
-        print("herer supplier product", flush=True)
+        print("herer supplier products", flush=True)
         print(product.supplier_product.all(), flush=True)
         context = {'product_form': product_form,
                    'formset': formset}
-        return render(request, 'procurement/productUpdate.html', context=context)
+        return render(request, 'procurement/products/productUpdate.html', context=context)
 
+def view_supplier_details(request, supplier_id):
+    if request.method == 'GET':
+        supplier = Supplier.objects.get(id=supplier_id)
+        context = {
+            "supplier": supplier
+        }
+        return render(request, 'procurement/suppliers/supplierDetails.html', context=context)
+
+def create_supplier(request):
+    if request.method == 'POST':
+        supplier = SupplierForm(request.POST)
+        supplier_contact_set_form = SupplierContactSet(request.POST)
+        if supplier.is_valid() and supplier_contact_set_form.is_valid():
+            supplier_object = supplier.save()
+            supplier_contact_set_form.instance = supplier_object
+            supplier_contact_set_form.save()
+            return redirect('supplier_details', supplier_id=supplier_object.id)
+        else:
+            logging.info(supplier.errors)
+            logging.info(supplier_contact_set_form.errors)
+            return redirect('create_supplier')
+
+    elif request.method == 'GET':
+
+        supplier_form = SupplierForm()
+        supplier_contact_form_set = SupplierContactSet()
+        supplier_bank_form_set = SupplierBankSet()
+
+        context = {'form': supplier_form,
+                   'supplier_contact_form_set': supplier_contact_form_set,
+                   'supplier_bank_form_set': supplier_bank_form_set}
+
+        return render(request, 'procurement/suppliers/supplierNew.html', context=context)
 
 
 def purchase_orders(request):
@@ -109,3 +157,23 @@ def purchase_orders(request):
 
 def purchases(request):
     return render(request, 'procurement/purchases.html')
+
+
+def good_receipt_order(request):
+    form = GoodReceiptNoteForm()
+    context = {'form': form}
+    return render(request, 'procurement/good_receipt_notes/goodReceiptNoteNew.html', context=context)
+
+
+def good_receipt_note_list(request):
+    pass
+
+def good_receipt_note_supplier_products(request, supplier_id, extra=1):
+    GoodReceiptNoteItemSet = form_set(extra=extra)
+    print("request")
+    print(request)
+    print(request.GET)
+    if request.method == 'GET':
+        formset = GoodReceiptNoteItemSet(supplier_id=supplier_id, prefix='leo')
+        context = {'formset': formset}
+        return render(request, 'procurement/good_receipt_notes/goodReceiptNoteItem.html', context=context)

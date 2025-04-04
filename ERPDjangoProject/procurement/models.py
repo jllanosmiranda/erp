@@ -4,25 +4,41 @@ from django.utils.timezone import now
 # Create your models here.
 class Supplier(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    address = models.CharField(max_length=200)
-    phone = models.CharField(max_length=20)
-    email = models.EmailField(max_length=100)
-    website = models.URLField(max_length=200)
+    address = models.CharField(max_length=200, null=True)
+    phone = models.CharField(max_length=20, null=True, unique=True)
+    email = models.EmailField(max_length=100, null=True, unique=True)
+    website = models.URLField(max_length=200, null=True, unique=True)
+    ruc = models.CharField(max_length=15, null=True, unique=True)
 
     def __str__(self):
         return self.name
 
+class SupplierContact(models.Model):
+    supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING, related_name="contacts")
+    name = models.CharField(max_length=10)
+    phone = models.CharField(max_length=10)
+
+class Bank(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    country = models.CharField(max_length=20)
+
+class SupplierBankAccount(models.Model):
+    supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING, related_name="bank_account")
+    account = models.CharField(max_length=50)
+    bank = models.ForeignKey(Bank, on_delete=models.DO_NOTHING, related_name="suppliers_banks")
+
+
 class Product(models.Model):
     product_name = models.CharField(max_length=200, unique=True)
     product_description = models.TextField()
-    suppliers = models.ManyToManyField(Supplier, through="SupplierProduct")
+    suppliers = models.ManyToManyField(Supplier, through="SupplierProduct", related_name="products")
     code = models.CharField(default='')
 
     def __str__(self):
         return self.product_name
 
 class SupplierProduct(models.Model):
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name="supplier_product")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="supplier_product")
     product_code = models.CharField(max_length=20)
     product_description = models.TextField()
@@ -79,10 +95,16 @@ class PurchaseOrderItem(models.Model):
 class PurchaseInvoice(models.Model):
     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.DO_NOTHING)
 
-
 class GoodReceiptNote(models.Model):
     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.DO_NOTHING)
+    number = models.CharField(default="")
+    supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING, default="")
     date = models.DateField()
+
+class GoodReceiptNoteItem(models.Model):
+    good_receipt_note = models.ForeignKey(GoodReceiptNote, on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    quantity = models.IntegerField()
 
 
 
