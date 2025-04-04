@@ -43,9 +43,16 @@ function remove_option(selects){
     })
 }
 
+
 export function handle_click(event, list_id, prefix ){
-    AddFormSet(event, list_id, prefix);
     const Selects = document.querySelectorAll('.dynamic-form select');
+
+    var total_options = Selects[0].querySelectorAll('option').length;
+    var total_selects = Selects.length;
+
+    if (total_selects <= total_options) {
+        AddFormSet(event, list_id, prefix);
+    }
 
     remove_option(Selects);
 
@@ -54,7 +61,6 @@ export function handle_click(event, list_id, prefix ){
             remove_option(Selects);
         })
     })
-    console.log(Selects);
 }
 
 window.handle_click = handle_click;
