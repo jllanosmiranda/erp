@@ -47,11 +47,13 @@ function remove_option(selects){
 export function handle_click(event, list_id, prefix ){
     const Selects = document.querySelectorAll('.dynamic-form select');
 
-    var total_options = Selects[0].querySelectorAll('option').length;
-    var total_selects = Selects.length;
+    if (Selects.length > 0){
+        var total_options = Selects[0].querySelectorAll('option').length;
+        var total_selects = Selects.length;
+        if (total_selects <= total_options) {
+            AddFormSet(event, list_id, prefix);
+        }
 
-    if (total_selects <= total_options) {
-        AddFormSet(event, list_id, prefix);
     }
 
     remove_option(Selects);
