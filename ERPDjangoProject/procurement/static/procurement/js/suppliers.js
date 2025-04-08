@@ -1,6 +1,12 @@
+import {ActiveSubNav} from "/static/nav/js/navigation.js"
+
+document.addEventListener('DOMContentLoaded', () => {
+    ActiveSubNav('suppliers')
+})
+
 export function openTab(event, tabName){
     var tabcontent = document.getElementsByClassName('tabcontent');
-    for (i = 0; i < tabcontent.length; i++){
+    for (let i = 0; i < tabcontent.length; i++){
         tabcontent[i].style.display = 'none';
     }
 

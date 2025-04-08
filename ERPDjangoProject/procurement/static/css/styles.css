@@ -54,6 +54,11 @@ li:hover {
     color: white;
 }
 
+li a:hover{
+    background-color: #555;
+    color: white;
+}
+
 h1 {
     text-align: center;
     color: black;
@@ -85,7 +90,7 @@ table {
     justify-content: center;
 }
 
-.sub-nav {
+.sub-nav.inactive {
     display: none;
 }
 
@@ -98,7 +103,15 @@ li a.active {
     color: white;
 }
 
+.sub-nav.active {
+    display: block;
+}
+
 .hidden-option {
     display: none;
+}
+
+.sub-nav:has(.active) {
+    display: block;
 }
 
