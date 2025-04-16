@@ -90,7 +90,7 @@ table {
     justify-content: center;
 }
 
-.sub-nav.inactive {
+.sub-nav {
     display: none;
 }
 
