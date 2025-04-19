@@ -57,7 +57,7 @@ CURRENCY_CHOICES = [
     (1, 'soles')
 ]
 
-class PurchaseRequirement(models.Model):
+class PurchaseRequisition(models.Model):
     status_choices = [
         (0, 'pending'),
         (1, 'approved'),
@@ -68,9 +68,9 @@ class PurchaseRequirement(models.Model):
     status = models.IntegerField(choices=status_choices)
 
 
-class PurchaseRequirementItems(models.Model):
+class PurchaseRequisitionItems(models.Model):
     supplier_product = models.ForeignKey(SupplierProduct, on_delete=models.DO_NOTHING)
-    purchase_requirement = models.ForeignKey(PurchaseRequirement, on_delete=models.DO_NOTHING)
+    purchase_requirement = models.ForeignKey(PurchaseRequisition, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField()
     price = models.FloatField()
     currency = models.IntegerField(choices=CURRENCY_CHOICES)

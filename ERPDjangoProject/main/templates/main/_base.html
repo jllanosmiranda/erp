@@ -14,7 +14,9 @@
                 <ul class="sub-nav">
                     <li><a id="products" href="{% url 'products' %}">Productos</a></li>
                     <li><a id="suppliers" href="{% url 'suppliers' %}">Proveedores</a>
-                    <li><a id="good_receipt" href="{% url 'good_receipt_note_new' %}">Guias de remision</a>
+                    <li><a id="good_receipt" href="{% url 'good_receipt_note_list' %}">Guias de remision</a>
+                    <li><a id="purchase_requisition" href="{% url 'purchase_requisition_list' %}"
+                        class="{% if subnav == "purchase_requisition"%}active{% endif %}">Peticiones de compra</a>
                 </ul>
             </li>
         </ul>

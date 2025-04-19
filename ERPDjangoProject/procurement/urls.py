@@ -12,6 +12,9 @@ urlpatterns = [
 
     path('suppliers/new', views.create_supplier, name='create_supplier'),
 
-    path('goods', views.good_receipt_order, name='good_receipt_note_new'),
-    path('goods-products/<int:supplier_id>/<int:extra>', views.good_receipt_note_supplier_products, name='good_receipt_note_products'),
+    path('goods', views.good_receipt_note_list, name='good_receipt_note_list'),
+    path('goods/new', views.good_receipt_note_new, name='good_receipt_note_new'),
+    path('goods/item/<int:supplier_id>/<int:extra>', views.good_receipt_note_supplier_products, name='good_receipt_note_products'),
+    path('purchase-requisitions/', views.purchase_requisition_list, name='purchase_requisition_list'),
+
     ]

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product, Supplier, SupplierProductPrice, SupplierProduct
+from .models import Product, Supplier, SupplierProductPrice, SupplierProduct, GoodReceiptNote, PurchaseOrder, PurchaseRequisition
 from .forms import (ProductForm,
                     SupplierForm,
                     SupplierProductPriceSet,
@@ -151,22 +151,30 @@ def create_supplier(request):
 
         return render(request, 'procurement/suppliers/supplierNew.html', context=context)
 
+def purchase_requisition_list(request):
+    purchase_requisitions_objects = PurchaseRequisition.objects.all()
+    context = {"subnav": "purchase_requisition",}
+    return render(request, 'procurement/purchase_requisition/purchaseRequisitionList.html',
+                  context=context)
 
-def purchase_orders(request):
-    return render(request, 'procurement/purchase_orders.html')
+def purchase_orders_list(request):
+    purchase_orders_objects = PurchaseOrder.objects.all()
+    return render(request, 'procurement/purchase_order')
+
+def purchase_order(request):
+    pass
 
 def purchases(request):
     return render(request, 'procurement/purchases.html')
 
 
-def good_receipt_order(request):
+def good_receipt_note_new(request):
+    if request.method == 'POST':
+        pass
     form = GoodReceiptNoteForm()
     context = {'form': form}
     return render(request, 'procurement/good_receipt_notes/goodReceiptNoteNew.html', context=context)
 
-
-def good_receipt_note_list(request):
-    pass
 
 def good_receipt_note_supplier_products(request, supplier_id, extra=1):
     GoodReceiptNoteItemSet = form_set(extra=extra)
@@ -177,3 +185,8 @@ def good_receipt_note_supplier_products(request, supplier_id, extra=1):
         formset = GoodReceiptNoteItemSet(supplier_id=supplier_id, prefix='leo')
         context = {'formset': formset}
         return render(request, 'procurement/good_receipt_notes/goodReceiptNoteItem.html', context=context)
+
+def good_receipt_note_list(request):
+    good_receipt_note_list_objects = GoodReceiptNote.objects.all()
+    context = {'good_receipt_note_list': good_receipt_note_list_objects}
+    return render(request, "procurement/good_receipt_notes/goodReceiptNoteList.html", context)

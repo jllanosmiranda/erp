@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function myFunction(selectedValue) {
         console.log('Selected value:', selectedValue);
-        fetch(`goods-products/${selectedValue}/${extra}`)
+        fetch(`item/${selectedValue}/${extra}`)
             .then(response => response.text())
             .then(data => {
                 items_list.innerHTML = data

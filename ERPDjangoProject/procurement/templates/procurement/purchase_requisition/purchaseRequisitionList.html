@@ -1,0 +1,19 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+{% block content %}
+    <h1>Lista de requerimientos de compra</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Numero</th>
+            <th>Proveedor</th>
+            <th>Fecha</th>
+        </tr>
+        {% for purchase_requisition in purchase_requisitions %}
+            <tr>
+
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'good_receipt_note_new' %}">agregar</a>
+{% endblock %}
