@@ -28,7 +28,7 @@
         <tr>
             <td>{{ product.product_name }}</td>
             <td>{{ product.code }}</td>
-            <td>{{ product.description }}</td>
+            <td>{{ product.product_description }}</td>
             <td><a href="{% url 'product_details' product_id=product.id %}">Detalles</a></td>
             <td><a href="{% url 'product_update' product_id=product.id %}">Editar</a></td>
         </tr>

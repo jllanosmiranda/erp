@@ -27,14 +27,6 @@ def suppliers(request):
     return render(request, 'procurement/suppliers/suppliers.html', context=context)
 
 def products(request):
-    if request.method == 'POST':
-        productForm = ProductForm(request.POST)
-        if productForm.is_valid():
-            productForm.save()
-            return redirect('products')
-
-    else:
-        productForm = ProductForm()
 
     products_list = Product.objects.all()
     product_filter = ProductFilter(request.GET,
@@ -51,7 +43,6 @@ def products(request):
         objects = paginator.page(paginator.num_pages)
 
     context = {'products': objects,
-               'form': productForm,
                'filter': product_filter}
 
     return render(request, 'procurement/products/products.html', context=context)
@@ -59,28 +50,26 @@ def products(request):
 def new_product(request):
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
-        formset = SupplierProductPriceSet(request.POST)
-        if product_form.is_valid() and formset.is_valid():
-            product = product_form.save()
-            formset.product_instance = product
-            formset.save()
+        if product_form.is_valid():
+            product_form.save()
 
             return redirect('products')
     else:
         product_form = ProductForm()
         formset = SupplierProductPriceSet(queryset=SupplierProduct.objects.none())
 
-    context = {'form': product_form,
-               'formset': formset}
+    context = {'form': product_form}
 
     return render(request, 'procurement/products/productNew.html', context=context)
 
 def product_details(request, product_id):
     product = Product.objects.get(id=product_id)
-    context = {'products': product}
+    logging.info(product)
+    context = {'product': product}
     return render(request, 'procurement/products/productDetails.html', context=context)
 
 def update_product(request, product_id):
+    print("update product id", product_id, flush=True)
     product = Product.objects.get(id=product_id)
 
     if request.method == 'POST':
