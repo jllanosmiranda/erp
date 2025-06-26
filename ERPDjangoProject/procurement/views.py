@@ -146,9 +146,19 @@ def update_supplier(request, supplier_id):
     supplier = Supplier.objects.get(id=supplier_id)
     if request.method == 'POST':
         supplier_form = SupplierForm(request.POST, instance=supplier)
+        supplier_contact_form_set = SupplierContactSet(request.POST, instance=supplier)
+        supplier_bank_form_set = SupplierBankSet(request.POST, instance=supplier)
+        if supplier_form.is_valid():
+            supplier_object = supplier_form.save()
+            return redirect('supplier_details', supplier_id=supplier_object.id)
     else:
         supplier_form = SupplierForm(instance=supplier)
-        return render(request, 'procurement/suppliers/supplierUpdate.html', context={'form': supplier_form})
+        supplier_contact_form_set = SupplierContactSet(instance=supplier)
+        supplier_bank_form_set = SupplierBankSet(instance=supplier)
+        context = {'form': supplier_form,
+                   'supplier_contact_form_set': supplier_contact_form_set,
+                   'supplier_bank_form_set': supplier_bank_form_set}
+        return render(request, 'procurement/suppliers/supplierNew.html', context=context)
 
 
 

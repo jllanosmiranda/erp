@@ -2,10 +2,10 @@
 {% load static %}
 {% block content %}
     <div class="tab">
-        <button onclick="openTab(Event, 'details')">Detalles</button>
-        <button onclick="openTab(Event, 'contact-list')">Contactos</button>
-        <button onclick="openTab(Event, 'bank-list')">Cuentas Bancarias</button>
-        <button onclick="openTab(Event, 'products-list')">Productos</button>
+        <button class="tab-button" data-tab="details">Detalles</button>
+        <button class="tab-button" data-tab="contact-list">Contactos</button>
+        <button class="tab-button" data-tab="bank-list">Cuentas Bancarias</button>
+        <button class="tab-button" data-tab="product-list">Productos</button>
     </div>
     <div id="details" class="tabcontent" style="display: block">
         <h2>Proveedor</h2>
@@ -85,5 +85,5 @@
     <div>
     <a href="{% url 'update_supplier' supplier_id=supplier.id %}" class="button-link">Editar</a>
     </div>
-    <script src="{% static 'procurement/js/suppliers.js' %}"></script>
+    <script type=module src="{% static 'procurement/js/suppliers.js' %}"></script>
 {% endblock %}
