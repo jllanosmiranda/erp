@@ -83,7 +83,7 @@
         </table>
     </div>
     <div>
-    <button>Editar</button>
+    <a href="{% url 'update_supplier' supplier_id=supplier.id %}" class="button-link">Editar</a>
     </div>
     <script src="{% static 'procurement/js/suppliers.js' %}"></script>
 {% endblock %}

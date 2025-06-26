@@ -1,11 +1,19 @@
 export function openTab(event, tabName){
     var tabcontent = document.getElementsByClassName('tabcontent');
-    for (i = 0; i < tabcontent.length; i++){
+    for (let i = 0; i < tabcontent.length; i++){
         tabcontent[i].style.display = 'none';
     }
 
     document.getElementById(tabName).style.display = 'block';
 }
+
+document.querySelectorAll('.tab-button').forEach(
+    btn => {
+        btn.addEventListener('click', function(event){
+            openTab(event, btn.getAttribute('data-tab'))
+        })
+    }
+)
 
 export function AddFormSet(event, list_id, prefix){
     var contactlist = document.getElementById(list_id)

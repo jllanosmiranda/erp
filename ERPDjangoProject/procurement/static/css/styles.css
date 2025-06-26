@@ -102,3 +102,15 @@ li a.active {
     display: none;
 }
 
+.button-link {
+    display: inline-block;
+    background-color: #007bff; /* Button background color */
+    color: white;              /* Button text color */
+    padding: 10px 20px;        /* Padding inside the button */
+    text-align: center;        /* Center the text */
+    text-decoration: none;     /* Remove underline */
+    border-radius: 5px;        /* Rounded corners */
+    border: none;              /* Remove border */
+    font-size: 16px;           /* Font size */
+    cursor: pointer;           /* Hand cursor on hover */
+}

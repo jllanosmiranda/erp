@@ -4,11 +4,11 @@ from django.utils.timezone import now
 # Create your models here.
 class Supplier(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    address = models.CharField(max_length=200, null=True)
-    phone = models.CharField(max_length=20, null=True, unique=True)
-    email = models.EmailField(max_length=100, null=True, unique=True)
-    website = models.URLField(max_length=200, null=True, unique=True)
-    ruc = models.CharField(max_length=15, null=True, unique=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, unique=True, blank=True)
+    email = models.EmailField(max_length=100, null=True, unique=True, blank=True)
+    website = models.URLField(max_length=200, null=True, unique=True, blank=True)
+    ruc = models.CharField(max_length=15, null=True, unique=True, blank=True)
 
     def __str__(self):
         return self.name
