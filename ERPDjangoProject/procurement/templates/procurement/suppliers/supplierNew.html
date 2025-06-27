@@ -4,7 +4,7 @@
 {% block content %}
 <div class="tab">
     <button class="tab-button" data-tab="detalles">Detalles</button>
-    <button class="tab-button" data-tab="contact-list">Contactos</button>
+    <button class="tab-button" data-tab="contact-list-tab">Contactos</button>
     <button class="tab-button" data-tab="bank-list">Cuentas Bancarias</button>
 </div>
 <form method="post">
@@ -13,7 +13,8 @@
             {% csrf_token %}
             {{ form.as_p }}
     </div>
-    <div id="contact-list" class="tabcontent">
+    <div id="contact-list-tab" class="tabcontent">
+        <div id="contact-list">
             <h3>Contactos</h3>
             {{ supplier_contact_form_set.management_form }}
             {% for contact_form in supplier_contact_form_set %}
@@ -21,8 +22,9 @@
                     {{ contact_form.as_p }}
                 </div>
             {% endfor %}
-        <button onclick="AddFormSet(Event, 'contact-list', 'contacts')">agregar contacto</button>
-        <button onclick="RemoveFormSet(Event, 'contact-list', 'contacts')">remover contacto</button>
+        </div>
+        <button class="add-form-btn" data-list-id='contact-list' data-list-prefix="contacts">agregar contacto</button>
+        <button class="remove-form-btn" data-list-id='contact-list' data-list-prefix="contacts">remover contacto</button>
     </div>
     <div id="bank-list" class="tabcontent">
             <h3>Cuentas de bancos</h3>

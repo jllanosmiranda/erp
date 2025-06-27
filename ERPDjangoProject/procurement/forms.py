@@ -111,7 +111,7 @@ class ProductForm(ModelForm):
 class SupplierContactForm(ModelForm):
     class Meta:
         model = SupplierContact
-        fields = ['name', 'phone']
+        fields = '__all__'
 
 class BaseSupplierContactSet(forms.BaseModelFormSet):
     def __init__(self, *args, **kwargs):

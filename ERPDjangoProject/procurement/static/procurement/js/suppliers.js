@@ -11,6 +11,7 @@ document.querySelectorAll('.tab-button').forEach(
     btn => {
         btn.addEventListener('click', function(event){
             openTab(event, btn.getAttribute('data-tab'))
+            console.log(btn.getAttribute('data-tab'))
         })
     }
 )
@@ -42,3 +43,26 @@ export function RemoveFormSet(event, list_id, prefix){
     }
 
 }
+
+
+document.querySelectorAll('.add-form-btn').forEach(
+    btn => {
+        btn.addEventListener('click', function(event){
+            event.preventDefault()
+            AddFormSet(event, btn.getAttribute('data-list-id'), btn.getAttribute('data-list-prefix'))
+            console.log(btn.getAttribute('data-list-id'))
+        })
+    }
+)
+
+document.querySelectorAll('.remove-form-btn').forEach(
+    btn => {
+        btn.addEventListener('click', function(event){
+            event.preventDefault()
+            RemoveFormSet(event,
+                btn.getAttribute('data-list-id'),
+                btn.getAttribute('data-list-prefix'))
+            console.log(btn.getAttribute('data-list-id'))
+        })
+    }
+)

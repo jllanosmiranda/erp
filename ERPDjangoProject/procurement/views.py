@@ -108,6 +108,7 @@ def update_product(request, product_id):
 def view_supplier_details(request, supplier_id):
     if request.method == 'GET':
         supplier = Supplier.objects.get(id=supplier_id)
+        print("contacts", supplier.contacts.all(), flush=True)
         context = {
             "supplier": supplier
         }
@@ -148,9 +149,24 @@ def update_supplier(request, supplier_id):
         supplier_form = SupplierForm(request.POST, instance=supplier)
         supplier_contact_form_set = SupplierContactSet(request.POST, instance=supplier)
         supplier_bank_form_set = SupplierBankSet(request.POST, instance=supplier)
-        if supplier_form.is_valid():
+
+        if supplier_form.is_valid() and supplier_contact_form_set.is_valid() and supplier_bank_form_set.is_valid():
             supplier_object = supplier_form.save()
+            contact_instances = supplier_contact_form_set.save(commit=False)
+            bank_instances = supplier_bank_form_set.save(commit=False)
+            for instance in contact_instances:
+                instance.save()
+            for instance in bank_instances:
+                instance.save()
+
             return redirect('supplier_details', supplier_id=supplier_object.id)
+        else:
+            logging.info(supplier_form.errors)
+            logging.info(supplier_contact_form_set.errors)
+            context = {'form': supplier_form,
+                       'supplier_contact_form_set': supplier_contact_form_set,
+                       'supplier_bank_form_set': supplier_bank_form_set}
+            return render(request, 'procurement/suppliers/supplierNew.html', context=context)
     else:
         supplier_form = SupplierForm(instance=supplier)
         supplier_contact_form_set = SupplierContactSet(instance=supplier)
