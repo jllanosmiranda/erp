@@ -74,7 +74,7 @@
             <tbody>
             {% for supplier_product in supplier.supplier_product.all %}
                 <tr>
-                    <td><a href="">{{ supplier_product.product }}</a></td>
+                    <td><a href={% url 'product_details' product_id=supplier_product.product.id %}>{{ supplier_product.product }}</a></td>
                     <td>{{ supplier_product.prices.last.price }}</td>
                     <td><a href="">ver</a></td>
                 </tr>
