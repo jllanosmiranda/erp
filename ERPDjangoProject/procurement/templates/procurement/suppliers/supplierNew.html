@@ -6,6 +6,7 @@
     <button class="tab-button" data-tab="detalles">Detalles</button>
     <button class="tab-button" data-tab="contact-list-tab">Contactos</button>
     <button class="tab-button" data-tab="bank-list">Cuentas Bancarias</button>
+    {% block product_tab %}{% endblock %}
 </div>
 <form method="post">
     <div id='detalles' class="tabcontent" style="display: block">
@@ -35,6 +36,7 @@
                 </div>
             {% endfor %}
     </div>
+    {% block products %} {% endblock %}
     <button type="submit">Guardar</button>
 </form>
 <script type="module" src="{% static 'procurement/js/suppliers.js' %}"></script>

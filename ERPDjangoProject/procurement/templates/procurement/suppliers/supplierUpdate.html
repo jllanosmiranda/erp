@@ -1,8 +1,21 @@
-{% extends 'main/_base.html' %}
-{% block content %}
-   <form method="post">
-       {% csrf_token %}
-       {{ form.as_p }}
-       <button type="submit">Guardar</button>
-   </form>
+{% extends 'procurement/suppliers/supplierNew.html' %}
+
+{% block product_tab %}
+<button class="tab-button" data-tab="products-list-tab">products</button>
+{% endblock %}
+
+{% block products %}
+    <div id="products-list-tab" class="tabcontent">
+        <div id="products-list">
+            <h3>Products</h3>
+            {{ supplier_contact_form_set.management_form }}
+            {% for contact_form in supplier_contact_form_set %}
+                <div class="dynamic-form">
+                    {{ contact_form.as_p }}
+                </div>
+            {% endfor %}
+        </div>
+        <button class="add-form-btn" data-list-id='contact-list' data-list-prefix="contacts">agregar contacto</button>
+        <button class="remove-form-btn" data-list-id='contact-list' data-list-prefix="contacts">remover contacto</button>
+    </div>
 {% endblock %}

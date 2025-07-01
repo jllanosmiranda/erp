@@ -174,7 +174,7 @@ def update_supplier(request, supplier_id):
         context = {'form': supplier_form,
                    'supplier_contact_form_set': supplier_contact_form_set,
                    'supplier_bank_form_set': supplier_bank_form_set}
-        return render(request, 'procurement/suppliers/supplierNew.html', context=context)
+        return render(request, 'procurement/suppliers/supplierUpdate.html', context=context)
 
 
 
