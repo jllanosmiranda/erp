@@ -62,25 +62,7 @@
         </table>
     </div>
     <div id="product-list" class="tabcontent">
-        <h3>Productos</h3>
-        <table>
-            <thead>
-            <tr>
-                <th> Nombre</th>
-                <th>Precio</th>
-                <th>Historial de precios</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for supplier_product in supplier.supplier_product.all %}
-                <tr>
-                    <td><a href={% url 'product_details' product_id=supplier_product.product.id %}>{{ supplier_product.product }}</a></td>
-                    <td>{{ supplier_product.prices.last.price }}</td>
-                    <td><a href="">ver</a></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% include 'procurement/products/productsList.html' with title='Productos' %}
     </div>
     <div>
     <a href="{% url 'update_supplier' supplier_id=supplier.id %}" class="button-link">Editar</a>

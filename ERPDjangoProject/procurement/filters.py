@@ -9,3 +9,11 @@ class ProductFilter(FilterSet):
             "suppliers": ["exact"],
             "code": ["icontains"]
         }
+
+class SupplierProductFilter(FilterSet):
+    class Meta:
+        model = Product
+        fields = {
+            "product_name": ["icontains"],
+            "code": ["icontains"]
+        }
