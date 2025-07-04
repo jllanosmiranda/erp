@@ -24,6 +24,7 @@ def suppliers(request):
 
 
 def view_supplier_details(request, supplier_id):
+    print("request get",request.GET, flush=True)
     if request.method == 'GET':
         supplier = Supplier.objects.get(id=supplier_id)
         products = supplier.products.all()

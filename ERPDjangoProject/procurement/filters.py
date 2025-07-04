@@ -10,6 +10,12 @@ class ProductFilter(FilterSet):
             "code": ["icontains"]
         }
 
+    @property
+    def has_active_filter(self):
+        if not self.is_bound or not self.is_valid():
+            return False
+        return any(bool(value) for name, value in self.form.cleaned_data.items() if value is not None)
+
 class SupplierProductFilter(FilterSet):
     class Meta:
         model = Product
@@ -17,3 +23,9 @@ class SupplierProductFilter(FilterSet):
             "product_name": ["icontains"],
             "code": ["icontains"]
         }
+
+    @property
+    def has_active_filter(self):
+        if not self.is_bound or not self.is_valid():
+            return False
+        return any(bool(value) for name, value in self.form.cleaned_data.items() if value is not None)

@@ -7,7 +7,11 @@
         <button class="tab-button" data-tab="bank-list">Cuentas Bancarias</button>
         <button class="tab-button" data-tab="product-list">Productos</button>
     </div>
+    {% if filter.has_active_filter %}
+    <div id="details" class="tabcontent">
+    {% else %}
     <div id="details" class="tabcontent" style="display: block">
+    {% endif %}
         <h2>Proveedor</h2>
         <table>
             <tbody>
@@ -61,7 +65,11 @@
             </thead>
         </table>
     </div>
+    {% if filter.has_active_filter %}
+    <div id="product-list" class="tabcontent" style="display: block">
+    {% else %}
     <div id="product-list" class="tabcontent">
+    {% endif %}
         {% include 'procurement/products/productsList.html' with title='Productos' %}
     </div>
     <div>
