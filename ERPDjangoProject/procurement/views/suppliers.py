@@ -1,5 +1,6 @@
 import logging
 
+from django.core.paginator import Paginator, PageNotAnInteger
 from django.shortcuts import redirect, render
 
 from ..filters import SupplierProductFilter
@@ -27,10 +28,16 @@ def view_supplier_details(request, supplier_id):
         supplier = Supplier.objects.get(id=supplier_id)
         products = supplier.products.all()
         products_filter = SupplierProductFilter(request.GET, queryset=products)
+        paginator = Paginator(products_filter.qs, 10)
+        page = request.GET.get('page')
+        try:
+            objects = paginator.page(page)
+        except PageNotAnInteger:
+            objects = paginator.page(1)
         context = {
             "supplier": supplier,
             "filter": products_filter,
-            "products": products
+            "products": objects
         }
         return render(request, 'procurement/suppliers/supplierDetails.html', context=context)
 
