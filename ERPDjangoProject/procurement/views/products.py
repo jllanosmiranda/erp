@@ -58,7 +58,7 @@ def update_product(request, product_id):
 
     if request.method == 'POST':
         product_form = ProductForm(request.POST, instance=product)
-        formset = SupplierProductPriceSet(request.POST)
+        formset = SupplierProductPriceSet(request.POST, instance=product)
         logging.info('info')
         logging.info(request.POST)
 
@@ -68,7 +68,6 @@ def update_product(request, product_id):
 
         if product_form.is_valid() and formset.is_valid():
             product_form.save()
-            formset.product_instance = product
             formset.save()
         else:
             logging.info("errors")
@@ -82,8 +81,9 @@ def update_product(request, product_id):
 
     else:
         product_form = ProductForm(instance=product)
+        formset = SupplierProductPriceSet(prefix="supplier", instance=product)
 
-        formset = SupplierProductPriceSet(queryset=product.supplier_product.all())
+        #formset = SupplierProductPriceSet(queryset=product.supplier_product.all())
         print("herer supplier products", flush=True)
         print(product.supplier_product.all(), flush=True)
         context = {'product_form': product_form,

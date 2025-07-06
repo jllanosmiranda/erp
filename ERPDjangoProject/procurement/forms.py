@@ -52,43 +52,10 @@ class SupplierProductForm(ModelForm):
             supplier_product_price.save()
             supplier_product.prices.add(supplier_product_price)
 
-class BaseSupplierProductPriceSet(forms.BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        logging.info(args)
-        logging.info(kwargs)
-        logging.info(self.forms)
-        select_suppliert = set()
-        logging.info("this is a log")
-
-        for form in self.forms:
-            logging.info('forms in the init')
-            logging.info(form.fields['supplier'])
-            if form.instance.pk:
-                select_suppliert.add(form.instance.supplier.pk)
-                form.fields['supplier'].widget.attrs['readonly'] = True
-                logging.info(form.instance)
-            else:
-                logging.info(select_suppliert)
-                form.fields['supplier'].queryset = Supplier.objects.exclude(pk__in=select_suppliert)
-
-    @property
-    def product_instance(self):
-        return None
-
-    @product_instance.setter
-    def product_instance(self, product_instance):
-        for form in self.forms:
-            logging.info("forms instance products")
-            logging.info(form.instance)
-            form.instance.product = product_instance
-
-
 
 SupplierProductPriceSet = inlineformset_factory(Product,
                                                 SupplierProduct,
                                                 form=SupplierProductForm,
-                                                formset=BaseSupplierProductPriceSet,
                                                 extra=1
                                                 )
 

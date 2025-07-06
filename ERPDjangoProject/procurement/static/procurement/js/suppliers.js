@@ -16,15 +16,45 @@ document.querySelectorAll('.tab-button').forEach(
     }
 )
 
+function cleanClonedForm(clone_node){
+    const inputs = clone_node.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        console.log(input.type)
+        switch (input.type){
+            case 'checkbox':
+            case 'radio':
+                input.checked = false;
+                break;
+            default:
+                console.log("inside default")
+                input.value = '';
+                console.log('new value')
+                console.log(input.value)
+        }
+    })
+}
+
 export function AddFormSet(event, list_id, prefix){
     var contactlist = document.getElementById(list_id)
     var total_forms = document.getElementById(`id_${prefix}-TOTAL_FORMS`)
     var currentFormCount = contactlist.getElementsByClassName('dynamic-form').length
     var new_form = contactlist.getElementsByClassName('dynamic-form')[0].cloneNode(true)
 
+    cleanClonedForm(new_form)
+
+    console.log("new forma data clean")
+    const inputs = new_form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        console.log(input.type)
+                console.log('value')
+                console.log(input.value)
+        })
+
     var formExp = RegExp(`${prefix}-0-`,'g')
 
     new_form.innerHTML = new_form.innerHTML.replace(formExp, `${prefix}-${currentFormCount}-`)
+
+    console.log("new forma data clean")
     contactlist.appendChild(new_form)
     total_forms.setAttribute('value', currentFormCount + 1)
 }
