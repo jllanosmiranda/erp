@@ -1,0 +1,12 @@
+<nav>
+    <ul>
+        <li><a id="home-nav" href="{% url 'home' %}" onclick="handleClick.call(this, Event)">Home</a></li>
+        <li> Compras
+            <ul class="sub-nav">
+                <li><a href="{% url 'products' %}">Productos</a></li>
+                <li><a href="{% url 'suppliers' %}">Proveedores</a>
+                <li><a href="{% url 'good_receipt_note_new' %}">Guias de remision</a>
+            </ul>
+        </li>
+    </ul>
+</nav>
