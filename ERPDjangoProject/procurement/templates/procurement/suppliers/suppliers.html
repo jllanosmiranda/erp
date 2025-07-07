@@ -17,7 +17,8 @@
                 <td>{{ supplier.name }}</td>
                 <td>{{ supplier.phone }}</td>
                 <td>{{ supplier.ruc }}</td>
-                <td><a href="{% url 'supplier_details' supplier_id=supplier.id%}">detalles</a></td>
+                <td><a href="{% url 'supplier_details' supplier_id=supplier.id %}">detalles</a></td>
+                <td><a href="{% url 'update_supplier' supplier_id=supplier.id %}">editar</a></td>
             </tr>
         {% endfor %}
         </tbody>
