@@ -103,5 +103,7 @@ def update_supplier(request, supplier_id):
         supplier_bank_form_set = SupplierBankSet(instance=supplier)
         context = {'form': supplier_form,
                    'supplier_contact_form_set': supplier_contact_form_set,
-                   'supplier_bank_form_set': supplier_bank_form_set}
+                   'supplier_bank_form_set': supplier_bank_form_set,
+                   'supplier': supplier,
+                   'products': supplier.products.all()}
         return render(request, 'procurement/suppliers/supplierUpdate.html', context=context)

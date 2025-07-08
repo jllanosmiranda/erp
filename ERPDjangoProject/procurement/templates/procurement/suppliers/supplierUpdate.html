@@ -7,13 +7,8 @@
 {% block products %}
     <div id="products-list-tab" class="tabcontent">
         <div id="products-list">
-            <h3>Products</h3>
-            {{ supplier_contact_form_set.management_form }}
-            {% for contact_form in supplier_contact_form_set %}
-                <div class="dynamic-form">
-                    {{ contact_form.as_p }}
-                </div>
-            {% endfor %}
+            {% url 'new_product_from_supplier' supplier_id=supplier.id as new_url%}
+            {% include 'procurement/products/productsList.html' with title='Productos' new_product_url=new_url add_enable=True products=supplier.products.all %}
         </div>
         <button class="add-form-btn" data-list-id='contact-list' data-list-prefix="contacts">agregar contacto</button>
         <button class="remove-form-btn" data-list-id='contact-list' data-list-prefix="contacts">remover contacto</button>
