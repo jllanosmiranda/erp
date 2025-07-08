@@ -20,17 +20,15 @@
         <th class="product">Nombre</th>
         <th>Codigo</th>
         <th>Descripcion</th>
-        <th>Detalles</th>
         <th>Editar</th>
         <th>Precio</th>
     </tr>
     <tbody>
     {% for supplier_product in supplier_products%}
         <tr>
-            <td>{{ supplier_product.product.product_name }}</td>
-            <td>{{ supplier_product.product.code }}</td>
+            <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
+            <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
             <td>{{ supplier_product.product.product_description }}</td>
-            <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">Detalles</a></td>
             <td><a href="{% url 'product_update' product_id=supplier_product.product.id %}">Editar</a></td>
             <td>{{ supplier_product.latest_price }}</td>
         </tr>
