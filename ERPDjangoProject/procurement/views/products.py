@@ -36,7 +36,10 @@ def new_product(request):
         suppliers_formset = SupplierProductPriceSet(request.POST, prefix="supplier")
         if product_form.is_valid() and suppliers_formset.is_valid():
             product = product_form.save()
-            return redirect('products_details', product_id=product.id)
+            for form in suppliers_formset:
+                form.instance.product = product
+                form.save()
+            return redirect('product_details', product_id=product.id)
         else:
             logging.info(product_form.errors)
             logging.info(suppliers_formset.errors)

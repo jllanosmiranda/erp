@@ -52,6 +52,8 @@ class SupplierProductForm(ModelForm):
             supplier_product_price.save()
             supplier_product.prices.add(supplier_product_price)
 
+        return supplier_product
+
 
 SupplierProductPriceSet = inlineformset_factory(Product,
                                                 SupplierProduct,
@@ -156,3 +158,39 @@ def form_set(extra):
                                                    extra=extra)
 
     return GoodReceiptNoteItemSet
+
+
+class ProductSupplierForm(ModelForm):
+    price = forms.DecimalField(max_digits=10, decimal_places=2, required=True, validators=[MinValueValidator(0)])
+
+    class Meta:
+        model = SupplierProduct
+        fields = ['product', 'price']
+
+    def __init__(self, *args, **kwargs):
+        supplier_product = kwargs.get('instance')
+        super().__init__(*args, **kwargs)
+
+        if supplier_product:
+            supplier_product_price = supplier_product.prices.order_by('-effective_date').first()
+            self.fields['price'].initial = supplier_product_price.price
+            self.fields['product'].initial = supplier_product.product
+
+    def save(self, commit=True):
+        supplier_product = super().save(commit=False)
+        price = self.cleaned_data.get('price')
+        logging.info(f"price {price}")
+        supplier_product_price = SupplierProductPrice(price=price)
+        supplier_product_price.supplier_product = supplier_product
+
+        if commit:
+            supplier_product.save()
+            supplier_product_price.save()
+        return supplier_product
+
+
+ProductSupplierFormSet = inlineformset_factory(Supplier,
+                                               SupplierProduct,
+                                               form=ProductSupplierForm,
+                                               can_delete=True,
+                                               extra=0)

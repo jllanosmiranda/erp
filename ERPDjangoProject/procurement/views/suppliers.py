@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, PageNotAnInteger
 from django.shortcuts import redirect, render
 
 from ..filters import SupplierProductFilter
-from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet
+from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet, ProductSupplierFormSet
 from ..models import Supplier
 
 
@@ -79,31 +79,36 @@ def update_supplier(request, supplier_id):
         supplier_form = SupplierForm(request.POST, instance=supplier)
         supplier_contact_form_set = SupplierContactSet(request.POST, instance=supplier)
         supplier_bank_form_set = SupplierBankSet(request.POST, instance=supplier)
+        product_form_set = ProductSupplierFormSet(request.POST, instance=supplier)
 
-        if supplier_form.is_valid() and supplier_contact_form_set.is_valid() and supplier_bank_form_set.is_valid():
+        if supplier_form.is_valid() and supplier_contact_form_set.is_valid() and supplier_bank_form_set.is_valid() and product_form_set.is_valid():
+            logging.info("valid update supplier")
             supplier_object = supplier_form.save()
-            contact_instances = supplier_contact_form_set.save(commit=False)
-            bank_instances = supplier_bank_form_set.save(commit=False)
-            for instance in contact_instances:
-                instance.save()
-            for instance in bank_instances:
-                instance.save()
+            supplier_contact_form_set.save()
+            supplier_bank_form_set.save()
+            f = product_form_set.save()
+            logging.info(f)
+
 
             return redirect('supplier_details', supplier_id=supplier_object.id)
         else:
+            logging.info("invalid update supplier")
             logging.info(supplier_form.errors)
             logging.info(supplier_contact_form_set.errors)
+            logging.info(supplier_bank_form_set.errors)
+            logging.info(product_form_set.errors)
             context = {'form': supplier_form,
                        'supplier_contact_form_set': supplier_contact_form_set,
-                       'supplier_bank_form_set': supplier_bank_form_set}
-            return render(request, 'procurement/suppliers/supplierNew.html', context=context)
+                       'supplier_bank_form_set': supplier_bank_form_set,
+                       'product_form_set': product_form_set,}
+            return render(request, 'procurement/suppliers/supplierUpdate.html', context=context)
     else:
         supplier_form = SupplierForm(instance=supplier)
         supplier_contact_form_set = SupplierContactSet(instance=supplier)
         supplier_bank_form_set = SupplierBankSet(instance=supplier)
+        product_form_set = ProductSupplierFormSet(instance=supplier)
         context = {'form': supplier_form,
                    'supplier_contact_form_set': supplier_contact_form_set,
                    'supplier_bank_form_set': supplier_bank_form_set,
-                   'supplier': supplier,
-                   'products': supplier.products.all()}
+                   'product_form_set': product_form_set}
         return render(request, 'procurement/suppliers/supplierUpdate.html', context=context)
