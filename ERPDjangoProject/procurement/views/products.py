@@ -104,9 +104,16 @@ def new_product_from_supplier(request, supplier_id):
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
         suppliers_formset = SupplierProductPriceSet(request.POST, prefix="supplier")
+
+        logging.info(f"supplier {suppliers_formset}")
+
         if product_form.is_valid() and suppliers_formset.is_valid():
             product = product_form.save()
-            return redirect('products_details', product_id=product.id)
+            for supplier_form in suppliers_formset:
+                supplier_form.instance.product = product
+                supplier_form.save()
+
+            return redirect('product_details', product_id=product.id)
         else:
             logging.info(product_form.errors)
             logging.info(suppliers_formset.errors)
@@ -124,4 +131,3 @@ def new_product_from_supplier(request, supplier_id):
                'suppliers_formset': suppliers_formset}
 
     return render(request, 'procurement/products/productNew.html', context=context)
-    pass
