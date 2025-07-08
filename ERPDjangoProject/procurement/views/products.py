@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 from ..filters import ProductFilter
 from ..forms import ProductForm, SupplierProductPriceSet
-from ..models import Product
+from ..models import Product, Supplier
 
 
 def products(request):
@@ -98,3 +98,30 @@ def update_product(request, product_id):
         context = {'product_form': product_form,
                    'formset': formset}
         return render(request, 'procurement/products/productUpdate.html', context=context)
+
+def new_product_from_supplier(request, supplier_id):
+    supplier = Supplier.objects.get(id=supplier_id)
+    if request.method == 'POST':
+        product_form = ProductForm(request.POST)
+        suppliers_formset = SupplierProductPriceSet(request.POST, prefix="supplier")
+        if product_form.is_valid() and suppliers_formset.is_valid():
+            product = product_form.save()
+            return redirect('products_details', product_id=product.id)
+        else:
+            logging.info(product_form.errors)
+            logging.info(suppliers_formset.errors)
+            context = {'form': product_form,
+                       'suppliers_formset': suppliers_formset}
+            logging.info(f"context {context}")
+            return render(request, 'procurement/products/productNew.html', context=context)
+    else:
+        product_form = ProductForm()
+        initial_data = [{'supplier': supplier}]
+        suppliers_formset = SupplierProductPriceSet(prefix="supplier",
+                                                    initial=initial_data)
+
+    context = {'form': product_form,
+               'suppliers_formset': suppliers_formset}
+
+    return render(request, 'procurement/products/productNew.html', context=context)
+    pass

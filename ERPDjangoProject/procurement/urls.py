@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('suppliers/new', suppliers.create_supplier, name='create_supplier'),
     path('suppliers/update<int:supplier_id>', suppliers.update_supplier, name='update_supplier'),
+    path('suppliers/<int:supplier_id>/product', products.new_product_from_supplier, name='new_product_from_supplier'),
 
     path('goods', good_receipt_notes.good_receipt_order, name='good_receipt_note_new'),
     path('goods-products/<int:supplier_id>/<int:extra>',

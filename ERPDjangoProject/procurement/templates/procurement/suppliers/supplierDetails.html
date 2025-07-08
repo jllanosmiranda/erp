@@ -70,7 +70,8 @@
     {% else %}
     <div id="product-list" class="tabcontent">
     {% endif %}
-        {% include 'procurement/products/productsList.html' with title='Productos' %}
+        {% url 'new_product_from_supplier' supplier_id=supplier.id as new_url%}
+        {% include 'procurement/products/productsList.html' with title='Productos' new_product_url=new_url%}
     </div>
     <div>
     <a href="{% url 'update_supplier' supplier_id=supplier.id %}" class="button-link">Editar</a>
