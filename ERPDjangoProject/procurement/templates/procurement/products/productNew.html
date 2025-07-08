@@ -3,6 +3,9 @@
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
+    {% for supplier_form in suppliers_formset %}
+    {{ supplier_form.as_p }}
+    {% endfor %}
   <button type="submit">Agregar</button>
 </form>
 {% endblock %}

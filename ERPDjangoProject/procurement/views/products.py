@@ -33,14 +33,17 @@ def products(request):
 def new_product(request):
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
+        suppliers_formset = SupplierProductPriceSet(request.POST)
         if product_form.is_valid():
             product_form.save()
 
             return redirect('products')
     else:
         product_form = ProductForm()
+        suppliers_formset = SupplierProductPriceSet(prefix="supplier")
 
-    context = {'form': product_form}
+    context = {'form': product_form,
+               'suppliers_formset': suppliers_formset}
 
     return render(request, 'procurement/products/productNew.html', context=context)
 
