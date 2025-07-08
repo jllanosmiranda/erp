@@ -3,6 +3,8 @@
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
+    <h3> Proveedores </h3>
+    {{ suppliers_formset.management_form }}
     {% for supplier_form in suppliers_formset %}
     {{ supplier_form.as_p }}
     {% endfor %}
