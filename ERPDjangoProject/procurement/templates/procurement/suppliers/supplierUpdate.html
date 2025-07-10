@@ -23,13 +23,13 @@
                 {% for form in product_form_set %}
                     {{ form.id }}
                     {{ form.product.as_hidden }}
-                    {% with product=form.instance.product %}
+                    {% with supplier_product=form.instance %}
                     <tr>
-                        {% if product.id %}
-                            <td><a href="{% url 'product_details' product_id=product.id %}">{{ product.product_name }}</a></td>
-                            <td><a href="{% url 'product_details' product_id=product.id %}">{{ product.code }}</a></td>
-                            <td>{{ product.product_description }}</td>
-                            <td><a href="{% url 'product_update' product_id=product.id %}">Editar</a></td>
+                        {% if supplier_product.product.id %}
+                            <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
+                            <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
+                            <td>{{ supplier_product.product.product_description }}</td>
+                            <td><a href="{% url 'product_update' product_id=supplier_product.product.id %}">Editar</a></td>
                             <td>{{ form.price }}</td>
                             <td>{{ form.DELETE }}</td>
                         {% else %}
