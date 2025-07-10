@@ -71,7 +71,7 @@
     <div id="product-list" class="tabcontent">
     {% endif %}
         {% url 'new_product_from_supplier' supplier_id=supplier.id as new_url%}
-        {% include 'procurement/suppliers/supplierProductList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=supplier.supplier_product.all%}
+        {% include 'procurement/suppliers/supplierProductList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=products forms=products_forms %}
     </div>
     <div>
     <a href="{% url 'update_supplier' supplier_id=supplier.id %}" class="button-link">Editar</a>

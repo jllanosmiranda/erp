@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 
 from ..filters import SupplierProductFilter
 from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet, ProductSupplierFormSet
-from ..models import Supplier
+from ..models import Supplier, SupplierProduct
 
 
 def suppliers(request):
@@ -25,22 +25,53 @@ def suppliers(request):
 
 def view_supplier_details(request, supplier_id):
     print("request get",request.GET, flush=True)
-    if request.method == 'GET':
-        supplier = Supplier.objects.get(id=supplier_id)
-        products = supplier.products.all()
-        products_filter = SupplierProductFilter(request.GET, queryset=products)
-        paginator = Paginator(products_filter.qs, 10)
-        page = request.GET.get('page')
-        try:
-            objects = paginator.page(page)
-        except PageNotAnInteger:
-            objects = paginator.page(1)
-        context = {
-            "supplier": supplier,
-            "filter": products_filter,
-            "products": objects
-        }
-        return render(request, 'procurement/suppliers/supplierDetails.html', context=context)
+    supplier = Supplier.objects.get(id=supplier_id)
+    if request.method == 'POST':
+        print("request post",request.POST, flush=True)
+        product_form_set = ProductSupplierFormSet(request.POST,instance=supplier)
+        if product_form_set.is_valid():
+            logging.info("valid form set")
+            product_form_set.save()
+            return redirect('supplier_details', supplier_id=supplier_id)
+        else:
+            logging.info("invalid form set")
+            logging.info(product_form_set.errors)
+            logging.info(product_form_set.non_form_errors())
+
+
+    else:
+        product_form_set = ProductSupplierFormSet(instance=supplier)
+
+    products = supplier.products.all()
+    products_filter = SupplierProductFilter(request.GET, queryset=products)
+    paginator = Paginator(products_filter.qs, 10)
+    page = request.GET.get('page')
+    try:
+        objects = paginator.page(page)
+    except PageNotAnInteger:
+        objects = paginator.page(1)
+
+    logging.info("total objects")
+    logging.info(objects)
+    logging.info(len(objects))
+
+    for o in objects:
+        logging.info("datos")
+        logging.info(o)
+
+    suppliers_objects = SupplierProduct.objects.filter(
+        supplier=supplier,
+        product__in=objects)
+
+    product_form_set = ProductSupplierFormSet(instance=supplier,
+                                              queryset=suppliers_objects)
+    context = {
+        "supplier": supplier,
+        "filter": products_filter,
+        "products": suppliers_objects,
+        'products_forms': product_form_set
+    }
+    return render(request, 'procurement/suppliers/supplierDetails.html', context=context)
 
 
 def create_supplier(request):
