@@ -70,7 +70,7 @@ def update_product(request, product_id):
 
     if request.method == 'POST':
         product_form = ProductForm(request.POST, instance=product)
-        formset = SupplierProductPriceSet(request.POST, instance=product)
+        formset = SupplierProductPriceSet(request.POST,prefix="supplier", instance=product)
         logging.info('info')
         logging.info(request.POST)
 
@@ -81,15 +81,17 @@ def update_product(request, product_id):
         if product_form.is_valid() and formset.is_valid():
             product_form.save()
             formset.save()
+            return redirect('product_details', product_id=product_id)
+
         else:
             logging.info("errors")
             logging.info(product_form.errors)
             for form in formset:
                 logging.info(form.errors)
+            context = {'product_form': product_form,
+                       'formset': formset}
+            return render(request, 'procurement/products/productUpdate.html', context=context)
 
-        print("redirect update products")
-
-        return redirect('product_details', product_id=product_id)
 
     else:
         product_form = ProductForm(instance=product)
