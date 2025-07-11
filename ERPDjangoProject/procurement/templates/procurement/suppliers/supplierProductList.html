@@ -17,23 +17,20 @@
     {% endif %}
 </form>
 
-<button id="button-view">Ver</button>
-<button id="button-edit">Editar</button>
 
 <div id="products-view">
     <table>
         <tr>
             <th class="product">Nombre</th>
             <th>Codigo</th>
-            <th>Editar</th>
             <th>Precio</th>
+            <th>Borrar</th>
         </tr>
         <tbody>
         {% for supplier_product in supplier_products%}
             <tr>
                 <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
                 <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
-                <td><a href="{% url 'product_update' product_id=supplier_product.product.id %}">Editar</a></td>
                 <td>{{ supplier_product.latest_price }}</td>
             </tr>
         {% endfor %}
@@ -42,11 +39,43 @@
 
 </div>
 
-<div id="products-edit" style="display: none">
-    <form method="post" id="product-form">
-        {% csrf_token %}
-        <input type="hidden" name="form_id" value="update-products">
-        {{ forms.management_form }}
+<form method="post" id="product-form">
+    {% csrf_token %}
+    <input type="hidden" name="form_id" value="update-products">
+    {{ forms.management_form }}
+    <div id="products-edit" style="display: none">
+            <table >
+                <tr>
+                    <th class="product">Nombre</th>
+                    <th>Codigo</th>
+                    <th>Descripcion</th>
+                    <th>Editar</th>
+                    <th>Precio</th>
+                    <th>Borrar</th>
+                </tr>
+                <tbody>
+
+                {% for form in forms %}
+                    {% with supplier_product=form.instance %}
+                        <tr>
+                            {% if supplier_product.product.id %}
+                                {{ form.id }}
+                                {{ form.product.as_hidden }}
+                            <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
+                            <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
+                            <td>{{ supplier_product.product.product_description }}</td>
+                            <td><a href="{% url 'product_update' product_id=supplier_product.product.id %}">Editar</a></td>
+                            <td>{{ form.price }}</td>
+                            <td>{{ form.DELETE }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endwith %}
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit">Guardar</button>
+    </div>
+    <div id="products-add" style="display: none">
         <table >
             <tr>
                 <th class="product">Nombre</th>
@@ -59,20 +88,17 @@
             <tbody>
 
             {% for form in forms %}
-                {{ form.id }}
-                {{ form.product.as_hidden }}
                 {% with supplier_product=form.instance %}
                     <tr>
-                        {% if supplier_product.product.id %}
-                        <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
-                        <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
-                        <td>{{ supplier_product.product.product_description }}</td>
-                        <td><a href="{% url 'product_update' product_id=supplier_product.product.id %}">Editar</a></td>
-                        <td>{{ form.price }}</td>
-                        <td>{{ form.DELETE }}</td>
-                        {% else %}
+                        {% if not supplier_product.product.id %}
+                            {{ form.id }}
+                            {{ form.product.as_hidden }}
                             <td>{{ form.product }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td>{{ form.price }}</td>
+                            <td></td>
                         {% endif %}
                     </tr>
                 {% endwith %}
@@ -80,8 +106,8 @@
             </tbody>
         </table>
         <button type="submit">Guardar</button>
-    </form>
-</div>
+    </div>
+</form>
 
 <div class="pagination">
     <span class="step-links">
@@ -99,5 +125,9 @@
     {% endif %}
 
 </div>
+
+<button id="button-view">Ver</button>
+<button id="button-edit">Editar</button>
+<button id="button-add">Agregar</button>
 
 <script src="{% static 'procurement/js/clearFilter.js' %}?v=1.0"></script>
