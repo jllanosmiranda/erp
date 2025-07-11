@@ -63,12 +63,17 @@
                 {{ form.product.as_hidden }}
                 {% with supplier_product=form.instance %}
                     <tr>
+                        {% if supplier_product.product.id %}
                         <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
                         <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
                         <td>{{ supplier_product.product.product_description }}</td>
                         <td><a href="{% url 'product_update' product_id=supplier_product.product.id %}">Editar</a></td>
                         <td>{{ form.price }}</td>
                         <td>{{ form.DELETE }}</td>
+                        {% else %}
+                            <td>{{ form.product }}</td>
+                            <td>{{ form.price }}</td>
+                        {% endif %}
                     </tr>
                 {% endwith %}
             {% endfor %}
