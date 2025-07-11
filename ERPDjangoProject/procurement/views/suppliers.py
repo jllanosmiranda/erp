@@ -2,6 +2,8 @@ import logging
 
 from django.core.paginator import Paginator, PageNotAnInteger
 from django.shortcuts import redirect, render
+from django.urls import reverse
+from urllib.parse import urlencode
 
 from ..filters import SupplierProductFilter
 from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet, ProductSupplierFormSet
@@ -26,13 +28,24 @@ def suppliers(request):
 def view_supplier_details(request, supplier_id):
     print("request get",request.GET, flush=True)
     supplier = Supplier.objects.get(id=supplier_id)
+    products = supplier.products.all()
+    products_filter = SupplierProductFilter(request.GET, queryset=products)
+    logging.info(f"products filter {products_filter.data}")
+
+    form_id = None
     if request.method == 'POST':
+        form_id = request.POST.get('form_id')
         print("request post",request.POST, flush=True)
         product_form_set = ProductSupplierFormSet(request.POST,instance=supplier)
         if product_form_set.is_valid():
             logging.info("valid form set")
             product_form_set.save()
-            return redirect('supplier_details', supplier_id=supplier_id)
+            url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
+            params = {'form_id': form_id}
+            params.update(products_filter.data.dict())
+            url = f"{url}?{urlencode(params)}"
+
+            return redirect(url)
         else:
             logging.info("invalid form set")
             logging.info(product_form_set.errors)
@@ -41,9 +54,9 @@ def view_supplier_details(request, supplier_id):
 
     else:
         product_form_set = ProductSupplierFormSet(instance=supplier)
+        form_id = request.GET.get('form_id')
 
-    products = supplier.products.all()
-    products_filter = SupplierProductFilter(request.GET, queryset=products)
+
     paginator = Paginator(products_filter.qs, 10)
     page = request.GET.get('page')
     try:
@@ -69,8 +82,10 @@ def view_supplier_details(request, supplier_id):
         "supplier": supplier,
         "filter": products_filter,
         "products": suppliers_objects,
-        'products_forms': product_form_set
+        'products_forms': product_form_set,
+        'form_id': form_id,
     }
+
     return render(request, 'procurement/suppliers/supplierDetails.html', context=context)
 
 

@@ -7,10 +7,10 @@
         <button class="tab-button" data-tab="bank-list">Cuentas Bancarias</button>
         <button class="tab-button" data-tab="product-list">Productos</button>
     </div>
-    {% if filter.has_active_filter %}
-    <div id="details" class="tabcontent">
+    {% if not form_id %}
+        <div id="details" class="tabcontent" style="display: block">
     {% else %}
-    <div id="details" class="tabcontent" style="display: block">
+        <div id="details" class="tabcontent">
     {% endif %}
         <h2>Proveedor</h2>
         <table>
@@ -65,7 +65,7 @@
             </thead>
         </table>
     </div>
-    {% if filter.has_active_filter %}
+    {% if form_id == 'update-products' %}
     <div id="product-list" class="tabcontent" style="display: block">
     {% else %}
     <div id="product-list" class="tabcontent">

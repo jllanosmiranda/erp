@@ -1,6 +1,7 @@
 {% load static %}
 <h1>{{ title }}</h1>
 <form method="get" id="filter-form">
+    <input type="hidden" name="form_id" value="update-products">
     <div class="in">
         {% for field in filter.form %}
             <div>
@@ -44,6 +45,7 @@
 <div id="products-edit" style="display: none">
     <form method="post" id="product-form">
         {% csrf_token %}
+        <input type="hidden" name="form_id" value="update-products">
         {{ forms.management_form }}
         <table >
             <tr>
