@@ -32,6 +32,11 @@ def view_supplier_details(request, supplier_id):
     products_filter = SupplierProductFilter(request.GET, queryset=products)
     logging.info(f"products filter {products_filter.data}")
 
+    filter_data = {}
+    if products_filter.data:
+        filter_data = products_filter.data.dict()
+
+
     form_id = None
     if request.method == 'POST':
         form_id = request.POST.get('form_id')
@@ -42,7 +47,7 @@ def view_supplier_details(request, supplier_id):
             product_form_set.save()
             url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
             params = {'form_id': form_id}
-            params.update(products_filter.data.dict())
+            params.update(filter_data)
             url = f"{url}?{urlencode(params)}"
 
             return redirect(url)

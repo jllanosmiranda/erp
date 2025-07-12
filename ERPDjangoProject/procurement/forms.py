@@ -55,6 +55,8 @@ class SupplierProductForm(ModelForm):
         return supplier_product
 
 
+
+
 SupplierProductPriceSet = inlineformset_factory(Product,
                                                 SupplierProduct,
                                                 form=SupplierProductForm,
@@ -188,9 +190,20 @@ class ProductSupplierForm(ModelForm):
             supplier_product_price.save()
         return supplier_product
 
+class ProductSupplierPriceFormBase(forms.BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            products = self.instance.products.all()
+
+            for form in self.forms:
+                if not form.instance.pk:
+                    form.fields['product'].queryset = Product.objects.exclude(id__in=products)
+
 
 ProductSupplierFormSet = inlineformset_factory(Supplier,
                                                SupplierProduct,
                                                form=ProductSupplierForm,
+                                               formset=ProductSupplierPriceFormBase,
                                                can_delete=True,
-                                               extra=0)
+                                               extra=1)
