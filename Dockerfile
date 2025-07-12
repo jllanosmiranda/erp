@@ -18,4 +18,5 @@ RUN chown -R appuser:appgroup /app
 
 USER appuser
 
-CMD ["sh", "start.sh"]
+ENTRYPOINT ["sh", "start.sh"]
+CMD ["python","ERPDjangoProject/manage.py","runserver","0.0.0.0:8000"]
