@@ -14,11 +14,13 @@
         <tbody>
         {% for supplier in suppliers %}
             <tr>
-                <td><a href="{% url 'supplier_details' supplier_id=supplier.id %}">{{ supplier.name }}</a></td>
+                <td><a href="{% url 'supplier_details' supplier_id=supplier.id %}">{{ supplier.name }} <i class="bi bi-eye"></i></a></td>
                 <td>{{ supplier.email }}</td>
                 <td>{{ supplier.phone }}</td>
                 <td>{{ supplier.ruc }}</td>
-                <td><a href="{% url 'update_supplier' supplier_id=supplier.id %}">editar</a></td>
+                <td><a href="{% url 'update_supplier' supplier_id=supplier.id %}" class="btn btn-sm btn-warning">
+                    Editar <i class="bi bi-pencil"></i>
+                </a></td>
             </tr>
         {% endfor %}
         </tbody>

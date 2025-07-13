@@ -47,14 +47,17 @@
         <tbody>
         {% for product in products%}
             <tr>
-                <td data-label="Nombre">{{ product.product_name }}</td>
+                <td data-label="Nombre">
+                <a href="{% url 'product_details' product_id=product.id %}">
+                    {{ product.product_name }} <i class="bi bi-eye"></i>
+                </a>
+                </td>
+
                 <td data-label="Codigo">{{ product.code }}</td>
                 <td data-label="Descripcion">{{ product.product_description }}</td>
                 <td data-label="Acciones">
                     <div class="btn-group" role="group">
-                        <a href="{% url 'product_details' product_id=product.id %}" class="btn btn-sm btn-info">
-                            <i class="bi bi-eye"></i> Detalles
-                        </a>
+
                         <a href="{% url 'product_update' product_id=product.id %}" class="btn btn-sm btn-warning">
                             <i class="bi bi-pencil"></i> Editar
                         </a>
