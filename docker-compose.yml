@@ -1,8 +1,8 @@
 services:
   django:
-    build: image
+    image: jllanosmiranda/erp
     ports:
-      - "8001:8000"
+      - "${APP_PORT}:8000"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
