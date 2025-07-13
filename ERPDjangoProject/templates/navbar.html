@@ -1,12 +1,40 @@
-<nav>
-    <ul>
-        <li><a id="home-nav" href="{% url 'home' %}" onclick="handleClick.call(this, Event)">Home</a></li>
-        <li> Compras
-            <ul class="sub-nav">
-                <li><a href="{% url 'products' %}">Productos</a></li>
-                <li><a href="{% url 'suppliers' %}">Proveedores</a>
-                <li><a href="{% url 'good_receipt_note_new' %}">Guias de remision</a>
-            </ul>
-        </li>
-    </ul>
+<nav class="navbar navbar-expand-md navbar-light bg-light flex-md-column flex-row py-2">
+    <div class="navbar-brand d-none d-md-block">
+        <h5>ERP System</h5>
+    </div>
+
+    <div class="collapse navbar-collapse w-100" id="navbarContent">
+        <ul class="nav flex-column w-100">
+            <li class="nav-item">
+                <a class="nav-link" id="home-nav" href="{% url 'home' %}" onclick="handleClick.call(this, Event)">
+                    <i class="bi bi-house-door"></i> Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <!-- Modified dropdown toggle to ensure it works on mobile -->
+                <a class="nav-link dropdown-toggle" href="#comprasSubmenu" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="comprasSubmenu">
+                    <i class="bi bi-cart"></i> Compras
+                </a>
+                <div class="collapse" id="comprasSubmenu">
+                    <ul class="nav flex-column ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'products' %}">
+                                <i class="bi bi-box"></i> Productos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'suppliers' %}">
+                                <i class="bi bi-people"></i> Proveedores
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'good_receipt_note_new' %}">
+                                <i class="bi bi-file-text"></i> Guias de remision
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
 </nav>

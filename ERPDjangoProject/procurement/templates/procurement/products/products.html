@@ -1,57 +1,122 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1>Catalogo de productos de los proveedores</h1>
-<form method="get" id="filter-form">
-    <div class="in">
-        {% for field in filter.form %}
-            <div>
-                {{ field.label_tag }}
-                {{ field }}
+<h1 class="mb-4">Catalogo de productos de los proveedores</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Filtros</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" id="filter-form" class="mb-3">
+            <div class="row g-3">
+                {% for field in filter.form %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            <div class="form-control-wrapper">{{ field }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-filter"></i> Filtrar
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="clearFilters()">
+                    <i class="bi bi-x-circle"></i> Limpiar
+                </button>
+                <a href="{% url 'product_new' %}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Agregar nuevo producto
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-to-cards">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Codigo</th>
+                <th>Descripcion</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in products%}
+            <tr>
+                <td data-label="Nombre">{{ product.product_name }}</td>
+                <td data-label="Codigo">{{ product.code }}</td>
+                <td data-label="Descripcion">{{ product.product_description }}</td>
+                <td data-label="Acciones">
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'product_details' product_id=product.id %}" class="btn btn-sm btn-info">
+                            <i class="bi bi-eye"></i> Detalles
+                        </a>
+                        <a href="{% url 'product_update' product_id=product.id %}" class="btn btn-sm btn-warning">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                    </div>
+                </td>
+            </tr>
         {% endfor %}
-    </div>
-    <button type="submit">Filtrar</button>
-    <button type="button" onclick="clearFilters()">Limpiar</button>
-    <a href="{% url 'product_new' %}" class="btn btn-primary">Agregar nuevo producto</a>
-</form>
-<table class="local">
-    <tr>
-        <th class="product">Nombre</th>
-        <th>Codigo</th>
-        <th>Descripcion</th>
-        <th>Detalles</th>
-        <th>Editar</th>
-    </tr>
-    <tbody>
-    {% for product in products%}
-        <tr>
-            <td>{{ product.product_name }}</td>
-            <td>{{ product.code }}</td>
-            <td>{{ product.product_description }}</td>
-            <td><a href="{% url 'product_details' product_id=product.id %}">Detalles</a></td>
-            <td><a href="{% url 'product_update' product_id=product.id %}">Editar</a></td>
-        </tr>
-    {% endfor %}
-</tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 
-    <div class="pagination">
-    <span class="step-links">
-       {% if supplier_products.has_previous %}
-           <a href="?page=1">&laquo;first</a>
-           <a href="?page={{ supplier_products.previous_page_number }}">previous</a>
+{% if supplier_products.paginator.num_pages > 1 %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if supplier_products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ supplier_products.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;&laquo;</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
         {% endif %}
-    </span>
-    <span class="current">
-        Page {{ supplier_products.number }} of {{ supplier_products.paginator.num_pages }}
-    </span>
-    {% if supplier_products.has_next %}
-        <a href="?page={{ supplier_products.next_page_number }}">next</a>
-        <a href="?page={{ supplier_products.paginator.num_pages }}">last &raquo;</a>
-    {% endif %}
 
-    </div>
+        <li class="page-item active">
+            <span class="page-link">
+                {{ supplier_products.number }} of {{ supplier_products.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if supplier_products.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ supplier_products.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ supplier_products.paginator.num_pages }}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;&raquo;</span>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 
 <script src="{% static 'procurement/js/clearFilter.js' %}?v=1.0"></script>
 {% endblock %}
