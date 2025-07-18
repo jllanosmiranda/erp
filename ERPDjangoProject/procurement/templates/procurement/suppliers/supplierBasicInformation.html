@@ -1,0 +1,26 @@
+
+<h2>Proveedor</h2>
+<table>
+    <tbody>
+    <tr>
+        <td>Nombre:</td>
+        <td>{{ supplier }}</td>
+    </tr>
+    <tr>
+        <td>RUC:</td>
+        <td>{{ supplier.ruc }}</td>
+    </tr>
+    <tr>
+        <td>Direccion:</td>
+        <td>{{ supplier.address }}</td>
+    </tr>
+    </tbody>
+</table>
+
+<form method="post">
+    <div id='detalles' class="tabcontent" style="display: block">
+        <h3>Informacion basica</h3>
+        {% csrf_token %}
+        {{ form.as_p }}
+    </div>
+</form>
