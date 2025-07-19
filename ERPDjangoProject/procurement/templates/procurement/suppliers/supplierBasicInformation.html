@@ -1,26 +1,45 @@
 
-<h2>Proveedor</h2>
-<table>
-    <tbody>
-    <tr>
-        <td>Nombre:</td>
-        <td>{{ supplier }}</td>
-    </tr>
-    <tr>
-        <td>RUC:</td>
-        <td>{{ supplier.ruc }}</td>
-    </tr>
-    <tr>
-        <td>Direccion:</td>
-        <td>{{ supplier.address }}</td>
-    </tr>
-    </tbody>
-</table>
+<h2>Informacion basica</h2>
+<div class="view">
+    <table>
+        <tbody>
+        <tr>
+            <td>Nombre:</td>
+            <td>{{ supplier }}</td>
+        </tr>
+        <tr>
+            <td>RUC:</td>
+            <td>{{ supplier.ruc }}</td>
+        </tr>
+        <tr>
+            <td>Direccion:</td>
+            <td>{{ supplier.address }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-<form method="post">
-    <div id='detalles' class="tabcontent" style="display: block">
-        <h3>Informacion basica</h3>
+<div class="edit">
+    <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-    </div>
-</form>
+        <input type="hidden" name="form_id" value="supplier-basic-information">
+        {{ form.id }}
+        <table>
+            <tbody>
+            <tr>
+                <td>Nombre:</td>
+                <td>{{ form.name }}</td>
+            </tr>
+            <tr>
+                <td>RUC:</td>
+                <td>{{ form.ruc }}</td>
+            </tr>
+            <tr>
+                <td>Direccion:</td>
+                <td>{{ form.address }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <button type="submit">Guardar</button>
+    </form>
+</div>

@@ -7,12 +7,12 @@
         <button class="tab-button" data-tab="bank-list">Cuentas Bancarias</button>
         <button class="tab-button" data-tab="product-list">Productos</button>
     </div>
-    {% if not form_id %}
+    {% if not form_id  or form_id == 'supplier-basic-information'%}
         <div id="details" class="tabcontent" style="display: block">
     {% else %}
         <div id="details" class="tabcontent">
     {% endif %}
-        {% include 'procurement/suppliers/supplierBasicInformation.html' %}
+        {% include 'procurement/suppliers/supplierBasicInformation.html' with form=supplier_form%}
 
     </div>
     <div id="contact-list" class="tabcontent">
