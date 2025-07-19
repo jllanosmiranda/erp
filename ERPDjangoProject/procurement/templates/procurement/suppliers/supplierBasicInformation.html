@@ -1,5 +1,16 @@
 
 <h2>Informacion basica</h2>
+{# Add this near the top of your template #}
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="view">
     <table>
         <tbody>

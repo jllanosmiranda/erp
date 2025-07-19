@@ -4,6 +4,7 @@ from django.core.paginator import Paginator, PageNotAnInteger
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from urllib.parse import urlencode
+from django.contrib import messages
 
 from ..filters import SupplierProductFilter
 from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet, ProductSupplierFormSet
@@ -52,8 +53,10 @@ def view_supplier_details(request, supplier_id):
                 params = {'form_id': form_id}
                 params.update(filter_data)
                 url = f"{url}?{urlencode(params)}"
+                messages.success(request, 'Supplier updated successfully')
                 return redirect(url)
             else:
+                messages.error(request, 'Supplier updated error')
                 log.info("invalid supplier")
                 log.info(supplier_form.errors)
 

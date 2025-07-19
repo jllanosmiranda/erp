@@ -3,7 +3,7 @@ from django.forms.models import ModelForm
 from django import forms
 from .models import Product, Supplier, SupplierProduct, SupplierProductPrice, SupplierContact, SupplierBankAccount, \
     GoodReceiptNote, GoodReceiptNoteItem
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.forms import inlineformset_factory
 import logging
 
@@ -15,6 +15,12 @@ class SupplierForm(ModelForm):
     address = forms.CharField(required=False)
     phone = forms.CharField(required=False)
     email = forms.EmailField(required=False)
+    ruc = forms.CharField(required=False,
+                          max_length=15,
+                          validators=[
+                              RegexValidator(regex=r'^[0-9]+$',
+                                             message='RUC debe de ser un numero')
+                          ])
 
     class Meta:
         model = Supplier
