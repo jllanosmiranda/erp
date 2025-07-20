@@ -26,6 +26,18 @@
             <td>Direccion:</td>
             <td>{{ supplier.address }}</td>
         </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{ supplier.email }}</td>
+        </tr>
+        <tr>
+            <td>Telefono:</td>
+            <td>{{ supplier.phone }}</td>
+        </tr>
+        <tr>
+            <td>Website:</td>
+            <td>{{ supplier.website }}</td>
+        </tr>
         </tbody>
     </table>
 </div>
@@ -39,15 +51,45 @@
             <tbody>
             <tr>
                 <td>Nombre:</td>
-                <td>{{ form.name }}</td>
+                <td>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <td>RUC:</td>
-                <td>{{ form.ruc }}</td>
+                <td>
+                    {{ form.ruc }}
+                    {% if form.ruc.errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.ruc.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <td>Direccion:</td>
                 <td>{{ form.address }}</td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>{{ form.email }}</td>
+            </tr>
+            <tr>
+                <td>Telefono:</td>
+                <td>{{ form.phone }}</td>
+            </tr>
+            <tr>
+                <td>Website:</td>
+                <td>{{ form.website }}</td>
             </tr>
             </tbody>
         </table>

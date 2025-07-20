@@ -11,16 +11,21 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class SupplierForm(ModelForm):
-    website = forms.URLField(required=False)
-    address = forms.CharField(required=False)
-    phone = forms.CharField(required=False)
-    email = forms.EmailField(required=False)
+    website = forms.URLField(required=False,
+                             label="Sitio Web")
+    address = forms.CharField(required=False,
+                              label="Direccion",)
+    phone = forms.CharField(required=False,
+                            label="Telefono")
+    email = forms.EmailField(required=False,
+                             label="Email")
     ruc = forms.CharField(required=False,
                           max_length=15,
                           validators=[
                               RegexValidator(regex=r'^[0-9]+$',
                                              message='RUC debe de ser un numero')
-                          ])
+                          ],
+                          label="RUC")
 
     class Meta:
         model = Supplier
