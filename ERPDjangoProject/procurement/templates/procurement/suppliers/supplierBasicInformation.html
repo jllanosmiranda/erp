@@ -49,48 +49,12 @@
         {{ form.id }}
         <table>
             <tbody>
-            <tr>
-                <td>Nombre:</td>
-                <td>
-                    {{ form.name }}
-                    {% if form.name.errors %}
-                        <div class="alert alert-danger">
-                            {% for error in form.name.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>RUC:</td>
-                <td>
-                    {{ form.ruc }}
-                    {% if form.ruc.errors %}
-                        <div class="alert alert-danger">
-                            {% for error in form.ruc.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>Direccion:</td>
-                <td>{{ form.address }}</td>
-            </tr>
-            <tr>
-                <td>Email:</td>
-                <td>{{ form.email }}</td>
-            </tr>
-            <tr>
-                <td>Telefono:</td>
-                <td>{{ form.phone }}</td>
-            </tr>
-            <tr>
-                <td>Website:</td>
-                <td>{{ form.website }}</td>
-            </tr>
+            {% for field in form %}
+                <tr>
+                    <td>{{ field.label_tag }}</td>
+                    <td>{{ field }}</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
         <button type="submit">Guardar</button>
