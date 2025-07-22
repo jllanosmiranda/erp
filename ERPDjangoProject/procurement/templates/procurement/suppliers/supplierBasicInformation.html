@@ -52,7 +52,16 @@
             {% for field in form %}
                 <tr>
                     <td>{{ field.label_tag }}</td>
-                    <td>{{ field }}</td>
+                    <td>
+                        {{ field }}
+                        <div class="messages">
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
