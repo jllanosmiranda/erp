@@ -34,6 +34,9 @@ class SupplierForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.order_fields(['name', 'ruc', 'address', 'phone', 'email', 'website'])
+        for field in self.fields.values():
+            field.widget.attrs['disabled'] = True
+            field.widget.attrs['class'] = 'supplier-field'
 
     def clean_website(self):
         website = self.cleaned_data.get("website")

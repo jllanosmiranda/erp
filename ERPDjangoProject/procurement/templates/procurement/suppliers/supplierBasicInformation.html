@@ -11,37 +11,6 @@
 </div>
 {% endif %}
 
-<div class="view">
-    <table>
-        <tbody>
-        <tr>
-            <td>Nombre:</td>
-            <td>{{ supplier }}</td>
-        </tr>
-        <tr>
-            <td>RUC:</td>
-            <td>{{ supplier.ruc }}</td>
-        </tr>
-        <tr>
-            <td>Direccion:</td>
-            <td>{{ supplier.address }}</td>
-        </tr>
-        <tr>
-            <td>Email:</td>
-            <td>{{ supplier.email }}</td>
-        </tr>
-        <tr>
-            <td>Telefono:</td>
-            <td>{{ supplier.phone }}</td>
-        </tr>
-        <tr>
-            <td>Website:</td>
-            <td>{{ supplier.website }}</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
 <div class="edit">
     <form method="post">
         {% csrf_token %}
@@ -69,3 +38,5 @@
         <button type="submit">Guardar</button>
     </form>
 </div>
+<button id="edit-supplier-basic-information">editar</button>
+<button id="view-supplier-basic-information">ver</button>
