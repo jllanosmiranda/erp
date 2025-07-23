@@ -2,7 +2,7 @@
 export function edit_supplier(){
     document.querySelectorAll(".supplier-field").forEach(
         input => {
-            input.disabled = false;
+            input.readOnly = false;
             console.log("input to readonly")
         }
     )
@@ -11,7 +11,7 @@ export function edit_supplier(){
 export function view_supplier() {
     document.querySelectorAll(".supplier-field").forEach(
         input => {
-            input.disabled = true;
+            input.readOnly = true;
             console.log("input to readonly")
         }
     )
