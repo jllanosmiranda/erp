@@ -237,6 +237,14 @@ class ProductSupplierPriceFormBase(forms.BaseInlineFormSet):
                 if not form.instance.pk:
                     form.fields['product'].queryset = Product.objects.exclude(id__in=products)
 
+    @property
+    def forms_with_data(self):
+        return [form for form in self.forms if form.instance.pk]
+
+    @property
+    def forms_extra(self):
+        return [form for form in self.forms if not form.instance.pk]
+
 
 ProductSupplierFormSet = inlineformset_factory(Supplier,
                                                SupplierProduct,

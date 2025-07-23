@@ -16,7 +16,7 @@
         <tbody id="contact-list-table">
         {% for form in forms_set.forms_with_data %}
             {{ form.id }}
-            {{ form.supplier }}
+            {{ form.supplier.as_hidden }}
             <tr id="contact-{{ form.instance.pk }}-view">
                 {% for field in form.get_visible_fields %}
                     <td data-label="{{ field.label }}">

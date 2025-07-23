@@ -18,95 +18,75 @@
 </form>
 
 
-<div id="products-view">
+
+<form method="post" id="product-form">
+    {% csrf_token %}
+    <input type="hidden" name="form_id" value="update-products">
+    {{ product_form_set.management_form }}
     <table>
         <tr>
             <th class="product">Nombre</th>
             <th>Codigo</th>
             <th>Descripcion</th>
             <th>Precio</th>
-            <th>Borrar</th>
+            <th>Action</th>
         </tr>
-        <tbody>
-        {% for supplier_product in supplier_products%}
+        <tbody class="table-body-supplier-product-list">
+
+        {% for form in product_form_set.forms_with_data %}
+            {% with supplier_product=form.instance %}
+                {{ form.id }}
+                {{ form.product.as_hidden }}
+                <tr id="supplier-product-{{ supplier_product.id }}-view">
+                        <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
+                        <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
+                        <td>{{ supplier_product.product.product_description }}</td>
+                        <td>{{ form.price.value }}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary edit-item-btn" data-form-id="supplier-product-{{ supplier_product.id }}">Editar</button>
+                        </td>
+                </tr>
+                <tr id="supplier-product-{{ supplier_product.id }}-edit" style="display: none">
+                    <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
+                    <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
+                    <td>{{ supplier_product.product.product_description }}</td>
+                    <td>{{ form.price }}</td>
+                    <td>
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </td>
+                </tr>
+            {% endwith %}
+        {% endfor %}
+        </tbody>
+        <tbody id="table-body-supplier-product-new" style="display: none">
+        {% for form in product_form_set.forms_extra %}
             <tr>
-                <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
-                <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
-                <td>{{ supplier_product.product.product_description }}</td>
-                <td>{{ supplier_product.latest_price }}</td>
+                    {{ form.id }}
+                    <td>
+                        {{ form.product }}
+                        {% for error in form.product.errors %}
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        {{ form.price }}
+                        {% for error in form.price.errors %}
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </td>
+                <td>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-</div>
-
-<form method="post" id="product-form">
-    {% csrf_token %}
-    <input type="hidden" name="form_id" value="update-products">
-    {{ forms.management_form }}
-    <div id="products-edit" style="display: none">
-            <table >
-                <tr>
-                    <th class="product">Nombre</th>
-                    <th>Codigo</th>
-                    <th>Descripcion</th>
-                    <th>Precio</th>
-                    <th>Borrar</th>
-                </tr>
-                <tbody>
-
-                {% for form in forms %}
-                    {% with supplier_product=form.instance %}
-                        <tr>
-                            {% if supplier_product.product.id %}
-                                {{ form.id }}
-                                {{ form.product.as_hidden }}
-                            <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.product_name }}</a></td>
-                            <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
-                            <td>{{ supplier_product.product.product_description }}</td>
-                            <td>{{ form.price }}</td>
-                            <td>{{ form.DELETE }}</td>
-                            {% endif %}
-                        </tr>
-                    {% endwith %}
-                {% endfor %}
-                </tbody>
-            </table>
-            <button type="submit">Guardar</button>
-    </div>
-    <div id="products-add" style="display: none">
-        <table >
-            <tr>
-                <th class="product">Nombre</th>
-                <th>Codigo</th>
-                <th>Descripcion</th>
-                <th>Editar</th>
-                <th>Precio</th>
-                <th>Borrar</th>
-            </tr>
-            <tbody>
-
-            {% for form in forms %}
-                {% with supplier_product=form.instance %}
-                    <tr>
-                        {% if not supplier_product.product.id %}
-                            {{ form.id }}
-                            {{ form.product.as_hidden }}
-                            <td>{{ form.product }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ form.price }}</td>
-                            <td></td>
-                        {% endif %}
-                    </tr>
-                {% endwith %}
-            {% endfor %}
-            </tbody>
-        </table>
-        <button type="submit">Guardar</button>
-    </div>
 </form>
 
 <div class="pagination">
@@ -126,9 +106,7 @@
 
 </div>
 
-<button id="button-view">Ver</button>
-<button id="button-edit">Editar</button>
-<button id="button-add">Asignar producto a proveedor</button>
+<button class="add-item" data-table-body-id="table-body-supplier-product-new">Asignar producto a proveedor</button>
 <a href="{{ new_url }}">Agregar nuevo producto</a>
 
 <script src="{% static 'procurement/js/clearFilter.js' %}?v=1.0"></script>

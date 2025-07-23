@@ -58,13 +58,13 @@ def view_supplier_details(request, supplier_id):
                 return redirect(url)
             else:
                 messages.error(request, 'Supplier updated error')
-                log.info("invalid supplier")
+                log.info("invalid supplier form")
                 log.info(supplier_form.errors)
 
-        if form_id == "supplier_products":
+        if form_id == "update-products":
             product_form_set = ProductSupplierFormSet(request.POST, instance=supplier)
             if product_form_set.is_valid():
-                logging.info("valid form set")
+                logging.info("valid product form set")
                 product_form_set.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
                 params = {'form_id': form_id}
@@ -73,7 +73,7 @@ def view_supplier_details(request, supplier_id):
 
                 return redirect(url)
             else:
-                logging.info("invalid form set")
+                logging.info("invalid product form set")
                 logging.info(product_form_set.errors)
                 logging.info(product_form_set.non_form_errors())
 
