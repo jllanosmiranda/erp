@@ -12,7 +12,7 @@
     {% else %}
         <div id="details" class="tabcontent">
     {% endif %}
-        {% include 'procurement/suppliers/basicInformation.html' with form=supplier_form%}
+        {% include 'procurement/supplier/basicInformation.html' with form=supplier_form%}
 
     </div>
     {% if form_id == "update-supplier-contacts" %}
@@ -20,7 +20,7 @@
     {% else %}
         <div id="contact-list" class="tabcontent">
     {% endif %}
-        {% include 'procurement/suppliers/contactList.html' with forms_set=contacts_form_set %}
+        {% include 'procurement/supplier/contactList.html' with forms_set=contacts_form_set %}
     </div>
     <div id="bank-list" class="tabcontent">
         <h3>Cuenta Bancarias</h3>
@@ -40,7 +40,7 @@
     <div id="product-list" class="tabcontent">
     {% endif %}
         {% url 'new_product_from_supplier' supplier_id=supplier.id as new_url%}
-        {% include 'procurement/suppliers/productList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=products product_form_set=products_forms new_url=new_url %}
+        {% include 'procurement/supplier/productList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=products product_form_set=products_forms new_url=new_url %}
     </div>
 {% endblock %}
 {% block extra_js %}

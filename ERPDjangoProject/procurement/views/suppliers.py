@@ -25,7 +25,7 @@ def suppliers(request):
 
     suppliers = Supplier.objects.all()
     context = {'suppliers': suppliers, 'form': supplierForm}
-    return render(request, 'procurement/suppliers/suppliers.html', context=context)
+    return render(request, 'procurement/supplier/suppliers.html', context=context)
 
 
 def view_supplier_details(request, supplier_id):
@@ -135,7 +135,7 @@ def view_supplier_details(request, supplier_id):
         'form_id': form_id,
     }
 
-    return render(request, 'procurement/suppliers/details.html', context=context)
+    return render(request, 'procurement/supplier/details.html', context=context)
 
 
 def create_supplier(request):
@@ -153,7 +153,7 @@ def create_supplier(request):
             context = {'form': supplier_form,
                        'supplier_contact_form_set': supplier_contact_form_set,
                        'supplier_bank_form_set': supplier_bank_form_set}
-            return render(request, 'procurement/suppliers/supplierNew.html', context=context)
+            return render(request, 'procurement/supplier/supplierNew.html', context=context)
 
     elif request.method == 'GET':
 
@@ -165,7 +165,7 @@ def create_supplier(request):
                    'supplier_contact_form_set': supplier_contact_form_set,
                    'supplier_bank_form_set': supplier_bank_form_set}
 
-        return render(request, 'procurement/suppliers/supplierNew.html', context=context)
+        return render(request, 'procurement/supplier/supplierNew.html', context=context)
 
 
 def update_supplier(request, supplier_id):
@@ -196,7 +196,7 @@ def update_supplier(request, supplier_id):
                        'supplier_contact_form_set': supplier_contact_form_set,
                        'supplier_bank_form_set': supplier_bank_form_set,
                        'product_form_set': product_form_set,}
-            return render(request, 'procurement/suppliers/supplierUpdate.html', context=context)
+            return render(request, 'procurement/supplier/supplierUpdate.html', context=context)
     else:
         supplier_form = SupplierForm(instance=supplier)
         supplier_contact_form_set = SupplierContactSet(instance=supplier)
@@ -206,4 +206,4 @@ def update_supplier(request, supplier_id):
                    'supplier_contact_form_set': supplier_contact_form_set,
                    'supplier_bank_form_set': supplier_bank_form_set,
                    'product_form_set': product_form_set}
-        return render(request, 'procurement/suppliers/supplierUpdate.html', context=context)
+        return render(request, 'procurement/supplier/supplierUpdate.html', context=context)
