@@ -4,13 +4,23 @@ export function openTab(event, tabName){
         tabcontent[i].style.display = 'none';
     }
 
-    document.getElementById(tabName).style.display = 'block';
+    const tab = document.getElementById(tabName);
+    tab.style.display = 'block';
+}
+
+function activeTab (clicked_tab){
+   const all_tabs = document.querySelectorAll('.tab-button')
+    all_tabs.forEach(tab => {
+        tab.classList.remove('active')
+    })
+    clicked_tab.classList.add('active')
 }
 
 document.querySelectorAll('.tab-button').forEach(
     btn => {
         btn.addEventListener('click', function(event){
             openTab(event, btn.getAttribute('data-tab'))
+            activeTab(btn)
             console.log(btn.getAttribute('data-tab'))
         })
     }

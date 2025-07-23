@@ -214,9 +214,9 @@ th {
     border-color: #e9ecef #e9ecef #dee2e6;
 }
 
-.tab button.active {
-    color: #495057;
-    background-color: #fff;
+.tab-button.active {
+    color: #fff;
+    background-color: #495057;
     border-color: #dee2e6 #dee2e6 #fff;
 }
 
