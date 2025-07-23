@@ -1,4 +1,4 @@
-import {AddFormSet} from "./suppliers.js";
+import {AddFormSet} from "./supplier/details.js";
 
 var extra = 1
 document.addEventListener('DOMContentLoaded', function() {
