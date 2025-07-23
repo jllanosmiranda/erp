@@ -135,7 +135,7 @@ def view_supplier_details(request, supplier_id):
         'form_id': form_id,
     }
 
-    return render(request, 'procurement/suppliers/supplierDetails.html', context=context)
+    return render(request, 'procurement/suppliers/details.html', context=context)
 
 
 def create_supplier(request):
