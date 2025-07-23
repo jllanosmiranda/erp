@@ -1,0 +1,70 @@
+<h3>Contactos</h3>
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_id" value="update-supplier-contacts">
+    {{ forms_set.management_form }}
+    <table>
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Telefono</th>
+            <th>Editar</th>
+        </tr>
+        </thead>
+        <tbody id="contact-list-table">
+        {% for form in forms_set.forms_with_data %}
+            {{ form.id }}
+            {{ form.supplier }}
+            <tr id="contact-{{ form.instance.pk }}-view">
+                {% for field in form.get_visible_fields %}
+                    <td>
+                        {{ field.value }}
+                    </td>
+                {% endfor %}
+                <td>
+                    <button type="button" class="btn btn-danger edit-contact-btn" data-contact-id="contact-{{ form.instance.pk }}">Editar</button>
+                </td>
+            </tr>
+            <tr id="contact-{{ form.instance.pk }}-edit" style="display: none">
+            {% for field in form.get_visible_fields %}
+                <td>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </td>
+            {% endfor %}
+                <td>
+                    <button type="button" class="btn btn-danger edit-contact-btn" data-contact-id="contact-{{ form.instance.pk }}">Editar</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tbody id="contact-new-table" style="display: none">
+        {% for form in forms_set.forms_extra %}
+            {{ form.id }}
+            {{ form.supplier }}
+            <tr>
+                {% for field in form.get_visible_fields %}
+                    <td>
+                        {{ field }}
+                        <div class="messages">
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<button type="submit">Guardar</button>
+</form>
+
+<button id="add-contact-btn">Agregar contacto</button>

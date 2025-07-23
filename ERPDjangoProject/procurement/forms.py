@@ -35,7 +35,7 @@ class SupplierForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.order_fields(['name', 'ruc', 'address', 'phone', 'email', 'website'])
         for field in self.fields.values():
-            field.widget.attrs['disabled'] = True
+            field.widget.attrs['readonly'] = True
             field.widget.attrs['class'] = 'supplier-field'
 
     def clean_website(self):
@@ -98,27 +98,46 @@ class ProductForm(ModelForm):
 
 
 class SupplierContactForm(ModelForm):
+    name = forms.CharField(max_length=50,
+                           label="Nombre")
+    phone = forms.CharField(max_length=10,
+                            required=False,
+                            label="Telefono")
+    email = forms.EmailField(max_length=100, required=False,
+                             label="Email")
     class Meta:
         model = SupplierContact
         fields = '__all__'
 
-class BaseSupplierContactSet(forms.BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['readonly'] = True
+            field.widget.attrs['class'] = "supplier-contact-field"
+
+    @property
+    def get_visible_fields(self):
+        return [self['name'],
+                self['email'],
+                self['phone']]
+
+class BaseSupplierContactSet(forms.BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     @property
-    def instance(self):
-        return None
+    def forms_with_data(self):
+        logging.info(f"forms with data {self.forms}")
+        return [form for form in self.forms if form.instance.pk]
 
-    @instance.setter
-    def instance(self, instance):
-        if instance:
-            for form in self.forms:
-                form.instance = instance
+    @property
+    def forms_extra(self):
+        return [form for form in self.forms if form.instance.pk is None]
 
 SupplierContactSet = inlineformset_factory(Supplier,
                                            SupplierContact,
                                            form=SupplierContactForm,
+                                           formset=BaseSupplierContactSet,
                                            extra=1)
 
 class SupplierBankForm(ModelForm):

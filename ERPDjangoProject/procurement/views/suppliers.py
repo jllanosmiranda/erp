@@ -44,9 +44,10 @@ def view_supplier_details(request, supplier_id):
     form_id = None
     if request.method == 'POST':
         form_id = request.POST.get('form_id')
-        supplier_form = SupplierForm(request.POST, instance=supplier)
         print("request post",request.POST, flush=True)
+        supplier_form = SupplierForm(instance=supplier)
         if form_id == "supplier-basic-information":
+            supplier_form = SupplierForm(request.POST, instance=supplier)
             if supplier_form.is_valid():
                 supplier_form.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
@@ -60,8 +61,8 @@ def view_supplier_details(request, supplier_id):
                 log.info("invalid supplier")
                 log.info(supplier_form.errors)
 
-        product_form_set = ProductSupplierFormSet(request.POST,instance=supplier)
         if form_id == "supplier_products":
+            product_form_set = ProductSupplierFormSet(request.POST, instance=supplier)
             if product_form_set.is_valid():
                 logging.info("valid form set")
                 product_form_set.save()
@@ -76,11 +77,28 @@ def view_supplier_details(request, supplier_id):
                 logging.info(product_form_set.errors)
                 logging.info(product_form_set.non_form_errors())
 
+        contacts_form_set = SupplierContactSet(instance=supplier)
+        if form_id == "update-supplier-contacts":
+            contacts_form_set = SupplierContactSet(request.POST, instance=supplier)
+            if contacts_form_set.is_valid():
+                logging.info("valid contacts form set")
+                contacts_form_set.save()
+                url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
+                params = {'form_id': form_id}
+                params.update(filter_data)
+                url = f"{url}?{urlencode(params)}"
+                return redirect(url)
+            else:
+                logging.error("invalid contacts form set")
+                logging.error(request.POST)
+                logging.error(contacts_form_set.errors)
+
 
     else:
         supplier_form = SupplierForm(instance=supplier)
         product_form_set = ProductSupplierFormSet(instance=supplier)
         form_id = request.GET.get('form_id')
+        contacts_form_set = SupplierContactSet(instance=supplier)
 
 
     log.info(f"form id {form_id}")
@@ -113,6 +131,7 @@ def view_supplier_details(request, supplier_id):
         "filter": products_filter,
         "products": suppliers_objects,
         'products_forms': product_form_set,
+        'contacts_form_set': contacts_form_set,
         'form_id': form_id,
     }
 

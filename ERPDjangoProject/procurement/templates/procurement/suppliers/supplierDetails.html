@@ -15,27 +15,12 @@
         {% include 'procurement/suppliers/supplierBasicInformation.html' with form=supplier_form%}
 
     </div>
-    <div id="contact-list" class="tabcontent">
-        <h3>Contactos</h3>
-        <table>
-            <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>WhatsApp</th>
-                <th>Puesto</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for contact in supplier.contacts.all %}
-                <tr>
-                    <td>{{contact.name}}</td>
-                    <td>{{contact.email}}</td>
-                    <td>{{contact.phone}}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    {% if form_id == "update-supplier-contacts" %}
+        <div id="contact-list" class="tabcontent" style="display: block">
+    {% else %}
+        <div id="contact-list" class="tabcontent">
+    {% endif %}
+        {% include 'procurement/suppliers/supplierContactList.html' with forms_set=contacts_form_set %}
     </div>
     <div id="bank-list" class="tabcontent">
         <h3>Cuenta Bancarias</h3>
@@ -60,5 +45,6 @@
 {% endblock %}
 {% block extra_js %}
     <script type=module src="{% static 'procurement/js/supplierBasicInformation.js' %}"></script>
+    <script type=module src="{% static 'procurement/js/supplierContactList.js' %}"></script>
     <script type=module src="{% static 'procurement/js/suppliers.js' %}"></script>
 {% endblock %}
