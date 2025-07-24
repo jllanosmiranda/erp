@@ -21,7 +21,8 @@
             {% for field in form %}
                 <tr>
                     <td>{{ field.label_tag }}</td>
-                    <td>
+                    <td class="view">{{ field.value }}</td>
+                    <td class="edit" style="display: none">
                         {{ field }}
                         <div class="messages">
                             {% for error in field.errors %}

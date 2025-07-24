@@ -1,5 +1,14 @@
 
 export function edit_supplier(){
+    const view_cells = document.querySelectorAll("td.view")
+    view_cells.forEach(cell => {
+        cell.style.display = "none";
+    })
+
+    const edit_cells = document.querySelectorAll("td.edit")
+    edit_cells.forEach(cell => {
+        cell.style.display = "";
+    })
     document.querySelectorAll(".supplier-field").forEach(
         input => {
             input.readOnly = false;
