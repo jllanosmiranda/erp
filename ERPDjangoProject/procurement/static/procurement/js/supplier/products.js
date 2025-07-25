@@ -24,6 +24,18 @@ function edit_items(id){
 
 }
 
+function add_new_product(){
+    const table_supplier_product_list = document.getElementById('table-supplier-product-list')
+    table_supplier_product_list.style.display = "none";
+
+    const table_supplier_product_new = document.getElementById('table-supplier-product-new')
+    table_supplier_product_new.style.display = "";
+    const inputs = table_supplier_product_new.querySelectorAll(".new-product-field");
+    inputs.forEach(input => {
+        input.disabled = false;
+    })
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const add_buttons = document.querySelectorAll('.add-item')
@@ -37,5 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', () => {
             edit_items(button.getAttribute('data-form-id'))
         })
+    })
+    const add_new_product_button = document.querySelector('.create-new-item')
+    add_new_product_button.addEventListener('click', () => {
+        add_new_product()
     })
 })

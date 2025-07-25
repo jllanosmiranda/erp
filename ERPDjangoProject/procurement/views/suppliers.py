@@ -61,11 +61,13 @@ def view_supplier_details(request, supplier_id):
                 log.info("invalid supplier form")
                 log.info(supplier_form.errors)
 
+        product_form_set = ProductSupplierFormSet(instance=supplier)
         if form_id == "update-products":
             product_form_set = ProductSupplierFormSet(request.POST, instance=supplier)
             if product_form_set.is_valid():
                 logging.info("valid product form set")
                 product_form_set.save()
+                new_product_form.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
                 params = {'form_id': form_id}
                 params.update(filter_data)
@@ -76,6 +78,22 @@ def view_supplier_details(request, supplier_id):
                 logging.info("invalid product form set")
                 logging.info(product_form_set.errors)
                 logging.info(product_form_set.non_form_errors())
+
+        new_product_form = SupplierAddProductForm(supplier=supplier)
+        if form_id == "create-new-product":
+            new_product_form = SupplierAddProductForm(request.POST, supplier=supplier)
+            if new_product_form.is_valid():
+                logging.info("valid product form set")
+                new_product_form.save()
+                url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
+                params = {'form_id': form_id}
+                params.update(filter_data)
+                url = f"{url}?{urlencode(params)}"
+
+                return redirect(url)
+            else:
+                logging.info("invalid product form set")
+                logging.info(new_product_form.errors)
 
         contacts_form_set = SupplierContactSet(instance=supplier)
         if form_id == "update-supplier-contacts":
@@ -99,6 +117,7 @@ def view_supplier_details(request, supplier_id):
         product_form_set = ProductSupplierFormSet(instance=supplier)
         form_id = request.GET.get('form_id')
         contacts_form_set = SupplierContactSet(instance=supplier)
+        new_product_form = SupplierAddProductForm(supplier=supplier)
 
 
     log.info(f"form id {form_id}")
@@ -131,6 +150,7 @@ def view_supplier_details(request, supplier_id):
         'products_forms': product_form_set,
         'contacts_form_set': contacts_form_set,
         'product_pages': objects,
+        'new_product_form': new_product_form,
         'form_id': form_id,
     }
 

@@ -266,6 +266,10 @@ class SupplierAddProductForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.supplier = supplier
 
+        for field in self.fields.values():
+            field.widget.attrs['disabled'] = True
+            field.widget.attrs['class'] = 'new-product-field'
+
     def save(self, commit=True):
         # Create the product first
         product = Product.objects.create(
