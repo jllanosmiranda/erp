@@ -26,6 +26,12 @@ document.querySelectorAll('.tab-button').forEach(
     }
 )
 
+document.querySelectorAll('.tab-button.active').forEach(
+    tab => {
+        document.getElementById(tab.getAttribute('data-tab')).classList.add('active')
+    }
+)
+
 function cleanClonedForm(clone_node){
     const inputs = clone_node.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
