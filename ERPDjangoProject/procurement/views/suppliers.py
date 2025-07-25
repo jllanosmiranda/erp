@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 from django.contrib import messages
 
 from ..filters import SupplierProductFilter
-from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet, ProductSupplierFormSet
+from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet, ProductSupplierFormSet, SupplierAddProductForm
 from ..models import Supplier, SupplierProduct
 
 log = logging.getLogger(__name__)
@@ -106,6 +106,8 @@ def view_supplier_details(request, supplier_id):
     log.info(f"go to get path")
     paginator = Paginator(products_filter.qs, 10)
     page = request.GET.get('page')
+    if page:
+        form_id = 'update-products'
     try:
         objects = paginator.page(page)
     except PageNotAnInteger:
@@ -114,10 +116,6 @@ def view_supplier_details(request, supplier_id):
     logging.info("total objects")
     logging.info(objects)
     logging.info(len(objects))
-
-    for o in objects:
-        logging.info("datos")
-        logging.info(o)
 
     suppliers_objects = SupplierProduct.objects.filter(
         supplier=supplier,
@@ -132,6 +130,7 @@ def view_supplier_details(request, supplier_id):
         "products": suppliers_objects,
         'products_forms': product_form_set,
         'contacts_form_set': contacts_form_set,
+        'product_pages': objects,
         'form_id': form_id,
     }
 

@@ -40,7 +40,7 @@
     <div id="product-list" class="tabcontent">
     {% endif %}
         {% url 'new_product_from_supplier' supplier_id=supplier.id as new_url%}
-        {% include 'procurement/supplier/productList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=products product_form_set=products_forms new_url=new_url %}
+        {% include 'procurement/supplier/productList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=products product_form_set=products_forms new_url=new_url%}
     </div>
 {% endblock %}
 {% block extra_js %}

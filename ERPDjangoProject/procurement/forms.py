@@ -1,4 +1,3 @@
-
 from django.forms.models import ModelForm
 from django import forms
 from .models import Product, Supplier, SupplierProduct, SupplierProductPrice, SupplierContact, SupplierBankAccount, \
@@ -252,3 +251,40 @@ ProductSupplierFormSet = inlineformset_factory(Supplier,
                                                formset=ProductSupplierPriceFormBase,
                                                can_delete=True,
                                                extra=1)
+
+class SupplierAddProductForm(forms.ModelForm):
+    product_name = forms.CharField(max_length=200)
+    product_description = forms.CharField(widget=forms.Textarea)
+    code = forms.CharField(required=False)
+    price = forms.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+
+    class Meta:
+        model = SupplierProduct
+        fields = ['product_name', 'product_description', 'code', 'price']  # We'll handle the fields manually
+
+    def __init__(self, *args, supplier=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.supplier = supplier
+
+    def save(self, commit=True):
+        # Create the product first
+        product = Product.objects.create(
+            product_name=self.cleaned_data['product_name'],
+            product_description=self.cleaned_data['product_description'],
+            code=self.cleaned_data['code']
+        )
+
+        # Create the supplier product relationship
+        supplier_product = super().save(commit=False)
+        supplier_product.supplier = self.supplier
+        supplier_product.product = product
+        
+        if commit:
+            supplier_product.save()
+            # Create the price
+            SupplierProductPrice.objects.create(
+                supplier_product=supplier_product,
+                price=self.cleaned_data['price']
+            )
+
+        return supplier_product

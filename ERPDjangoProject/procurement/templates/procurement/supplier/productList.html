@@ -90,17 +90,17 @@
 
 <div class="pagination">
     <span class="step-links">
-       {% if products.has_previous %}
-           <a href="?page=1">&laquo;first</a>
-           <a href="?page={{ products.previous_page_number }}">previous</a>
+       {% if product_pages.has_previous %}
+           <a href="?page=1">&laquo;1</a>
+           <a href="?page={{ product_pages.previous_page_number }}"> anterior </a>
        {% endif %}
     </span>
     <span class="current">
-        Page {{ products.number }} of {{ products.paginator.num_pages }}
+        Pagina {{ product_pages.number }} de {{ product_pages.paginator.num_pages }}
     </span>
-    {% if supplier_products.has_next %}
-        <a href="?page={{ products.next_page_number }}">next</a>
-        <a href="?page={{ products.paginator.num_pages }}">last &raquo;</a>
+    {% if product_pages.has_next %}
+        <a href="?page={{ product_pages.next_page_number }}"> siguiente </a>
+        <a href="?page={{ product_pages.paginator.num_pages }}"> {{ product_pages.paginator.num_pages }} &raquo;</a>
     {% endif %}
 
 </div>

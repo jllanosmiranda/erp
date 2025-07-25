@@ -246,3 +246,7 @@ th {
         margin-left: 25%;
     }
 }
+
+a {
+    margin: 0 10px;
+}
