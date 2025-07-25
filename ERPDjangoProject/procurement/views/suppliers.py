@@ -165,18 +165,16 @@ def create_supplier(request):
             return redirect('supplier_details', supplier_id=supplier_object.id)
 
         logging.info(supplier_form.errors)
-        context = {'form': supplier_form}
-        return render(request, 'procurement/supplier/new.html', context=context)
 
-    elif request.method == 'GET':
-
+    else:
         supplier_form = SupplierForm()
         for field in supplier_form.fields.values():
             field.widget.attrs['readonly'] = False
 
-        context = {'form': supplier_form}
 
-        return render(request, 'procurement/supplier/new.html', context=context)
+    context = {'form': supplier_form}
+
+    return render(request, 'procurement/supplier/new.html', context=context)
 
 
 def update_supplier(request, supplier_id):
