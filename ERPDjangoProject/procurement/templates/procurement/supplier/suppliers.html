@@ -11,7 +11,6 @@
                     <th>Email</th>
                     <th>Telefono</th>
                     <th>RUC</th>
-                    <th>Editar</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,9 +20,6 @@
                     <td data-label="Email">{{ supplier.email }}</td>
                     <td data-label="Telefono">{{ supplier.phone }}</td>
                     <td data-label="RUC">{{ supplier.ruc }}</td>
-                    <td data-label="Editar"><a href="{% url 'update_supplier' supplier_id=supplier.id %}" class="btn btn-sm btn-warning">
-                        Editar <i class="bi bi-pencil"></i>
-                    </a></td>
                 </tr>
             {% endfor %}
             </tbody>
