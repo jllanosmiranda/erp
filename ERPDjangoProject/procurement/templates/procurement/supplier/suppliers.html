@@ -8,18 +8,18 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>RUC</th>
                     <th>Email</th>
                     <th>Telefono</th>
-                    <th>RUC</th>
                 </tr>
             </thead>
             <tbody>
             {% for supplier in suppliers %}
                 <tr>
                     <td data-label="Nombre"><a href="{% url 'supplier_details' supplier_id=supplier.id %}">{{ supplier.name }} <i class="bi bi-eye"></i></a></td>
+                    <td data-label="RUC">{{ supplier.ruc }}</td>
                     <td data-label="Email">{{ supplier.email }}</td>
                     <td data-label="Telefono">{{ supplier.phone }}</td>
-                    <td data-label="RUC">{{ supplier.ruc }}</td>
                 </tr>
             {% endfor %}
             </tbody>
