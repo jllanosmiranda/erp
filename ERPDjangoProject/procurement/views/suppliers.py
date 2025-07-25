@@ -159,31 +159,24 @@ def view_supplier_details(request, supplier_id):
 def create_supplier(request):
     if request.method == 'POST':
         supplier_form = SupplierForm(request.POST)
-        supplier_contact_form_set = SupplierContactSet(request.POST)
-        supplier_bank_form_set = SupplierBankSet(request.POST)
 
         if supplier_form.is_valid():
             supplier_object = supplier_form.save()
             return redirect('supplier_details', supplier_id=supplier_object.id)
-        else:
-            logging.info(supplier_form.errors)
-            logging.info(supplier_contact_form_set.errors)
-            context = {'form': supplier_form,
-                       'supplier_contact_form_set': supplier_contact_form_set,
-                       'supplier_bank_form_set': supplier_bank_form_set}
-            return render(request, 'procurement/supplier/supplierNew.html', context=context)
+
+        logging.info(supplier_form.errors)
+        context = {'form': supplier_form}
+        return render(request, 'procurement/supplier/new.html', context=context)
 
     elif request.method == 'GET':
 
         supplier_form = SupplierForm()
-        supplier_contact_form_set = SupplierContactSet()
-        supplier_bank_form_set = SupplierBankSet()
+        for field in supplier_form.fields.values():
+            field.widget.attrs['readonly'] = False
 
-        context = {'form': supplier_form,
-                   'supplier_contact_form_set': supplier_contact_form_set,
-                   'supplier_bank_form_set': supplier_bank_form_set}
+        context = {'form': supplier_form}
 
-        return render(request, 'procurement/supplier/supplierNew.html', context=context)
+        return render(request, 'procurement/supplier/new.html', context=context)
 
 
 def update_supplier(request, supplier_id):
