@@ -34,7 +34,6 @@ class SupplierForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.order_fields(['name', 'ruc', 'address', 'phone', 'email', 'website'])
         for field in self.fields.values():
-            field.widget.attrs['readonly'] = True
             field.widget.attrs['class'] = 'supplier-field'
 
     def clean_website(self):
@@ -42,6 +41,14 @@ class SupplierForm(ModelForm):
         if not website:
             return None
         return website
+
+    def set_fields_readonly(self):
+        for field in self.fields.values():
+            field.widget.attrs['readonly'] = True
+
+    def unset_fields_readonly(self):
+        for field in self.fields.values():
+            field.widget.attrs['readonly'] = False
 
 
 class SupplierProductForm(ModelForm):

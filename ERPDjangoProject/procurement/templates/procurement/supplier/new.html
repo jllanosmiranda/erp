@@ -6,7 +6,26 @@
     <div id='detalles' class="tabcontent" style="display: block">
         <h3>Informacion basica</h3>
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form.id }}
+        <table>
+            <tbody>
+            {% for field in form %}
+                <tr>
+                    <td>{{ field.label_tag }}</td>
+                    <td>
+                        {{ field }}
+                        <div class="messages">
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
     <button type="submit">Guardar</button>
 </form>
