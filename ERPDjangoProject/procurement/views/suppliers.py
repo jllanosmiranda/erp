@@ -13,19 +13,11 @@ from ..models import Supplier, SupplierProduct
 log = logging.getLogger(__name__)
 
 
-def suppliers(request):
-    if request.method == 'POST':
-        supplierForm = SupplierForm(request.POST)
-        if supplierForm.is_valid():
-            supplierForm.save()
-            return redirect('suppliers')
-
-    else:
-        supplierForm = SupplierForm()
+def list(request):
 
     suppliers = Supplier.objects.all()
-    context = {'suppliers': suppliers, 'form': supplierForm}
-    return render(request, 'procurement/supplier/suppliers.html', context=context)
+    context = {'suppliers': suppliers}
+    return render(request, 'procurement/supplier/list.html', context=context)
 
 
 def view_supplier_details(request, supplier_id):
