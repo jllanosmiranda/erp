@@ -15,6 +15,7 @@
     <form method="post">
         {% csrf_token %}
         <input type="hidden" name="form_id" value="supplier-basic-information">
+        <input type="hidden" name="tab-name" value="{{ tab_name }}">
         {{ form.id }}
         <table>
             <tbody>
