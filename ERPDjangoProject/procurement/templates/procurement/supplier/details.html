@@ -2,25 +2,42 @@
 {% load static %}
 {% block content %}
     <div class="tab">
-        <button class="tab-button active" data-tab="details">Detalles</button>
-        <button class="tab-button" data-tab="contact-list">Contactos</button>
-        <button class="tab-button" data-tab="bank-list">Cuentas Bancarias</button>
-        <button class="tab-button" data-tab="product-list">Productos</button>
+        {% if not tab_name  or tab_name == 'details'%}
+            <button class="tab-button active" data-tab="details">Detalles</button>
+        {% else %}
+            <button class="tab-button" data-tab="details">Detalles</button>
+        {% endif %}
+
+        {% if tab_name == 'contact-list'%}
+            <button class="tab-button active" data-tab="contact-list">Contactos</button>
+        {% else %}
+            <button class="tab-button" data-tab="contact-list">Contactos</button>
+        {% endif %}
+        {% if tab_name == 'bank-list'%}
+            <button class="tab-button active" data-tab="bank-list">Cuentas Bancarias</button>
+        {% else %}
+            <button class="tab-button" data-tab="bank-list">Cuentas Bancarias</button>
+        {% endif %}
+        {% if tab_name == 'product-list'%}
+            <button class="tab-button active" data-tab="product-list">Productos</button>
+        {% else %}
+            <button class="tab-button" data-tab="product-list">Productos</button>
+        {% endif %}
     </div>
-    {% if not form_id  or form_id == 'supplier-basic-information'%}
+    {% if not tab_name  or tab_name == 'details'%}
         <div id="details" class="tabcontent active">
     {% else %}
         <div id="details" class="tabcontent">
     {% endif %}
-        {% include 'procurement/supplier/basicInformation.html' with form=supplier_form%}
+        {% include 'procurement/supplier/basicInformation.html' with form=supplier_form tab_name='details'%}
 
     </div>
-    {% if form_id == "update-supplier-contacts" %}
+    {% if tab_name == "contact-list" %}
         <div id="contact-list" class="tabcontent active">
     {% else %}
         <div id="contact-list" class="tabcontent">
     {% endif %}
-        {% include 'procurement/supplier/contactList.html' with forms_set=contacts_form_set %}
+    {% include 'procurement/supplier/contactList.html' with forms_set=contacts_form_set tab_name='contact-list'%}
     </div>
     <div id="bank-list" class="tabcontent">
         <h3>Cuenta Bancarias</h3>
@@ -34,13 +51,14 @@
             </thead>
         </table>
     </div>
-    {% if form_id == 'update-products' %}
+    {% if tab_name == 'product-list' %}
     <div id="product-list" class="tabcontent active">
     {% else %}
     <div id="product-list" class="tabcontent">
     {% endif %}
         {% url 'new_product_from_supplier' supplier_id=supplier.id as new_url%}
-        {% include 'procurement/supplier/productList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=products product_form_set=products_forms new_url=new_url%}
+
+        {% include 'procurement/supplier/productList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=products product_form_set=products_forms new_url=new_url tab_name='product-list'%}
     </div>
 {% endblock %}
 {% block extra_js %}

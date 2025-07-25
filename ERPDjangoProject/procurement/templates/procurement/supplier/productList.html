@@ -3,6 +3,7 @@
 <div id="table-supplier-product-list">
     <form method="get" id="filter-form">
         <input type="hidden" name="form_id" value="update-products">
+        <input type="hidden" name="tab-name" value="{{ tab_name }}">
         <div class="in">
             {% for field in filter.form %}
                 <div>
@@ -22,6 +23,7 @@
     <form method="post" id="product-form">
         {% csrf_token %}
         <input type="hidden" name="form_id" value="update-products">
+        <input type="hidden" name="tab-name" value="{{ tab_name }}">
         {{ product_form_set.management_form }}
         <table >
             <tr>
@@ -113,6 +115,7 @@
     <form method="post" id="product-new-form">
         {% csrf_token %}
         <input type="hidden" name="form_id" value="create-new-product">
+        <input type="hidden" name="tab-name" value="{{ tab_name }}">
         <table >
             <tr>
                 <th class="product">Nombre</th>

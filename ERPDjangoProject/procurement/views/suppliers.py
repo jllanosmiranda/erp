@@ -33,8 +33,10 @@ def view_supplier_details(request, supplier_id):
         filter_data = products_filter.data.dict()
 
 
+
     form_id = None
     if request.method == 'POST':
+        tab_name = request.POST.get('tab-name')
         form_id = request.POST.get('form_id')
         print("request post",request.POST, flush=True)
         supplier_form = SupplierForm(instance=supplier)
@@ -43,9 +45,10 @@ def view_supplier_details(request, supplier_id):
             if supplier_form.is_valid():
                 supplier_form.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
-                params = {'form_id': form_id}
-                params.update(filter_data)
-                url = f"{url}?{urlencode(params)}"
+                params = {'form_id': form_id,
+                          'tab_name': tab_name,}
+                filter_data.update(params)
+                url = f"{url}?{urlencode(filter_data)}"
                 messages.success(request, 'Supplier updated successfully')
                 return redirect(url)
             else:
@@ -60,9 +63,11 @@ def view_supplier_details(request, supplier_id):
                 logging.info("valid product form set")
                 product_form_set.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
-                params = {'form_id': form_id}
-                params.update(filter_data)
-                url = f"{url}?{urlencode(params)}"
+                params = {'form_id': form_id,
+                          'tab_name': tab_name,}
+                filter_data.update(params)
+                url = f"{url}?{urlencode(filter_data)}"
+                log.info(url)
 
                 return redirect(url)
             else:
@@ -77,9 +82,10 @@ def view_supplier_details(request, supplier_id):
                 logging.info("valid product form set")
                 new_product_form.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
-                params = {'form_id': form_id}
-                params.update(filter_data)
-                url = f"{url}?{urlencode(params)}"
+                params = {'form_id': form_id,
+                          'tab_name': tab_name,}
+                filter_data.update(params)
+                url = f"{url}?{urlencode(filter_data)}"
 
                 return redirect(url)
             else:
@@ -93,9 +99,13 @@ def view_supplier_details(request, supplier_id):
                 logging.info("valid contacts form set")
                 contacts_form_set.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
-                params = {'form_id': form_id}
-                params.update(filter_data)
-                url = f"{url}?{urlencode(params)}"
+                params = {'form_id': form_id,
+                          'tab_name': tab_name,}
+                log.info(f"params {params}")
+                filter_data.update(params)
+                log.info(f"filter data {filter_data}")
+                url = f"{url}?{urlencode(filter_data)}"
+                logging.info(url)
                 return redirect(url)
             else:
                 logging.error("invalid contacts form set")
@@ -109,6 +119,9 @@ def view_supplier_details(request, supplier_id):
         form_id = request.GET.get('form_id')
         contacts_form_set = SupplierContactSet(instance=supplier)
         new_product_form = SupplierAddProductForm(supplier=supplier)
+        tab_name = request.GET.get('tab_name')
+
+    log.info(f"tab name: {tab_name}")
 
 
     log.info(f"form id {form_id}")
@@ -143,6 +156,7 @@ def view_supplier_details(request, supplier_id):
         'product_pages': objects,
         'new_product_form': new_product_form,
         'form_id': form_id,
+        'tab_name': tab_name,
     }
 
     return render(request, 'procurement/supplier/details.html', context=context)

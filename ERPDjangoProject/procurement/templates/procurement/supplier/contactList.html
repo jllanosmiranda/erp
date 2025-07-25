@@ -2,6 +2,7 @@
 <form method="post">
     {% csrf_token %}
     <input type="hidden" name="form_id" value="update-supplier-contacts">
+    <input type="hidden" name="tab-name" value="{{ tab_name }}">
     {{ forms_set.management_form }}
 <div class="table-responsive">
     <table class="table table-striped table-hover table-to-cards">
