@@ -1,11 +1,11 @@
 export function openTab(event, tabName){
-    var tabcontent = document.getElementsByClassName('tabcontent');
-    for (let i = 0; i < tabcontent.length; i++){
-        tabcontent[i].style.display = 'none';
-    }
+    const tabs = document.querySelectorAll('.tabcontent');
+    tabs.forEach(tab => {
+        tab.classList.remove('active')
+    })
 
-    const tab = document.getElementById(tabName);
-    tab.style.display = 'block';
+    const active_tab = document.getElementById(tabName);
+    active_tab.classList.add('active');
 }
 
 function activeTab (clicked_tab){

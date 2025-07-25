@@ -2,13 +2,13 @@
 {% load static %}
 {% block content %}
     <div class="tab">
-        <button class="tab-button" data-tab="details">Detalles</button>
+        <button class="tab-button active" data-tab="details">Detalles</button>
         <button class="tab-button" data-tab="contact-list">Contactos</button>
         <button class="tab-button" data-tab="bank-list">Cuentas Bancarias</button>
         <button class="tab-button" data-tab="product-list">Productos</button>
     </div>
     {% if not form_id  or form_id == 'supplier-basic-information'%}
-        <div id="details" class="tabcontent" style="display: block">
+        <div id="details" class="tabcontent active">
     {% else %}
         <div id="details" class="tabcontent">
     {% endif %}
@@ -16,7 +16,7 @@
 
     </div>
     {% if form_id == "update-supplier-contacts" %}
-        <div id="contact-list" class="tabcontent" style="display: block">
+        <div id="contact-list" class="tabcontent active">
     {% else %}
         <div id="contact-list" class="tabcontent">
     {% endif %}
@@ -35,7 +35,7 @@
         </table>
     </div>
     {% if form_id == 'update-products' %}
-    <div id="product-list" class="tabcontent" style="display: block">
+    <div id="product-list" class="tabcontent active">
     {% else %}
     <div id="product-list" class="tabcontent">
     {% endif %}
