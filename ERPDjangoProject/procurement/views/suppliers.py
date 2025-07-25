@@ -67,7 +67,6 @@ def view_supplier_details(request, supplier_id):
             if product_form_set.is_valid():
                 logging.info("valid product form set")
                 product_form_set.save()
-                new_product_form.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
                 params = {'form_id': form_id}
                 params.update(filter_data)
