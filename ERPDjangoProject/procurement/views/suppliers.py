@@ -119,7 +119,7 @@ def view_supplier_details(request, supplier_id):
         form_id = request.GET.get('form_id')
         contacts_form_set = SupplierContactSet(instance=supplier)
         new_product_form = SupplierAddProductForm(supplier=supplier)
-        tab_name = request.GET.get('tab_name')
+        tab_name = request.GET.get('tab-name')
 
     log.info(f"tab name: {tab_name}")
 
