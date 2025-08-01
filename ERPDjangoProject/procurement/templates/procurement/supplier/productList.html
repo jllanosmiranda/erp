@@ -92,20 +92,22 @@
     </form>
 
     <div class="pagination">
+    {% with tab_product_list='?tab-name='|add:tab_name %}
     <span class="step-links">
        {% if product_pages.has_previous %}
-           <a href="?tab-name={{ tab_name }}&page=1">&laquo;1</a>
-           <a href="?tab-name={{ tab_name }}&page={{ product_pages.previous_page_number }}"> anterior </a>
+           <a href="{{ tab_product_list }}&page=1">&laquo;1</a>
+           <a href="{{ tab_product_list }}&page={{ product_pages.previous_page_number }}"> anterior </a>
        {% endif %}
     </span>
         <span class="current">
         Pagina {{ product_pages.number }} de {{ product_pages.paginator.num_pages }}
     </span>
         {% if product_pages.has_next %}
-            <a href="?tab-name={{ tab_name }}&page={{ product_pages.next_page_number }}"> siguiente </a>
-            <a href="?tab-name={{ tab_name }}&page={{ product_pages.paginator.num_pages }}"> {{ product_pages.paginator.num_pages }} &raquo;</a>
+            <a href="{{ tab_product_list }}&page={{ product_pages.next_page_number }}"> siguiente </a>
+            <a href="{{ tab_product_list }}&page={{ product_pages.paginator.num_pages }}"> {{ product_pages.paginator.num_pages }} &raquo;</a>
         {% endif %}
     </div>
+    {% endwith %}
 
     <button class="add-item" data-table-body-id="table-body-supplier-product-new">Asignar producto existente</button>
     <button class="create-new-item">Crear nuevo producto</button>
