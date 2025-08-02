@@ -9,4 +9,4 @@ suppliers = ['Supplier', 'SupplierContact', 'Bank', 'SupplierBankAccount']
 supplier_product = ['SupplierProduct', 'SupplierProductPrice']
 purchase = ['PurchaseRequirement', 'PurchaseRequirementItem','PurchaseOrder']
 good_receipt_note = ['GoodReceiptNote', 'GoodReceiptNoteItem']
-__all__ = products + suppliers + supplier_product
+__all__ = products + suppliers + supplier_product + purchase + good_receipt_note

@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Requerimientos de Compra</h1>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Filtros</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" id="filter-form">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="supplier">Proveedor:</label>
+                            <select name="supplier" id="supplier" class="form-control">
+                                <option value="">Todos</option>
+                                {% for supplier in suppliers %}
+                                    <option value="{{ supplier.id }}" {% if filter_supplier == supplier.id|stringformat:"i" %}selected{% endif %}>
+                                        {{ supplier.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="start_date">Fecha Inicio:</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control" 
+                                   value="{{ filter_start_date|default:'' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="end_date">Fecha Fin:</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control" 
+                                   value="{{ filter_end_date|default:'' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="status">Estado:</label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="">Todos</option>
+                                {% for status_value, status_label in status_choices %}
+                                    <option value="{{ status_value }}" {% if filter_status == status_value|stringformat:"i" %}selected{% endif %}>
+                                        {{ status_label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 text-right">
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <a href="{% url 'purchase_requirement_list' %}" class="btn btn-secondary">Limpiar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="mb-3 text-right">
+        <a href="{% url 'purchase_requirement_create' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Nuevo Requerimiento
+        </a>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for requirement in page_obj %}
+                            <tr>
+                                <td>{{ requirement.id }}</td>
+                                <td>{{ requirement.date }}</td>
+                                <td>{{ requirement.description|truncatechars:50 }}</td>
+                                <td>
+                                    {% if requirement.status == 0 %}
+                                        <span class="badge badge-warning">Pendiente</span>
+                                    {% elif requirement.status == 1 %}
+                                        <span class="badge badge-success">Aprobado</span>
+                                    {% elif requirement.status == 2 %}
+                                        <span class="badge badge-danger">Rechazado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'purchase_requirement_detail' pk=requirement.id %}" class="btn btn-info btn-sm">
+                                        Ver Detalle
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No hay requerimientos de compra disponibles.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if request.GET.supplier %}&supplier={{ request.GET.supplier }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.supplier %}&supplier={{ request.GET.supplier }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if request.GET.supplier %}&supplier={{ request.GET.supplier }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.supplier %}&supplier={{ request.GET.supplier }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.supplier %}&supplier={{ request.GET.supplier }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

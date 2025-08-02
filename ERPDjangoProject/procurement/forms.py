@@ -1,7 +1,7 @@
 from django.forms.models import ModelForm
 from django import forms
 from .models import Product, Supplier, SupplierProduct, SupplierProductPrice, SupplierContact, SupplierBankAccount, \
-    GoodReceiptNote, GoodReceiptNoteItem
+    GoodReceiptNote, GoodReceiptNoteItem, PurchaseRequirement, PurchaseRequirementItems
 from django.core.validators import MinValueValidator, RegexValidator
 from django.forms import inlineformset_factory
 import logging
@@ -324,3 +324,78 @@ class SupplierAddProductForm(forms.ModelForm):
             )
 
         return supplier_product
+
+
+class PurchaseRequirementForm(ModelForm):
+    class Meta:
+        model = PurchaseRequirement
+        fields = ['description', 'date', 'status']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'rows': 3}),
+        }
+        labels = {
+            'description': 'Descripción',
+            'date': 'Fecha',
+            'status': 'Estado'
+        }
+
+
+class PurchaseRequirementItemsForm(ModelForm):
+    class Meta:
+        model = PurchaseRequirementItems
+        fields = ['supplier_product', 'quantity', 'price', 'currency']
+        labels = {
+            'supplier_product': 'Producto',
+            'quantity': 'Cantidad',
+            'price': 'Precio',
+            'currency': 'Moneda'
+        }
+    
+    def __init__(self, *args, supplier=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if supplier:
+            self.fields['supplier_product'].queryset = SupplierProduct.objects.filter(supplier=supplier)
+        
+        # Add CSS classes
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class BasePurchaseRequirementItemsFormSet(forms.BaseInlineFormSet):
+    def __init__(self, *args, supplier=None, **kwargs):
+        self.supplier = supplier
+        super().__init__(*args, **kwargs)
+        
+    def get_form_kwargs(self, index):
+        kwargs = super().get_form_kwargs(index)
+        kwargs['supplier'] = self.supplier
+        return kwargs
+        
+    @property
+    def forms_with_data(self):
+        return [form for form in self.forms if form.instance.pk]
+        
+    @property
+    def forms_extra(self):
+        return [form for form in self.forms if not form.instance.pk]
+        
+    def calculate_total(self):
+        total = 0
+        for form in self.forms:
+            if form.is_valid() and form.cleaned_data.get('DELETE', False) is False:
+                price = form.cleaned_data.get('price', 0)
+                quantity = form.cleaned_data.get('quantity', 0)
+                total += price * quantity
+        return total
+
+
+def purchase_requirement_items_formset(extra=1):
+    return inlineformset_factory(
+        PurchaseRequirement,
+        PurchaseRequirementItems,
+        form=PurchaseRequirementItemsForm,
+        formset=BasePurchaseRequirementItemsFormSet,
+        extra=extra,
+        can_delete=True
+    )

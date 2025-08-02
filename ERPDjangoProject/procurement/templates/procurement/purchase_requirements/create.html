@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Crear Requerimiento de Compra</h1>
+    
+    <form method="post" id="purchase-requirement-form">
+        {% csrf_token %}
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Información General</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_date">Fecha:</label>
+                            {{ form.date }}
+                            {% if form.date.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.date.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_status">Estado:</label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.status.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="id_description">Descripción:</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Proveedor y Productos</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="supplier">Proveedor:</label>
+                            <select name="supplier" id="supplier" class="form-control" required>
+                                <option value="">Seleccione un proveedor</option>
+                                {% for supplier in suppliers %}
+                                    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <h5>Productos</h5>
+                <div id="items-container">
+                    {{ formset.management_form }}
+                    <table class="table table-bordered" id="items-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Moneda</th>
+                                <th>Subtotal</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="items-tbody">
+                            {% for form in formset %}
+                                <tr class="item-row">
+                                    <td>
+                                        {{ form.id }}
+                                        {{ form.supplier_product }}
+                                        {% if form.supplier_product.errors %}
+                                            <div class="alert alert-danger">
+                                                {{ form.supplier_product.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ form.quantity }}
+                                        {% if form.quantity.errors %}
+                                            <div class="alert alert-danger">
+                                                {{ form.quantity.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ form.price }}
+                                        {% if form.price.errors %}
+                                            <div class="alert alert-danger">
+                                                {{ form.price.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ form.currency }}
+                                        {% if form.currency.errors %}
+                                            <div class="alert alert-danger">
+                                                {{ form.currency.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="subtotal">0.00</td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm remove-item">Eliminar</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button type="button" id="add-item" class="btn btn-secondary">Agregar Producto</button>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6 offset-md-6">
+                        <table class="table">
+                            <tr>
+                                <th>Total:</th>
+                                <td id="total-amount">0.00</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group text-right">
+            <a href="{% url 'purchase_requirement_list' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const supplierSelect = document.getElementById('supplier');
+        const itemsContainer = document.getElementById('items-container');
+        const itemsTable = document.getElementById('items-table');
+        const itemsTbody = document.getElementById('items-tbody');
+        const addItemBtn = document.getElementById('add-item');
+        const totalAmount = document.getElementById('total-amount');
+        
+        // Initial form count
+        let formCount = {{ formset.total_form_count }};
+        
+        // Update product options when supplier changes
+        supplierSelect.addEventListener('change', function() {
+            const supplierId = this.value;
+            if (supplierId) {
+                // Clear existing items
+                while (itemsTbody.firstChild) {
+                    itemsTbody.removeChild(itemsTbody.firstChild);
+                }
+                
+                // Reset form count
+                formCount = 0;
+                document.getElementById('id_form-TOTAL_FORMS').value = formCount;
+                
+                // Fetch products for this supplier
+                fetch(`/procurement/purchase-requirements/supplier-products/${supplierId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Enable add item button
+                        addItemBtn.disabled = false;
+                        
+                        // Store products for later use
+                        window.supplierProducts = data.products;
+                        
+                        // Add first empty row
+                        addItemRow();
+                    });
+            } else {
+                // Disable add item button if no supplier selected
+                addItemBtn.disabled = true;
+            }
+        });
+        
+        // Add new item row
+        addItemBtn.addEventListener('click', function() {
+            addItemRow();
+        });
+        
+        // Remove item row
+        itemsTable.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-item')) {
+                const row = e.target.closest('tr');
+                row.remove();
+                updateTotalAmount();
+                
+                // Update form indices
+                updateFormIndices();
+            }
+        });
+        
+        // Calculate subtotal when quantity or price changes
+        itemsTable.addEventListener('input', function(e) {
+            if (e.target.name.includes('quantity') || e.target.name.includes('price')) {
+                const row = e.target.closest('tr');
+                updateRowSubtotal(row);
+                updateTotalAmount();
+            }
+        });
+        
+        // Function to add a new item row
+        function addItemRow() {
+            const newRow = document.createElement('tr');
+            newRow.className = 'item-row';
+            
+            // Create product dropdown
+            const productOptions = window.supplierProducts.map(product => 
+                `<option value="${product.id}">${product.product_name} - ${product.product_code}</option>`
+            ).join('');
+            
+            // Create currency dropdown
+            const currencyOptions = `
+                <option value="0">USD</option>
+                <option value="1">Soles</option>
+            `;
+            
+            newRow.innerHTML = `
+                <td>
+                    <input type="hidden" name="form-${formCount}-id" id="id_form-${formCount}-id">
+                    <select name="form-${formCount}-supplier_product" id="id_form-${formCount}-supplier_product" class="form-control" required>
+                        <option value="">Seleccione un producto</option>
+                        ${productOptions}
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="form-${formCount}-quantity" id="id_form-${formCount}-quantity" 
+                           class="form-control" min="1" value="1" required>
+                </td>
+                <td>
+                    <input type="number" name="form-${formCount}-price" id="id_form-${formCount}-price" 
+                           class="form-control" min="0" step="0.01" required>
+                </td>
+                <td>
+                    <select name="form-${formCount}-currency" id="id_form-${formCount}-currency" class="form-control" required>
+                        ${currencyOptions}
+                    </select>
+                </td>
+                <td class="subtotal">0.00</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-item">Eliminar</button>
+                </td>
+            `;
+            
+            itemsTbody.appendChild(newRow);
+            
+            // Update form count
+            formCount++;
+            document.getElementById('id_form-TOTAL_FORMS').value = formCount;
+            
+            // Add event listener for product selection
+            const productSelect = newRow.querySelector(`#id_form-${formCount-1}-supplier_product`);
+            productSelect.addEventListener('change', function() {
+                const productId = this.value;
+                if (productId) {
+                    const product = window.supplierProducts.find(p => p.id == productId);
+                    if (product) {
+                        // Set price from product
+                        const priceInput = newRow.querySelector(`#id_form-${formCount-1}-price`);
+                        priceInput.value = product.latest_price || '';
+                        
+                        // Update subtotal
+                        updateRowSubtotal(newRow);
+                        updateTotalAmount();
+                    }
+                }
+            });
+        }
+        
+        // Function to update row subtotal
+        function updateRowSubtotal(row) {
+            const quantity = parseFloat(row.querySelector('input[name*="quantity"]').value) || 0;
+            const price = parseFloat(row.querySelector('input[name*="price"]').value) || 0;
+            const subtotal = quantity * price;
+            row.querySelector('.subtotal').textContent = subtotal.toFixed(2);
+        }
+        
+        // Function to update total amount
+        function updateTotalAmount() {
+            let total = 0;
+            document.querySelectorAll('.subtotal').forEach(cell => {
+                total += parseFloat(cell.textContent) || 0;
+            });
+            totalAmount.textContent = total.toFixed(2);
+        }
+        
+        // Function to update form indices after removal
+        function updateFormIndices() {
+            const rows = itemsTbody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                row.querySelectorAll('input, select').forEach(input => {
+                    const name = input.getAttribute('name');
+                    if (name) {
+                        const newName = name.replace(/form-\d+/, `form-${index}`);
+                        input.setAttribute('name', newName);
+                        
+                        const id = input.getAttribute('id');
+                        if (id) {
+                            const newId = id.replace(/id_form-\d+/, `id_form-${index}`);
+                            input.setAttribute('id', newId);
+                        }
+                    }
+                });
+            });
+            
+            // Update form count
+            formCount = rows.length;
+            document.getElementById('id_form-TOTAL_FORMS').value = formCount;
+        }
+    });
+</script>
+{% endblock %}

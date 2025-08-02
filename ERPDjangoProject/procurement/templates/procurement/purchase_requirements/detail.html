@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Detalle de Requerimiento de Compra</h1>
+        <a href="{% url 'purchase_requirement_list' %}" class="btn btn-secondary">
+            Volver a la lista
+        </a>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Información General</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>ID:</strong> {{ purchase_requirement.id }}</p>
+                    <p><strong>Fecha:</strong> {{ purchase_requirement.date }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        <strong>Estado:</strong>
+                        {% if purchase_requirement.status == 0 %}
+                            <span class="badge badge-warning">Pendiente</span>
+                        {% elif purchase_requirement.status == 1 %}
+                            <span class="badge badge-success">Aprobado</span>
+                        {% elif purchase_requirement.status == 2 %}
+                            <span class="badge badge-danger">Rechazado</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <p><strong>Descripción:</strong></p>
+                    <p>{{ purchase_requirement.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h5>Productos</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Proveedor</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Moneda</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>{{ item.supplier_product.product.product_name }}</td>
+                                <td>{{ item.supplier_product.supplier.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.price }}</td>
+                                <td>
+                                    {% if item.currency == 0 %}
+                                        USD
+                                    {% elif item.currency == 1 %}
+                                        Soles
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.quantity|floatformat:2 }} × {{ item.price|floatformat:2 }} = {{ item.quantity|floatformat:2|multiply:item.price|floatformat:2 }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No hay productos en este requerimiento.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="5" class="text-right">Total:</th>
+                            <th>{{ total|floatformat:2 }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Custom template filter for multiplication
+    function multiply(a, b) {
+        return a * b;
+    }
+</script>
+{% endblock %}

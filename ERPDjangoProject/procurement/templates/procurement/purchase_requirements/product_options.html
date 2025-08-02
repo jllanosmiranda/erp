@@ -1,0 +1,12 @@
+{
+    "products": [
+        {% for product in products %}
+            {
+                "id": {{ product.id }},
+                "product_name": "{{ product.product.product_name }}",
+                "product_code": "{{ product.product_code }}",
+                "latest_price": {{ product.latest_price|default:"null" }}
+            }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ]
+}
