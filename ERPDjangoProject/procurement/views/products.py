@@ -58,69 +58,73 @@ def new_product(request):
 
     return render(request, 'procurement/products/new.html', context=context)
 
+class ProductDetails:
+    def __init__(self):
+        self.request = None
+        self.product_id = None
+        self.product_object = None
+        self.tab_name = None
+        self.product_form = None
+        self.formset = None
 
-def product_details(request, product_id):
-    print("update product id", product_id, flush=True)
-    product = Product.objects.get(id=product_id)
+    def __call__(self, request, product_id):
+        self.product_id = product_id
+        self.request = request
+        self.product_object = Product.objects.get(id=product_id)
 
-    if request.method == 'POST':
-        form_id = request.POST.get('form_id')
-        logging.info('info')
-        logging.info(request.POST)
-
-        logging.info("here update post")
-
-        if form_id == "product-details":
-            product_form = ProductForm(request.POST, instance=product)
-            formset = SupplierProductPriceSet(prefix="supplier", instance=product)
-            logging.info(product_form.is_valid())
-            if product_form.is_valid():
-                product_form.save()
-                url = reverse('product_details', kwargs={'product_id': product_id})
-                params = {'tab-name': 'product-details',}
-                url = f"{url}?{urlencode(params)}"
-                return redirect(url)
-
-            else:
-                logging.info("errors product details")
-                logging.info(product_form.errors)
-                context = {'product_form': product_form,
-                           'formset': formset,
-                           'tab_name': 'product-details',}
-                return render(request, 'procurement/products/details.html', context=context)
-
-        if form_id == "update-supplier-products":
-            product_form = ProductForm(instance=product)
-            formset = SupplierProductPriceSet(request.POST, prefix="supplier", instance=product)
-            logging.info(formset.is_valid())
-
-            if formset.is_valid():
-                formset.save()
-                url = reverse('product_details', kwargs={'product_id': product_id})
-                params = {'tab-name': 'update-supplier-products'}
-                url = f"{url}?{urlencode(params)}"
-                return redirect(url)
-            else:
-                logging.info("errors supplier product formset")
-                logging.info(formset.errors)
-                context = {'product_form': product_form,
-                           'formset': formset,
-                           'tab_name': 'update-supplier-products'}
-                return render(request, 'procurement/products/details.html', context=context)
+        self.product_form = ProductForm(instance=self.product_object)
+        self.formset = SupplierProductPriceSet(prefix="supplier", instance=self.product_object)
 
 
-    else:
-        product_form = ProductForm(instance=product)
-        formset = SupplierProductPriceSet(prefix="supplier", instance=product)
-        tab_name = request.GET.get('tab-name')
+        if self.request.method == 'POST':
+            self.tab_name = self.request.POST.get('tab-name')
+            form_id = self.request.POST.get('form_id')
+            if form_id == "product-details":
+                return self.post_product_details()
+            if form_id == "update-supplier-products":
+                return self.post_supplier_products()
+        else:
+            self.tab_name = self.request.GET.get('tab-name')
+            return self.render()
 
-        #formset = SupplierProductPriceSet(queryset=product.supplier_product.all())
-        print("herer supplier products", flush=True)
-        print(product.supplier_product.all(), flush=True)
-        context = {'product_form': product_form,
-                   'formset': formset,
-                   'tab_name': tab_name,}
-        return render(request, 'procurement/products/details.html', context=context)
+
+    def post_product_details(self):
+        self.product_form = ProductForm(self.request.POST, instance=self.product_object)
+        logging.info(self.product_form.is_valid())
+        if self.product_form.is_valid():
+            self.product_form.save()
+            return self.redirect()
+
+        else:
+            logging.info("errors product details")
+            logging.info(self.product_form.errors)
+            return self.render()
+
+    def post_supplier_products(self):
+        self.formset = SupplierProductPriceSet(self.request.POST, prefix="supplier", instance=self.product_object)
+        logging.info(self.formset.is_valid())
+
+        if self.formset.is_valid():
+            self.formset.save()
+            return self.redirect()
+
+        else:
+            logging.info("errors supplier product formset")
+            logging.info(self.formset.errors)
+            return self.render()
+
+    def render(self):
+        context = {'product_form': self.product_form,
+                   'formset': self.formset,
+                   'tab_name': self.tab_name,}
+        return render(self.request, 'procurement/products/details.html', context=context)
+
+    def redirect(self):
+        url = reverse('product_details', kwargs={'product_id': self.product_id})
+        params = {'tab-name': self.tab_name }
+        url = f"{url}?{urlencode(params)}"
+        return redirect(url)
+
 
 
 def new_product_from_supplier(request, supplier_id):

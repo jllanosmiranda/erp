@@ -4,11 +4,11 @@
 <h1>Detalles de producto</h1>
 
     <div class="tab">
-    {% if tab_name == 'product-details' or not tab_name %}
+    {% if tab_name == 'details' or not tab_name %}
         <button class="tab-button active" data-tab="details">Detalles</button>
         <button class="tab-button" data-tab="suppliers">Proveedores</button>
     {% endif %}
-    {% if tab_name == 'update-supplier-products' %}
+    {% if tab_name == 'suppliers' %}
         <button class="tab-button" data-tab="details">Detalles</button>
         <button class="tab-button active" data-tab="suppliers">Proveedores</button>
     {% endif %}
