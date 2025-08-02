@@ -258,3 +258,51 @@ th {
 a {
     margin: 0 10px;
 }
+
+.view-input {
+    display: none;
+}
+
+.edit-input {
+    display: none;
+}
+
+div.view-input.active {
+    display: block;
+}
+
+
+div.edit-input.active {
+    display: block;
+}
+
+tbody.view-input.active {
+    display: table-row-group;
+}
+
+tbody.edit-input.active {
+    display: table-row-group;
+}
+
+tr.view-input.active {
+    display: table-row;
+}
+tr.edit-input.active {
+    display: table-row;
+}
+
+.hide-button {
+    display: none;
+}
+
+.hide-button.active {
+    display: inline-block;
+}
+
+.supplier-product {
+    display: none;
+}
+
+tr.supplier-product.active {
+    display: table-row;
+}

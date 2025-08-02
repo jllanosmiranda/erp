@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>Detalles de producto</h1>
+
+    <div class="tab">
+    {% if tab_name == 'product-details' or not tab_name %}
+        <button class="tab-button active" data-tab="details">Detalles</button>
+        <button class="tab-button" data-tab="suppliers">Proveedores</button>
+    {% endif %}
+    {% if tab_name == 'update-supplier-products' %}
+        <button class="tab-button" data-tab="details">Detalles</button>
+        <button class="tab-button active" data-tab="suppliers">Proveedores</button>
+    {% endif %}
+    </div>
+
+
+    <div id="details" class="tabcontent">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_id" value="product-details">
+            <input type="hidden" name="tab-name" value="details">
+            <table>
+                <tbody class="basic-info">
+                    <tr>
+                        <td>Name:</td>
+                        <td>
+                            <div class="view-input active">{{product_form.product_name.value}}</div>
+                            <div class="edit-input">{{ product_form.product_name }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Descripcion: </td>
+                        <td>
+                            <div class="view-input active">{{ product_form.product_description.value }}</div>
+                            <div class="edit-input">{{ product_form.product_description }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Codigo: </td>
+                        <td>
+                            <div class="view-input active">{{ product_form.code.value }}</div>
+                            <div class="edit-input">{{ product_form.code }}</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="edit-product" class="btn btn-primary hide-button active" type="button">Editar</button>
+            <button id="save-product" class="btn btn-success hide-button" type="submit">Guardar</button>
+            <button id="cancel-edit" class="btn btn-danger hide-button" type="button">Cancelar</button>
+        </form>
+    </div>
+
+    <div id="suppliers" class="tabcontent">
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form_id" value="update-supplier-products">
+        <input type="hidden" name="tab-name" value="suppliers">
+        {{ formset.management_form }}
+        <table>
+            <thead>
+            <tr>
+                <th>Proveedores</th>
+                <th>Precio</th>
+                <th>Accion</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for form in formset.forms_with_data %}
+                {{ form.id }}
+                <tr id="supplier-product-view-{{ form.instance.id }}" class="supplier-product active" data-type="view">
+                    <td><div><a href="{% url 'supplier_details' supplier_id=form.instance.supplier.id%}">{{form.instance.supplier}}</a></div></td>
+                    <td><div>{{form.instance.prices.last.price}}</div></td>
+                    <td><button type="button" data-supplier-product-id="{{ form.instance.id }}" class="btn btn-primary edit-supplier-product-btn">Editar</button></td>
+                </tr>
+                <tr id="supplier-product-edit-{{ form.instance.id }}" class="supplier-product" data-type="edit">
+                    <td><div>
+                        {{ form.supplier }}
+                    </div></td>
+                    <td><div>
+                        {{ form.price }}
+                    </div></td>
+                    <td><button type="submit" class="btn btn-success">Guardar</button>
+                        <button type="button" class="btn btn-danger cancel-edit-supplier-product-btn" data-supplier-product-id="{{ form.instance.id }}">Cancelar</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            {% for form in formset.forms_extra %}
+                {{ form.id }}
+                <tr id="supplier-product-add" class="supplier-product" data-type="add">
+                    <td><div>
+                        {{ form.supplier }}
+                    </div></td>
+                    <td><div>
+                        {{ form.price }}
+                    </div></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    </div>
+
+{% endblock %}
+{% block extra_js %}
+    <script type=module src="{% static 'procurement/js/common/tabs.js' %}"></script>
+    <script type=module src="{% static 'procurement/js/products/details.js' %}"></script>
+{% endblock %}

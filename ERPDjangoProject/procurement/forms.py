@@ -78,12 +78,25 @@ class SupplierProductForm(ModelForm):
 
         return supplier_product
 
+class BaseSupplierProductPriceSet(forms.BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    @property
+    def forms_with_data(self):
+        logging.info(f"forms with data {self.forms}")
+        return [form for form in self.forms if form.instance.pk]
+
+    @property
+    def forms_extra(self):
+        return [form for form in self.forms if form.instance.pk is None]
 
 
 
 SupplierProductPriceSet = inlineformset_factory(Product,
                                                 SupplierProduct,
                                                 form=SupplierProductForm,
+                                                formset=BaseSupplierProductPriceSet,
                                                 extra=1
                                                 )
 
