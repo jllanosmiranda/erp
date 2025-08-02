@@ -14,7 +14,7 @@
         </div>
         <button type="submit" style="display:none">Filtrar</button>
         {% if add_enable %}
-            <a href={{ new_product_url }} class="btn btn-primary">Agregar nuevo producto</a>
+            <a href="{{ new_product_url }}" class="btn btn-primary">Agregar nuevo producto</a>
         {% endif %}
     </form>
 
@@ -31,6 +31,7 @@
                 <th>Codigo</th>
                 <th>Descripcion</th>
                 <th>Precio</th>
+                <th>Moneda</th>
                 <th>Action</th>
             </tr>
             <tbody class="table-body-supplier-product-list">
@@ -44,6 +45,7 @@
                         <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
                         <td>{{ supplier_product.product.product_description }}</td>
                         <td>{{ form.price.value }}</td>
+                        <td>{{ form.currency.value }}</td>
                         <td>
                             <button type="button" class="btn btn-primary edit-item-btn" data-form-id="supplier-product-{{ supplier_product.id }}">Editar</button>
                         </td>
@@ -53,6 +55,7 @@
                         <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
                         <td>{{ supplier_product.product.product_description }}</td>
                         <td>{{ form.price }}</td>
+                        <td>{{ form.currency }}</td>
                         <td>
                             <button type="submit" class="btn btn-success">Guardar</button>
                         </td>
@@ -77,6 +80,14 @@
                     <td>
                         {{ form.price }}
                         {% for error in form.price.errors %}
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ form.currency }}
+                        {% for error in form.currency.errors %}
                             <div class="alert alert-danger">
                                 {{ error }}
                             </div>
@@ -124,6 +135,7 @@
                 <th>Codigo</th>
                 <th>Descripcion</th>
                 <th>Precio</th>
+                <th>Moneda</th>
                 <th>Action</th>
             </tr>
             <tbody>
@@ -132,6 +144,7 @@
                 <td>{{ new_product_form.code }}</td>
                 <td>{{ new_product_form.product_description }}</td>
                 <td>{{ new_product_form.price }}</td>
+                <td>{{ new_product_form.currency }}</td>
                 <td>
                     <button type="submit" class="btn btn-success">Guardar</button>
                 </td>

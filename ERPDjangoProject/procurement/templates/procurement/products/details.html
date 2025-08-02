@@ -62,6 +62,7 @@
             <tr>
                 <th>Proveedores</th>
                 <th>Precio</th>
+                <th>Moneda</th>
                 <th>Accion</th>
             </tr>
             </thead>
@@ -71,6 +72,7 @@
                 <tr id="supplier-product-view-{{ form.instance.id }}" class="supplier-product active" data-type="view">
                     <td><div><a href="{% url 'supplier_details' supplier_id=form.instance.supplier.id%}">{{form.instance.supplier}}</a></div></td>
                     <td><div>{{form.instance.prices.last.price}}</div></td>
+                    <td><div>{{form.instance.prices.last.currency}}</div></td>
                     <td><button type="button" data-supplier-product-id="{{ form.instance.id }}" class="btn btn-primary edit-supplier-product-btn">Editar</button></td>
                 </tr>
                 <tr id="supplier-product-edit-{{ form.instance.id }}" class="supplier-product" data-type="edit">
@@ -79,6 +81,9 @@
                     </div></td>
                     <td><div>
                         {{ form.price }}
+                    </div></td>
+                    <td><div>
+                        {{ form.currency }}
                     </div></td>
                     <td><button type="submit" class="btn btn-success">Guardar</button>
                         <button type="button" class="btn btn-danger cancel-edit-supplier-product-btn" data-supplier-product-id="{{ form.instance.id }}">Cancelar</button>
@@ -93,6 +98,9 @@
                     </div></td>
                     <td><div>
                         {{ form.price }}
+                    </div></td>
+                    <td><div>
+                        {{ form.currency }}
                     </div></td>
                 </tr>
             {% endfor %}

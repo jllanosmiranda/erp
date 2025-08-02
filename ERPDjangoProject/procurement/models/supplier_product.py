@@ -20,6 +20,12 @@ class SupplierProduct(models.Model):
 
 
 class SupplierProductPrice(models.Model):
+    CURRENCY_CHOICES = [
+        ('soles', 'Soles'),
+        ('dolares', 'Dólares'),
+    ]
+    
     supplier_product = models.ForeignKey(SupplierProduct, on_delete=models.CASCADE, related_name="prices")
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=10, choices=CURRENCY_CHOICES, default='soles')
     effective_date = models.DateTimeField(default=now)

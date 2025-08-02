@@ -14,6 +14,9 @@
         {{ product_form.price.label_tag }} {{ product_form.price}}
     </div>
     <div>
+        {{ product_form.currency.label_tag }} {{ product_form.currency}}
+    </div>
+    <div>
         {{ product_form.code.label_tag }} {{ product_form.code}}
     </div>
     <div>
@@ -27,6 +30,8 @@
                 {{ f.supplier }}
                 {{ f.price.label_tag }}
                 {{ f.price }}
+                {{ f.currency.label_tag }}
+                {{ f.currency }}
                 </div>
             {% endfor %}
         </div>

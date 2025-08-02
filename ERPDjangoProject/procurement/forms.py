@@ -53,10 +53,11 @@ class SupplierForm(ModelForm):
 
 class SupplierProductForm(ModelForm):
     price = forms.DecimalField(max_digits=10, decimal_places=2, required=True, validators=[MinValueValidator(0)])
+    currency = forms.ChoiceField(choices=SupplierProductPrice.CURRENCY_CHOICES, initial='soles', label="Moneda")
 
     class Meta:
         model = SupplierProduct
-        fields = ['supplier', 'price']
+        fields = ['supplier', 'price', 'currency']
 
     def __init__(self, *args, **kwargs):
         supplier_product = kwargs.get('instance')
@@ -64,11 +65,16 @@ class SupplierProductForm(ModelForm):
 
         if supplier_product:
             supplier_product_price = supplier_product.prices.order_by('-effective_date').first()
-            self.fields['price'].initial = supplier_product_price.price
+            if supplier_product_price:
+                self.fields['price'].initial = supplier_product_price.price
+                self.fields['currency'].initial = supplier_product_price.currency
 
     def save(self, commit=True):
         supplier_product = super().save(commit=False)
-        supplier_product_price = SupplierProductPrice(price=self.cleaned_data.get('price'))
+        supplier_product_price = SupplierProductPrice(
+            price=self.cleaned_data.get('price'),
+            currency=self.cleaned_data.get('currency')
+        )
         supplier_product_price.supplier_product = supplier_product
 
         if commit:
@@ -220,10 +226,11 @@ def form_set(extra):
 
 class ProductSupplierForm(ModelForm):
     price = forms.DecimalField(max_digits=10, decimal_places=2, required=True, validators=[MinValueValidator(0)])
+    currency = forms.ChoiceField(choices=SupplierProductPrice.CURRENCY_CHOICES, initial='soles', label="Moneda")
 
     class Meta:
         model = SupplierProduct
-        fields = ['product', 'price']
+        fields = ['product', 'price', 'currency']
 
     def __init__(self, *args, **kwargs):
         supplier_product = kwargs.get('instance')
@@ -231,14 +238,17 @@ class ProductSupplierForm(ModelForm):
 
         if supplier_product:
             supplier_product_price = supplier_product.prices.order_by('-effective_date').first()
-            self.fields['price'].initial = supplier_product_price.price
+            if supplier_product_price:
+                self.fields['price'].initial = supplier_product_price.price
+                self.fields['currency'].initial = supplier_product_price.currency
             self.fields['product'].initial = supplier_product.product
 
     def save(self, commit=True):
         supplier_product = super().save(commit=False)
         price = self.cleaned_data.get('price')
+        currency = self.cleaned_data.get('currency')
         logging.info(f"price {price}")
-        supplier_product_price = SupplierProductPrice(price=price)
+        supplier_product_price = SupplierProductPrice(price=price, currency=currency)
         supplier_product_price.supplier_product = supplier_product
 
         if commit:
@@ -277,10 +287,11 @@ class SupplierAddProductForm(forms.ModelForm):
     product_description = forms.CharField(widget=forms.Textarea)
     code = forms.CharField(required=False)
     price = forms.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    currency = forms.ChoiceField(choices=SupplierProductPrice.CURRENCY_CHOICES, initial='soles', label="Moneda")
 
     class Meta:
         model = SupplierProduct
-        fields = ['product_name', 'product_description', 'code', 'price']  # We'll handle the fields manually
+        fields = ['product_name', 'product_description', 'code', 'price', 'currency']  # We'll handle the fields manually
 
     def __init__(self, *args, supplier=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -308,7 +319,8 @@ class SupplierAddProductForm(forms.ModelForm):
             # Create the price
             SupplierProductPrice.objects.create(
                 supplier_product=supplier_product,
-                price=self.cleaned_data['price']
+                price=self.cleaned_data['price'],
+                currency=self.cleaned_data['currency']
             )
 
         return supplier_product
