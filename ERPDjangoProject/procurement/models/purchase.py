@@ -1,11 +1,8 @@
 from django.db import models
 
 from ..models import SupplierProduct, Product
+from ..models.constants import CURRENCY_CHOICES
 
-CURRENCY_CHOICES = [
-    (0, 'usd'),
-    (1, 'soles')
-]
 
 class PurchaseRequirement(models.Model):
     status_choices = [

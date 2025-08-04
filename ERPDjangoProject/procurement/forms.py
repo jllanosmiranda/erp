@@ -5,6 +5,7 @@ from .models import Product, Supplier, SupplierProduct, SupplierProductPrice, Su
 from django.core.validators import MinValueValidator, RegexValidator
 from django.forms import inlineformset_factory
 import logging
+from .models.constants import CURRENCY_CHOICES
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -53,7 +54,7 @@ class SupplierForm(ModelForm):
 
 class SupplierProductForm(ModelForm):
     price = forms.DecimalField(max_digits=10, decimal_places=2, required=True, validators=[MinValueValidator(0)])
-    currency = forms.ChoiceField(choices=SupplierProductPrice.CURRENCY_CHOICES, initial='soles', label="Moneda")
+    currency = forms.ChoiceField(choices=CURRENCY_CHOICES, initial=1, label="Moneda")
 
     class Meta:
         model = SupplierProduct
@@ -226,7 +227,7 @@ def form_set(extra):
 
 class ProductSupplierForm(ModelForm):
     price = forms.DecimalField(max_digits=10, decimal_places=2, required=True, validators=[MinValueValidator(0)])
-    currency = forms.ChoiceField(choices=SupplierProductPrice.CURRENCY_CHOICES, initial='soles', label="Moneda")
+    currency = forms.ChoiceField(choices=CURRENCY_CHOICES, initial='soles', label="Moneda")
 
     class Meta:
         model = SupplierProduct
@@ -287,7 +288,7 @@ class SupplierAddProductForm(forms.ModelForm):
     product_description = forms.CharField(widget=forms.Textarea)
     code = forms.CharField(required=False)
     price = forms.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    currency = forms.ChoiceField(choices=SupplierProductPrice.CURRENCY_CHOICES, initial='soles', label="Moneda")
+    currency = forms.ChoiceField(choices=CURRENCY_CHOICES, initial='soles', label="Moneda")
 
     class Meta:
         model = SupplierProduct
