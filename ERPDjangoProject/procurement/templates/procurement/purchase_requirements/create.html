@@ -167,6 +167,9 @@
         // Initial form count
         let formCount = {{ formset.total_form_count }};
         
+        // Initialize supplierProducts as an empty array
+        window.supplierProducts = [];
+        
         // Update product options when supplier changes
         supplierSelect.addEventListener('change', function() {
             const supplierId = this.value;
@@ -180,22 +183,36 @@
                 formCount = 0;
                 document.getElementById('id_form-TOTAL_FORMS').value = formCount;
                 
+                // Disable add item button until products are loaded
+                addItemBtn.disabled = true;
+                
                 // Fetch products for this supplier
                 fetch(`/procurement/purchase-requirements/supplier-products/${supplierId}/`)
                     .then(response => response.json())
                     .then(data => {
-                        // Enable add item button
+                        // Store products for later use
+                        window.supplierProducts = data.products || [];
+                        
+                        // Enable add item button even if no products
                         addItemBtn.disabled = false;
                         
-                        // Store products for later use
-                        window.supplierProducts = data.products;
-                        
+                        // Add first empty row
+                        addItemRow();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching supplier products:', error);
+                        // Initialize with empty array in case of error
+                        window.supplierProducts = [];
+                        // Enable add item button anyway
+                        addItemBtn.disabled = false;
                         // Add first empty row
                         addItemRow();
                     });
             } else {
                 // Disable add item button if no supplier selected
                 addItemBtn.disabled = true;
+                // Clear supplier products
+                window.supplierProducts = [];
             }
         });
         
@@ -231,9 +248,15 @@
             newRow.className = 'item-row';
             
             // Create product dropdown
-            const productOptions = window.supplierProducts.map(product => 
-                `<option value="${product.id}">${product.product_name} - ${product.product_code}</option>`
-            ).join('');
+            let productOptions = '';
+            if (window.supplierProducts && window.supplierProducts.length > 0) {
+                productOptions = window.supplierProducts.map(product => 
+                    `<option value="${product.id}">${product.product_name} - ${product.product_code}</option>`
+                ).join('');
+            } else {
+                // If no products available, show a message in the dropdown
+                productOptions = '<option value="" disabled>No hay productos disponibles para este proveedor</option>';
+            }
             
             // Create currency dropdown
             const currencyOptions = `
