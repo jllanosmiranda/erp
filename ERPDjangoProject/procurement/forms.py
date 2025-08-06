@@ -54,7 +54,7 @@ class SupplierForm(ModelForm):
 
 class SupplierProductForm(ModelForm):
     price = forms.DecimalField(max_digits=10, decimal_places=2, required=True, validators=[MinValueValidator(0)])
-    currency = forms.ChoiceField(choices=CURRENCY_CHOICES, initial=1, label="Moneda")
+    currency = forms.ChoiceField(choices=[('', '---------')] + CURRENCY_CHOICES, label="Moneda")
 
     class Meta:
         model = SupplierProduct
@@ -227,7 +227,7 @@ def form_set(extra):
 
 class ProductSupplierForm(ModelForm):
     price = forms.DecimalField(max_digits=10, decimal_places=2, required=True, validators=[MinValueValidator(0)])
-    currency = forms.ChoiceField(choices=CURRENCY_CHOICES, initial='soles', label="Moneda")
+    currency = forms.ChoiceField(choices=[('','----------')] + CURRENCY_CHOICES, label="Moneda")
 
     class Meta:
         model = SupplierProduct
