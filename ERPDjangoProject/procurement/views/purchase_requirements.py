@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
+from django.http import JsonResponse
 
 from ..models import PurchaseRequirement, PurchaseRequirementItems, Supplier, SupplierProduct
 from ..forms import PurchaseRequirementForm, purchase_requirement_items_formset
@@ -131,10 +132,11 @@ def get_supplier_products(request, supplier_id):
     AJAX view to get products for a specific supplier
     """
     supplier = get_object_or_404(Supplier, id=supplier_id)
-    products = SupplierProduct.objects.filter(supplier=supplier)
-    
+    formset = purchase_requirement_items_formset()(supplier=supplier)
     context = {
-        'products': products,
+        'formset': formset,
     }
-    
-    return render(request, 'procurement/purchase_requirements/product_options.html', context)
+
+    return render(request, 'procurement/purchase_requirements/product_options.html', context=context)
+
+

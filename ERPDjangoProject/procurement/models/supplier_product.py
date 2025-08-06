@@ -12,7 +12,7 @@ class SupplierProduct(models.Model):
     product_description = models.TextField()
 
     def __str__(self):
-        return self.product.product_name + ' ' + self.supplier.name
+        return self.product.product_name
 
     @property
     def latest_price(self):

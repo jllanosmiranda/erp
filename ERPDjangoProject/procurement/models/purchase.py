@@ -21,6 +21,8 @@ class PurchaseRequirementItems(models.Model):
     quantity = models.IntegerField()
     price = models.FloatField()
     currency = models.IntegerField(choices=CURRENCY_CHOICES)
+    def __str__(self):
+        return self.supplier_product.product.product_name
 
 
 class PurchaseOrder(models.Model):

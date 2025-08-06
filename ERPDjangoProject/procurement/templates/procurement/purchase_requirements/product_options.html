@@ -1,12 +1,60 @@
-{
-    "products": [
-        {% for product in products %}
-            {
-                "id": {{ product.id }},
-                "product_name": "{{ product.product.product_name }}",
-                "product_code": "{{ product.product_code }}",
-                "latest_price": {{ product.latest_price|default:"null" }}
-            }{% if not forloop.last %},{% endif %}
+<div id="items-container">
+    {{ formset.management_form }}
+    <table class="table table-bordered" id="items-table">
+        <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Moneda</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="items-tbody">
+        {% for form in formset %}
+            <tr class="item-row">
+                <td>
+                    {{ form.id }}
+                    {{ form.supplier_product }}
+                    {% if form.supplier_product.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.supplier_product.errors }}
+                        </div>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ form.quantity }}
+                    {% if form.quantity.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.quantity.errors }}
+                        </div>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ form.price }}
+                    {% if form.price.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.price.errors }}
+                        </div>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ form.currency }}
+                    {% if form.currency.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.currency.errors }}
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="subtotal">0.00</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-item">Eliminar</button>
+                </td>
+            </tr>
         {% endfor %}
-    ]
-}
+        </tbody>
+    </table>
+    <button type="button" id="add-item" class="btn btn-secondary">Agregar Producto</button>
+</div>
+

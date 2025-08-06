@@ -362,6 +362,8 @@ class PurchaseRequirementItemsForm(ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
+        self.fields['supplier_product'].widget.attrs['class'] += ' supplier-product-selector'
+
 
 class BasePurchaseRequirementItemsFormSet(forms.BaseInlineFormSet):
     def __init__(self, *args, supplier=None, **kwargs):
@@ -391,7 +393,7 @@ class BasePurchaseRequirementItemsFormSet(forms.BaseInlineFormSet):
         return total
 
 
-def purchase_requirement_items_formset(extra=1):
+def purchase_requirement_items_formset(extra=2):
     return inlineformset_factory(
         PurchaseRequirement,
         PurchaseRequirementItems,

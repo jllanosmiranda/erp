@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from urllib.parse import urlencode
 from django.contrib import messages
+from django.http import JsonResponse
 
 from ..filters import SupplierProductFilter
 from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet, ProductSupplierFormSet, SupplierAddProductForm
@@ -192,3 +193,11 @@ def create_supplier(request):
     context = {'form': supplier_form}
 
     return render(request, 'procurement/supplier/new.html', context=context)
+
+def get_supplier_products(request, supplier_product_id):
+    object = SupplierProduct.objects.get(id=supplier_product_id)
+    return JsonResponse({'name': object.product.product_name,
+                        'price': object.latest_price.price,
+                         'currency': object.latest_price.currency
+                         })
+

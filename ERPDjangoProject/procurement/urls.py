@@ -22,4 +22,6 @@ urlpatterns = [
     path('purchase-requirements/create/', purchase_requirements.purchase_requirement_create, name='purchase_requirement_create'),
     path('purchase-requirements/<int:pk>/', purchase_requirements.purchase_requirement_detail, name='purchase_requirement_detail'),
     path('purchase-requirements/supplier-products/<int:supplier_id>/', purchase_requirements.get_supplier_products, name='purchase_requirement_supplier_products'),
+
+    path('supplier-product/<int:supplier_product_id>/', suppliers.get_supplier_products, name='new_product_from_supplier'),
     ]
