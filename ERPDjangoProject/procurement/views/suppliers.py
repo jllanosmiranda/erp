@@ -153,22 +153,15 @@ class SupplierDetails:
 
     def _get(self):
         log.info(f"tab name: {self.tab_name}")
-
         log.info(f"form id {self.form_id}")
         log.info(f"form supplier {self.supplier_form.errors}")
-        log.info(f"go to get path")
         paginator = Paginator(self.products_filter.qs, 10)
         page = self.request.GET.get('page')
-        if page:
-            form_id = 'update-products'
+
         try:
             objects = paginator.page(page)
         except PageNotAnInteger:
             objects = paginator.page(1)
-
-        logging.info("total objects")
-        logging.info(objects)
-        logging.info(len(objects))
 
         suppliers_objects = SupplierProduct.objects.filter(
             supplier=self.supplier_object,
