@@ -45,7 +45,7 @@
                         <td><a href="{% url 'product_details' product_id=supplier_product.product.id %}">{{ supplier_product.product.code }}</a></td>
                         <td>{{ supplier_product.product.product_description }}</td>
                         <td>{{ form.price.value }}</td>
-                        <td>{{ form.currency.value }}</td>
+                        <td>{{ form.instance.latest_price.get_currency_display }}</td>
                         <td>
                             <button type="button" class="btn btn-primary edit-item-btn" data-form-id="supplier-product-{{ supplier_product.id }}">Editar</button>
                         </td>

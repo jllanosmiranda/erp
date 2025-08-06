@@ -17,7 +17,7 @@ class SupplierProduct(models.Model):
     @property
     def latest_price(self):
         price_obj = self.prices.order_by('-effective_date').first()
-        return price_obj.price if price_obj else None
+        return price_obj
 
 
 class SupplierProductPrice(models.Model):
