@@ -46,7 +46,7 @@ def view_supplier_details(request, supplier_id):
                 supplier_form.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
                 params = {'form_id': form_id,
-                          'tab_name': tab_name,}
+                          'tab-name': tab_name,}
                 filter_data.update(params)
                 url = f"{url}?{urlencode(filter_data)}"
                 messages.success(request, 'Supplier updated successfully')
@@ -64,7 +64,7 @@ def view_supplier_details(request, supplier_id):
                 product_form_set.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
                 params = {'form_id': form_id,
-                          'tab_name': tab_name,}
+                          'tab-name': tab_name,}
                 filter_data.update(params)
                 url = f"{url}?{urlencode(filter_data)}"
                 log.info(url)
@@ -83,7 +83,7 @@ def view_supplier_details(request, supplier_id):
                 new_product_form.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
                 params = {'form_id': form_id,
-                          'tab_name': tab_name,}
+                          'tab-name': tab_name,}
                 filter_data.update(params)
                 url = f"{url}?{urlencode(filter_data)}"
 
@@ -100,7 +100,7 @@ def view_supplier_details(request, supplier_id):
                 contacts_form_set.save()
                 url = reverse('supplier_details', kwargs={'supplier_id': supplier_id})
                 params = {'form_id': form_id,
-                          'tab_name': tab_name,}
+                          'tab-name': tab_name,}
                 log.info(f"params {params}")
                 filter_data.update(params)
                 log.info(f"filter data {filter_data}")
