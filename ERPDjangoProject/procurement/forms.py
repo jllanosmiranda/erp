@@ -393,7 +393,7 @@ class BasePurchaseRequirementItemsFormSet(forms.BaseInlineFormSet):
         return total
 
 
-def purchase_requirement_items_formset(extra=2):
+def purchase_requirement_items_formset(extra=10):
     return inlineformset_factory(
         PurchaseRequirement,
         PurchaseRequirementItems,
