@@ -1,17 +1,35 @@
+function subtotal(price_input_id, quantity_id){
+    const price_input = document.getElementById(price_input_id)
+    const quantity = document.getElementById(quantity_id)
 
-function update_selector_values(selector, selectedValues) {
-   selectedValues.add(selector.value);
+    return price_input.value * quantity.value
 }
 
-function update(selectors, selectedValues){
-    selectors.forEach(selector => {
-        const currentValue = selector.value;
-        Array.from(selector.options).forEach(option => {
+function total(){
+    let total =  0
+    const prices_inputs = document.querySelectorAll('.price-field')
+    prices_inputs.forEach(price_input => {
+        total += price_input.value
+        const totalcell = document.getElementById("total-amount")
+        totalcell.innerHTML = total
+     })
+}
 
+function add_up_amounts(){
+    const prices_inputs = document.querySelectorAll('.price-field')
+    console.log(prices_inputs)
+    prices_inputs.forEach(price_input => {
+        price_input.addEventListener('change', () => {
+            const quantity_id = price_input.id.replace(/price$/, 'quantity')
+            console.log(quantity_id)
+            const sub = subtotal(price_input.id, quantity_id)
+            console.log(sub)
         })
-
     })
+
 }
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const mySelect = document.getElementById('supplier');
@@ -28,21 +46,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('items-container').innerHTML = data
+                    add_up_amounts()
                     const selectors = document.querySelectorAll('.supplier-product-selector');
                     selectors.forEach(selectorChanged => {
                         selectorChanged.addEventListener('change', () => {
                             selectedValues.add(selectorChanged.value)
-                            console.log('Selected value:', selectorChanged.id);
-                            console.log('Selected value:', selectedValues);
 
                             const other_selectors = document.querySelectorAll('.supplier-product-selector')
                             other_selectors.forEach(other_selector => {
                                 if (other_selector.id !== selectorChanged.id){
                                     Array.from(other_selector.options).forEach(option => {
-                                        console.log("values")
-                                        console.log(option.value)
-                                        console.log(selectedValues.has(option.value))
-                                        console.log(selectorChanged.value !== option.value)
                                         option.disabled = selectedValues.has(option.value) && other_selector.value !== option.value;
                                     })
                                 }
@@ -57,9 +70,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                     const currency_input = document.getElementById(currency_id)
                                     price_input.value = data.price
                                     currency_input.value = data.currency
+                                    total()
                                 })
                         })
                     })
+
                 })
 
         }
