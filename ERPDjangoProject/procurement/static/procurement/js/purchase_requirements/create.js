@@ -54,10 +54,6 @@ function total(){
         }
     })
 
-    console.log(total_soles)
-    console.log(total_usd)
-    console.log(total_eur)
-
     const total_soles_object = document.getElementById("total-amount-soles")
     const total_usd_object = document.getElementById("total-amount-usd")
     const total_euros_object = document.getElementById("total-amount-euros")
@@ -144,8 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                         data.currency,
                                         subtotals[index]
                                     )
-                                    console.log(products)
-                                    console.log(`index: ${index}`)
                                     total()
                                 })
                         })
