@@ -364,6 +364,7 @@ class PurchaseRequirementItemsForm(ModelForm):
 
         self.fields['supplier_product'].widget.attrs['class'] += ' supplier-product-selector'
         self.fields['price'].widget.attrs['class'] += ' price-field'
+        self.fields['quantity'].widget.attrs['class'] += ' quantity-field'
 
 
 class BasePurchaseRequirementItemsFormSet(forms.BaseInlineFormSet):
