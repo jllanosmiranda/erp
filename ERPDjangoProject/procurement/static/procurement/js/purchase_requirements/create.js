@@ -1,3 +1,8 @@
+const USD = 0
+const SOLES = 1
+const EURO = 2
+
+
 class Product {
     #price = 0
     #currency = ''
@@ -43,13 +48,13 @@ function total(){
     let total_eur = 0
     products.forEach(product => {
         console.log(`currency ${product.currency} ${product.subtotal} ${typeof product.currency}`)
-        if (product.currency === 0){
-            total_soles += product.subtotal
-        }
-        if (product.currency === 1){
+        if (product.currency === USD){
             total_usd += product.subtotal
         }
-        if (product.currency === 2){
+        if (product.currency === SOLES){
+            total_soles += product.subtotal
+        }
+        if (product.currency === EURO){
             total_eur += product.subtotal
         }
     })
