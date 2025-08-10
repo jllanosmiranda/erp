@@ -306,3 +306,13 @@ tr.edit-input.active {
 tr.supplier-product.active {
     display: table-row;
 }
+
+/* Ensure site-wide light background is visible even if other styles load after Bootstrap */
+body.bg-light {
+    background-color: #f8f9fa !important; /* stronger enforcement for light gray background */
+}
+
+/* Dark blue site background utility */
+body.bg-dark-blue {
+    background-color: #0b3d91 !important; /* dark blue */
+}
