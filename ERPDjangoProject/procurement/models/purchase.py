@@ -10,7 +10,6 @@ class PurchaseRequirement(models.Model):
         (1, 'approved'),
         (2, 'rejected')
     ]
-    description = models.TextField()
     date = models.DateField()
     status = models.IntegerField(choices=status_choices)
 
