@@ -36,6 +36,17 @@
                             {% endif %}
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_status">{{ form.payment_condition.label }}</label>
+                            {{ form.payment_condition }}
+                            {% if form.payment_condition.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.payment_condition.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

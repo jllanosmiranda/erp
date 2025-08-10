@@ -330,13 +330,14 @@ class SupplierAddProductForm(forms.ModelForm):
 class PurchaseRequirementForm(ModelForm):
     class Meta:
         model = PurchaseRequirement
-        fields = ['date', 'status']
+        fields = ['date', 'status', 'payment_condition']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
         }
         labels = {
             'date': 'Fecha',
-            'status': 'Estado'
+            'status': 'Estado',
+            'payment_condition': 'Condicion de pago'
         }
 
 
