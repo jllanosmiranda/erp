@@ -7,24 +7,65 @@
     
     <form method="post" id="purchase-requirement-form">
         {% csrf_token %}
-        
+
         <div class="card mb-4">
             <div class="card-header">
-                <h5>Información General</h5>
+                <h5>Proveedor</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="supplier">Proveedor:</label>
+                            <select name="supplier" id="supplier" class="form-control" required>
+                                <option value="">Seleccione un proveedor</option>
+                                {% for supplier in suppliers %}
+                                    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Productos</h5>
+            </div>
+            <div class="card-body">
+                <h5>Productos</h5>
+                <div id="items-container">
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6 offset-md-6">
+                        <table class="table">
+                            <tr>
+                                <th>Total Soles:</th>
+                                <td id="total-amount-soles">0.00</td>
+                            </tr>
+                            <tr>
+                                <th>Total USD:</th>
+                                <td id="total-amount-usd">0.00</td>
+                            </tr>
+                            <tr>
+                                <th>Total Euros:</th>
+                                <td id="total-amount-euros">0.00</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Condiciones</h5>
             </div>
             <div class="card-body">
                 <div class="row align-items-start">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
-                        <div class="form-group">
-                            {{ form.date.label }}
-                            {{ form.date }}
-                            {% if form.date.errors %}
-                                <div class="alert alert-danger">
-                                    {{ form.date.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
                         <div class="form-group">
                             {{ form.status.label }}
@@ -52,21 +93,6 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            {{ form.comments.label }}
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            {{ form.comments }}
-                            {% if form.comments.errors %}
-                                <div class="alert alert-danger">
-                                    {{ form.comments.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                             {{ form.shipping_condition.label }}
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
@@ -79,54 +105,26 @@
                         </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Proveedor y Productos</h5>
-            </div>
-            <div class="card-body">
-                <div class="row mb-4">
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
                         <div class="form-group">
-                            <label for="supplier">Proveedor:</label>
-                            <select name="supplier" id="supplier" class="form-control" required>
-                                <option value="">Seleccione un proveedor</option>
-                                {% for supplier in suppliers %}
-                                    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                {{ form.comments.label }}
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                {{ form.comments }}
+                                {% if form.comments.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ form.comments.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <h5>Productos</h5>
-                <div id="items-container">
-                </div>
-                
-                <div class="row mt-4">
-                    <div class="col-md-6 offset-md-6">
-                        <table class="table">
-                            <tr>
-                                <th>Total Soles:</th>
-                                <td id="total-amount-soles">0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Total USD:</th>
-                                <td id="total-amount-usd">0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Total Euros:</th>
-                                <td id="total-amount-euros">0.00</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
         
+
         <div class="form-group text-right">
             <a href="{% url 'purchase_requirement_list' %}" class="btn btn-secondary">Cancelar</a>
             <button type="submit" class="btn btn-primary">Guardar</button>
