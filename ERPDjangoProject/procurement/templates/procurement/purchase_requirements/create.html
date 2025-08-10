@@ -49,9 +49,12 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-12">
+                    <div class="col-lg-6">
                         <div class="form-group">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                             {{ form.comments.label }}
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                             {{ form.comments }}
                             {% if form.comments.errors %}
                                 <div class="alert alert-danger">
@@ -59,18 +62,21 @@
                                 </div>
                             {% endif %}
                         </div>
+                        </div>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12">
+                    <div class="col-lg-6">
                         <div class="form-group">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                             {{ form.shipping_condition.label }}
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                             {{ form.shipping_condition }}
                             {% if form.shipping_condition.errors %}
                                 <div class="alert alert-danger">
                                     {{ form.shipping_condition.errors }}
                                 </div>
                             {% endif %}
+                        </div>
                         </div>
                     </div>
                 </div>

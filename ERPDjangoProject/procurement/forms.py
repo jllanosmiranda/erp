@@ -344,9 +344,6 @@ class PurchaseRequirementForm(ModelForm):
             'shipping_condition': 'Condicion de envio:'
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
 
 class PurchaseRequirementItemsForm(ModelForm):
     class Meta:
