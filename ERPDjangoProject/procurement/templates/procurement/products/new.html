@@ -6,12 +6,13 @@
     {% csrf_token %}
     {{ form.id }}
     <div class="container-sm my-5">
-        <!-- Información básica del producto -->
+        <!-- Única tarjeta que contiene toda la información -->
         <div id="detalles" class="card mb-4 mx-auto">
             <div class="card-header">
-                <h3>Informacion basica</h3>
+                <h3>Nuevo producto</h3>
             </div>
             <div class="card-body">
+                <h3 class="mt-2">Informacion basica</h3>
                 {% for field in form %}
                     <div class="row mt-4">
                         <label for="{{ field.id_for_label }}" class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
@@ -27,15 +28,10 @@
                         </div>
                     </div>
                 {% endfor %}
-            </div>
-        </div>
 
-        <!-- Proveedores (formset) -->
-        <div id="proveedores" class="card mb-4 mx-auto">
-            <div class="card-header">
-                <h3>Proveedores</h3>
-            </div>
-            <div class="card-body">
+                <hr class="my-4"/>
+                <h3 class="mt-2">Proveedores</h3>
+
                 {{ suppliers_formset.management_form }}
                 {% if suppliers_formset.non_form_errors %}
                     <div class="messages mb-3">
@@ -69,10 +65,9 @@
                     </div>
                 {% endfor %}
             </div>
-        </div>
-
-        <div class="mt-4 text-end p-3">
-            <button type="submit" class="btn btn-success">Guardar</button>
+            <div class="mt-4 text-end p-3">
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </div>
         </div>
     </div>
 </form>

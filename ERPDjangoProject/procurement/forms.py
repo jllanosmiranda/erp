@@ -116,6 +116,14 @@ SupplierProductPriceSet = inlineformset_factory(Product,
 
 
 class ProductForm(ModelForm):
+    product_name = forms.CharField(max_length=200,
+                                   label="Nombre",
+                                   widget=forms.TextInput(attrs={'class': 'form-control'}))
+    product_description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+                                          label="Descripcion")
+    code = forms.CharField(required=False,
+                           label="Codigo",
+                           widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Product
