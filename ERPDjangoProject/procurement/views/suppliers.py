@@ -116,7 +116,7 @@ class SupplierDetails:
             return self._render()
 
     def _basic_information(self):
-        supplier_form = SupplierForm(self.request.POST, instance=supplier)
+        supplier_form = SupplierForm(self.request.POST, instance=self.supplier_object)
         if supplier_form.is_valid():
             supplier_form.save()
             return self._redirect()
