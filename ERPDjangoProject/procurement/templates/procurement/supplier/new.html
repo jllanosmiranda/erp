@@ -5,13 +5,14 @@
 <form method="post">
             {% csrf_token %}
             {{ form.id }}
+<div class="container-sm">
     <div id='detalles' class="card mb-4">
-            <div class="card-header">
-                <h3>Informacion basica</h3>
-            </div>
-            <div class="card-body">
+        <div class="card-header">
+            <h3>Informacion basica</h3>
+        </div>
+        <div class="card-body">
             {% for field in form %}
-            <div class="row mt-4">
+                <div class="row mt-4">
                     <label for="{{ field.id_for_label }}" class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
                         {{ field.label }}
                     </label>
@@ -20,16 +21,19 @@
                         <div class="messages">
                             {% for error in field.errors %}
                                 <div class="alert alert-danger">
-                                {{ error }}
+                                    {{ error }}
                                 </div>
                             {% endfor %}
                         </div>
                     </div>
-            </div>
+                </div>
             {% endfor %}
-            </div>
+        </div>
+        <div class="mt-4 text-end p-3">
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </div>
     </div>
-    <button type="submit">Guardar</button>
+</div>
 </form>
 <script type="module" src="{% static 'procurement/js/supplier/details.js' %}"></script>
 {% endblock %}
