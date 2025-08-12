@@ -2,17 +2,15 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
-    <h1>Crear Requerimiento de Compra</h1>
-    
+<div class="container-sm my-5">
     <form method="post" id="purchase-requirement-form">
         {% csrf_token %}
-
-        <div class="card mb-4">
+        <div id="detalles" class="card mb-4 mx-auto">
             <div class="card-header">
-                <h5>Proveedor</h5>
+                <h3>Crear Requerimiento de Compra</h3>
             </div>
             <div class="card-body">
+                <h3 class="mt-2">Proveedor</h3>
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -26,17 +24,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Productos</h5>
-            </div>
-            <div class="card-body">
-                <h5>Productos</h5>
-                <div id="items-container">
-                </div>
+                <hr class="my-4"/>
+                <h3 class="mt-2">Productos</h3>
+                <div id="items-container"></div>
 
                 <div class="row mt-4">
                     <div class="col-md-6 offset-md-6">
@@ -56,15 +47,9 @@
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
 
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Condiciones</h5>
-            </div>
-            <div class="card-body">
+                <hr class="my-4"/>
+                <h3 class="mt-2">Condiciones</h3>
                 <div class="row align-items-start">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
                         <div class="form-group">
@@ -92,17 +77,17 @@
                 <div class="row mt-3">
                     <div class="col-lg-6">
                         <div class="form-group">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            {{ form.shipping_condition.label }}
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            {{ form.shipping_condition }}
-                            {% if form.shipping_condition.errors %}
-                                <div class="alert alert-danger">
-                                    {{ form.shipping_condition.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                {{ form.shipping_condition.label }}
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                {{ form.shipping_condition }}
+                                {% if form.shipping_condition.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ form.shipping_condition.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -122,12 +107,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
-
-        <div class="form-group text-right">
-            <a href="{% url 'purchase_requirement_list' %}" class="btn btn-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-primary">Guardar</button>
+            <div class="mt-4 text-end p-3">
+                <a href="{% url 'purchase_requirement_list' %}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </div>
         </div>
     </form>
 </div>
