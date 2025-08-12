@@ -60,8 +60,16 @@ class SupplierForm(ModelForm):
 
 
 class SupplierProductForm(ModelForm):
-    price = forms.DecimalField(max_digits=10, decimal_places=2, required=True, validators=[MinValueValidator(0)])
-    currency = forms.ChoiceField(choices=[('', '---------')] + CURRENCY_CHOICES, label="Moneda")
+    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), label="Proveedor")
+    price = forms.DecimalField(max_digits=10,
+                               min_value=0.01,
+                               decimal_places=2,
+                               required=True,
+                               validators=[MinValueValidator(0)],
+                               label="Precio")
+
+    currency = forms.ChoiceField(choices=[('', '---------')] + CURRENCY_CHOICES,
+                                 label="Moneda")
 
     class Meta:
         model = SupplierProduct
