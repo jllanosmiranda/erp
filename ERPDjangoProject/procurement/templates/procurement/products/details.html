@@ -20,34 +20,47 @@
             {% csrf_token %}
             <input type="hidden" name="form_id" value="product-details">
             <input type="hidden" name="tab-name" value="details">
-            <table>
-                <tbody class="basic-info">
-                    <tr>
-                        <td>Name:</td>
-                        <td>
-                            <div class="view-input active">{{product_form.product_name.value}}</div>
+            <div id="detalles" class="card mb-4 mx-auto">
+                <div class="card-header">
+                    <h3>Informacion basica</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mt-3">
+                        <label for="{{ product_form.product_name.id_for_label }}" class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                            {{ product_form.product_name.label }}
+                        </label>
+                        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                            <div class="view-input active">{{ product_form.product_name.value }}</div>
                             <div class="edit-input">{{ product_form.product_name }}</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Descripcion: </td>
-                        <td>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <label for="{{ product_form.product_description.id_for_label }}" class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                            {{ product_form.product_description.label }}
+                        </label>
+                        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
                             <div class="view-input active">{{ product_form.product_description.value }}</div>
                             <div class="edit-input">{{ product_form.product_description }}</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Codigo: </td>
-                        <td>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <label for="{{ product_form.code.id_for_label }}" class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                            {{ product_form.code.label }}
+                        </label>
+                        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
                             <div class="view-input active">{{ product_form.code.value }}</div>
                             <div class="edit-input">{{ product_form.code }}</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <button id="edit-product" class="btn btn-primary hide-button active" type="button">Editar</button>
-            <button id="save-product" class="btn btn-success hide-button" type="submit">Guardar</button>
-            <button id="cancel-edit" class="btn btn-danger hide-button" type="button">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-end p-3">
+                    <button id="edit-product" class="btn btn-primary hide-button active" type="button">Editar</button>
+                    <button id="save-product" class="btn btn-success hide-button" type="submit">Guardar</button>
+                    <button id="cancel-edit" class="btn btn-danger hide-button" type="button">Cancelar</button>
+                </div>
+            </div>
         </form>
     </div>
 
