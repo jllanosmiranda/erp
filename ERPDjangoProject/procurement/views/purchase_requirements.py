@@ -7,6 +7,8 @@ from django.http import JsonResponse
 
 from ..models import PurchaseRequirement, PurchaseRequirementItems, Supplier, SupplierProduct
 from ..forms import PurchaseRequirementForm, purchase_requirement_items_formset
+import logging
+log = logging.getLogger(__name__)
 
 
 def purchase_requirement_list(request):
@@ -64,7 +66,9 @@ def purchase_requirement_create(request):
     """
     View to create a new purchase requirement
     """
+    log.info("inside create")
     if request.method == 'POST':
+        log.info("inside post")
         # Get the supplier ID from the form
         supplier_id = request.POST.get('supplier')
         supplier = None
@@ -82,6 +86,7 @@ def purchase_requirement_create(request):
         )
         
         if form.is_valid() and formset.is_valid():
+            log.info("valid formset")
             # Save the main form
             purchase_requirement = form.save()
             
@@ -91,11 +96,15 @@ def purchase_requirement_create(request):
             
             messages.success(request, 'Requerimiento de compra creado exitosamente.')
             return redirect('purchase_requirement_list')
+        else:
+            log.info("invalid formset")
+            log.info(form.errors)
+            log.info(formset.errors)
     else:
         # Initial form and empty formset
         form = PurchaseRequirementForm(initial={'date': timezone.now().date(), 'status': 0})
         formset = purchase_requirement_items_formset()(supplier=None)
-    
+
     # Get all suppliers for the dropdown
     suppliers = Supplier.objects.all()
     

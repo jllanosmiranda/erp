@@ -14,7 +14,7 @@ class PurchaseRequirement(models.Model):
         (0, 'al contado'),
         (1, 'credito'),
     ]
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
     status = models.IntegerField(choices=status_choices)
     payment_condition = models.IntegerField(choices=payment_condition, default=0)
     shipping_condition = models.TextField(default="")

@@ -73,8 +73,7 @@
                                         Soles
                                     {% endif %}
                                 </td>
-                                <td>{{ item.quantity|floatformat:2 }} × {{ item.price|floatformat:2 }} = {{ item.quantity|floatformat:2|multiply:item.price|floatformat:2 }}</td>
-                            </tr>
+                                </tr>
                         {% empty %}
                             <tr>
                                 <td colspan="6" class="text-center">No hay productos en este requerimiento.</td>
