@@ -29,7 +29,7 @@
                 {% endif %}
 
                 <h3 class="mt-2">Proveedor y Productos</h3>
-
+            <div class="p-3">
                 <label for="{{ form.supplier.id_for_label }}">
                     {{ form.supplier.label }}
                 </label>
@@ -48,6 +48,9 @@
                         {% endfor %}
                     </div>
                 {% endif %}
+
+            </div>
+
 
                 <div id="items-container"></div>
 

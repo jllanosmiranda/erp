@@ -359,9 +359,9 @@ class PurchaseRequirementForm(ModelForm):
             'shipping_condition': forms.Textarea(attrs={'rows': 3}),
         }
         labels = {
-            'supplier': 'Proveedor',
-            'status': 'Estado',
-            'payment_condition': 'Condicion de pago',
+            'supplier': 'Proveedor:',
+            'status': 'Estado:',
+            'payment_condition': 'Condicion de pago:',
             'comments': 'Observaciones:',
             'shipping_condition': 'Condicion de envio:'
         }
