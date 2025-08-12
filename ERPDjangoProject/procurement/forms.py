@@ -353,12 +353,13 @@ class SupplierAddProductForm(forms.ModelForm):
 class PurchaseRequirementForm(ModelForm):
     class Meta:
         model = PurchaseRequirement
-        fields = ['status', 'payment_condition', 'comments', 'shipping_condition']
+        fields = ['supplier', 'status', 'payment_condition', 'comments', 'shipping_condition']
         widgets = {
             'comments': forms.Textarea(attrs={'rows': 3}),
             'shipping_condition': forms.Textarea(attrs={'rows': 3}),
         }
         labels = {
+            'supplier': 'Proveedor',
             'status': 'Estado',
             'payment_condition': 'Condicion de pago',
             'comments': 'Observaciones:',

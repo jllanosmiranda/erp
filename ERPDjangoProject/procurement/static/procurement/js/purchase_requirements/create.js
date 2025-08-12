@@ -98,7 +98,7 @@ function add_up_amounts(){
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    const mySelect = document.getElementById('supplier');
+    const mySelect = document.getElementById('id_supplier');
 
     const selectedValues = new Set()
 

@@ -10,23 +10,45 @@
                 <h3>Crear Requerimiento de Compra</h3>
             </div>
             <div class="card-body">
-                <h3 class="mt-2">Proveedor</h3>
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="supplier">Proveedor:</label>
-                            <select name="supplier" id="supplier" class="form-control" required>
-                                <option value="">Seleccione un proveedor</option>
-                                {% for supplier in suppliers %}
-                                    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                {# Global messages #}
+                {% if messages %}
+                    <div class="messages mb-3">
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}">{{ message }}</div>
+                        {% endfor %}
                     </div>
-                </div>
+                {% endif %}
 
-                <hr class="my-4"/>
-                <h3 class="mt-2">Productos</h3>
+                {# Non-field errors from main form #}
+                {% if form.non_field_errors %}
+                    <div class="messages mb-3">
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <h3 class="mt-2">Proveedor y Productos</h3>
+
+                <label for="{{ form.supplier.id_for_label }}">
+                    {{ form.supplier.label }}
+                </label>
+                {{ form.supplier }}
+                {% if form.supplier.errors %}
+                    <div class="alert alert-danger mt-2">
+                        {{ form.supplier.errors }}
+                    </div>
+                {% endif %}
+
+                {# Non-form errors from items formset #}
+                {% if formset.non_field_errors %}
+                    <div class="messages mb-3">
+                        {% for error in formset.non_field_errors %}
+                            <div class="alert alert-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <div id="items-container"></div>
 
                 <div class="row mt-4">
