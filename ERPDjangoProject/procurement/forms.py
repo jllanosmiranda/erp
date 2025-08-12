@@ -12,20 +12,29 @@ logging.basicConfig(level=logging.DEBUG)
 
 class SupplierForm(ModelForm):
     website = forms.URLField(required=False,
-                             label="Sitio Web")
+                             label="Sitio Web",
+                             widget=forms.URLInput(attrs={'class': 'form-control'}))
     address = forms.CharField(required=False,
-                              label="Direccion",)
+                              label="Direccion",
+                              widget=forms.TextInput(attrs={'class': 'form-control'}))
     phone = forms.CharField(required=False,
-                            label="Telefono")
+                            label="Telefono",
+                            widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(required=False,
-                             label="Email")
+                             label="Email",
+                             widget=forms.EmailInput(attrs={'class': 'form-control'}))
     ruc = forms.CharField(required=False,
                           max_length=15,
                           validators=[
                               RegexValidator(regex=r'^[0-9]+$',
                                              message='RUC debe de ser un numero')
                           ],
-                          label="RUC")
+                          label="RUC",
+                          widget=forms.TextInput(attrs={'class': 'form-control'}))
+    name = forms.CharField(required=False,
+                           label="Nombre",
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+                           )
 
     class Meta:
         model = Supplier
@@ -34,8 +43,6 @@ class SupplierForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.order_fields(['name', 'ruc', 'address', 'phone', 'email', 'website'])
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'supplier-field'
 
     def clean_website(self):
         website = self.cleaned_data.get("website")
