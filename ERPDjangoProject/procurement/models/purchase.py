@@ -18,8 +18,8 @@ class PurchaseRequirement(models.Model):
     date = models.DateField(auto_now=True)
     status = models.IntegerField(choices=status_choices)
     payment_condition = models.IntegerField(choices=payment_condition, default=0)
-    shipping_condition = models.TextField(default="")
-    comments = models.TextField(default="")
+    shipping_condition = models.TextField(default="", blank=True)
+    comments = models.TextField(default="", blank=True)
 
 
 class PurchaseRequirementItems(models.Model):

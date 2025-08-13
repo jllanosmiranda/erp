@@ -16,8 +16,8 @@ class Supplier(models.Model):
 class SupplierContact(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING, related_name="contacts")
     name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=10, null=True, blank=True)
-    email = models.EmailField(max_length=100, null=True, blank=True)
+    phone = models.CharField(max_length=10, blank=True)
+    email = models.EmailField(max_length=100, blank=True)
 
 
 class Bank(models.Model):

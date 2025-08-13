@@ -20,6 +20,8 @@
                     <p><strong>ID:</strong> {{ purchase_requirement.id }}</p>
                     <p><strong>Fecha:</strong> {{ purchase_requirement.date }}</p>
                     <p><strong>Proveedor:</strong> <a href="{% url 'supplier_details' supplier_id=purchase_requirement.supplier.id%}">{{purchase_requirement.supplier}}</a></p>
+                    <p><strong>Condicion de pago:</strong> {{ purchase_requirement.get_payment_condition_display }}</p>
+                    <p><strong>Condicion de entrega:</strong> {{ purchase_requirement.shipping_condition }}</p>
                 </div>
                 <div class="col-md-6">
                     <p>
@@ -36,8 +38,8 @@
             </div>
             <div class="row mt-3">
                 <div class="col-12">
-                    <p><strong>Descripción:</strong></p>
-                    <p>{{ purchase_requirement.description }}</p>
+                    <p><strong>Observaciones:</strong></p>
+                    <p>{{ purchase_requirement.comments }}</p>
                 </div>
             </div>
         </div>
