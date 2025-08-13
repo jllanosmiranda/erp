@@ -77,7 +77,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Fecha</th>
-                            <th>Descripción</th>
+                            <th>Proveedor</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -87,7 +87,7 @@
                             <tr>
                                 <td>{{ requirement.id }}</td>
                                 <td>{{ requirement.date }}</td>
-                                <td>{{ requirement.description|truncatechars:50 }}</td>
+                                <td><div><a href="{% url 'supplier_details' supplier_id=requirement.supplier.id%}">{{requirement.supplier}}</a></div></td>
                                 <td>
                                     {% if requirement.status == 0 %}
                                         <span class="badge badge-warning">Pendiente</span>

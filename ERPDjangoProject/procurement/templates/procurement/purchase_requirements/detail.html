@@ -19,6 +19,7 @@
                 <div class="col-md-6">
                     <p><strong>ID:</strong> {{ purchase_requirement.id }}</p>
                     <p><strong>Fecha:</strong> {{ purchase_requirement.date }}</p>
+                    <p><strong>Proveedor:</strong> <a href="{% url 'supplier_details' supplier_id=purchase_requirement.supplier.id%}">{{purchase_requirement.supplier}}</a></p>
                 </div>
                 <div class="col-md-6">
                     <p>
@@ -52,7 +53,6 @@
                     <thead>
                         <tr>
                             <th>Producto</th>
-                            <th>Proveedor</th>
                             <th>Cantidad</th>
                             <th>Precio</th>
                             <th>Moneda</th>
@@ -62,8 +62,7 @@
                     <tbody>
                         {% for item in items %}
                             <tr>
-                                <td>{{ item.supplier_product.product.product_name }}</td>
-                                <td>{{ item.supplier_product.supplier.name }}</td>
+                                <td><a href="{% url 'product_details' product_id=item.supplier_product.product.id %}">{{ item.supplier_product.product.product_name }}</a></td>
                                 <td>{{ item.quantity }}</td>
                                 <td>{{ item.price }}</td>
                                 <td>
@@ -73,6 +72,7 @@
                                         Soles
                                     {% endif %}
                                 </td>
+                                <td>{{ item.subtotal }}</td>
                                 </tr>
                         {% empty %}
                             <tr>
@@ -82,7 +82,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="5" class="text-right">Total:</th>
+                            <th colspan="4" class="text-end">Total:</th>
                             <th>{{ total|floatformat:2 }}</th>
                         </tr>
                     </tfoot>
