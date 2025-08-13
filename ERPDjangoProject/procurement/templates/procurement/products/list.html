@@ -28,87 +28,97 @@
     </div>
 </div>
 
-    <a href="{% url 'product_new' %}" class="btn btn-success">
-        <i class="bi bi-plus-circle"></i> Agregar nuevo producto
-    </a>
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Productos</h5>
+    </div>
+    <div class="card-body">
+        <div class="mt-4 text-end p-3">
+        <a href="{% url 'product_new' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Agregar nuevo producto
+        </a>
+        </div>
 
-<div class="table-responsive">
-    <table class="table table-striped table-hover table-to-cards">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Codigo</th>
-                <th>Descripcion</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for product in products%}
-            <tr>
-                <td data-label="Nombre">
-                <a href="{% url 'product_details' product_id=product.id %}">
-                    {{ product.product_name }} <i class="bi bi-eye"></i>
-                </a>
-                </td>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-to-cards">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Codigo</th>
+                    <th>Descripcion</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for product in products%}
+                    <tr>
+                        <td data-label="Nombre">
+                            <a href="{% url 'product_details' product_id=product.id %}">
+                                {{ product.product_name }} <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
 
-                <td data-label="Codigo">{{ product.code }}</td>
-                <td data-label="Descripcion">{{ product.product_description }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+                        <td data-label="Codigo">{{ product.code }}</td>
+                        <td data-label="Descripcion" class="text-wrap text-break w-50">{{ product.product_description }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-{% if supplier_products.paginator.num_pages > 1 %}
-<nav aria-label="Page navigation" class="mt-4">
-    <ul class="pagination justify-content-center">
-        {% if supplier_products.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="First">
-                    <span aria-hidden="true">&laquo;&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ supplier_products.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">&laquo;&laquo;</span>
-            </li>
-            <li class="page-item disabled">
-                <span class="page-link">&laquo;</span>
-            </li>
-        {% endif %}
+        {% if supplier_products.paginator.num_pages > 1 %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if supplier_products.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ supplier_products.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;&laquo;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                    {% endif %}
 
-        <li class="page-item active">
+                    <li class="page-item active">
             <span class="page-link">
                 {{ supplier_products.number }} of {{ supplier_products.paginator.num_pages }}
             </span>
-        </li>
+                    </li>
 
-        {% if supplier_products.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ supplier_products.next_page_number }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ supplier_products.paginator.num_pages }}" aria-label="Last">
-                    <span aria-hidden="true">&raquo;&raquo;</span>
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">&raquo;</span>
-            </li>
-            <li class="page-item disabled">
-                <span class="page-link">&raquo;&raquo;</span>
-            </li>
+                    {% if supplier_products.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ supplier_products.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ supplier_products.paginator.num_pages }}" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;&raquo;</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         {% endif %}
-    </ul>
-</nav>
-{% endif %}
+
+    </div>
+</div>
 
 <script src="{% static 'procurement/js/clearFilter.js' %}?v=1.0"></script>
 {% endblock %}
