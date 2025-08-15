@@ -14,10 +14,12 @@ class ItemRow {
     #deleteButton = null
     #supplierProductSelectorChangedEvents = []
     #rowDeleteEvents = []
+    #idNonde = null
 
 
     constructor(rowNode){
         this.#rowNode = rowNode
+        this.#idNonde = this.#rowNode.querySelector('.id-field')
         this.#subtotalNode = this.#rowNode.querySelector('.subtotal')
         this.#priceNode = this.#rowNode.querySelector('.price-field')
         this.#currencyNode = this.#rowNode.querySelector('.currency-field')
@@ -118,10 +120,11 @@ class ItemRow {
     }
 
     setIndex(index){
-        this.setIndexNode(this.#supplierProductSelectorNode, index, 'supplier?product')
+        this.setIndexNode(this.#supplierProductSelectorNode, index, 'supplier_product')
         this.setIndexNode(this.#priceNode, index, 'price')
         this.setIndexNode(this.#currencyNode, index, 'currency')
         this.setIndexNode(this.#quantityNode, index, 'quantity')
+        this.setIndexNode(this.#idNonde, index, 'id')
 
     }
 
@@ -208,7 +211,10 @@ class ItemListManager {
 
     }
 
-
+    updateFormManager(){
+        const totalInput = this.#formmanager.querySelector('input[name="items-TOTAL_FORMS"]')
+        totalInput.value = this.#itemRows.length
+    }
 
     addItemRow(){
         const itemNode = this.#itemRows[0].node.cloneNode(true)
@@ -216,8 +222,8 @@ class ItemListManager {
         const itemRow = new ItemRow(itemNode)
         this.#itemRows.push(itemRow)
         this.addEventsToItemRow(itemRow)
-
         this.reorder()
+        this.updateFormManager()
     }
 
     reorder(){
@@ -236,6 +242,7 @@ class ItemListManager {
         console.log(this.#itemRows.length)
         this.reorder()
         this.compute_totals()
+        this.updateFormManager()
 
     }
 
@@ -299,8 +306,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('items-container').innerHTML = data
                     const addButton = document.getElementById('add-item')
                     const itemsBody = document.getElementById('items-tbody')
+                    const formManager = document.getElementById('formset-management')
                     console.log(itemsBody)
-                    const itemRowManager = new ItemListManager(itemsBody, addButton)
+                    const itemRowManager = new ItemListManager(itemsBody, addButton, formManager)
 
                 })
 

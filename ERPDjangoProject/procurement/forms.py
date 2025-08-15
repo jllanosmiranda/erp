@@ -397,7 +397,9 @@ class BasePurchaseRequirementItemsFormSet(forms.BaseInlineFormSet):
     def __init__(self, *args, supplier=None, **kwargs):
         self.supplier = supplier
         super().__init__(*args, **kwargs)
-        
+        for form in self.forms:
+            form.fields['id'].widget.attrs['class'] = 'id-field'
+
     def get_form_kwargs(self, index):
         kwargs = super().get_form_kwargs(index)
         kwargs['supplier'] = self.supplier
