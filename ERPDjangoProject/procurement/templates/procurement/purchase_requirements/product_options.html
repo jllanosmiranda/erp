@@ -1,5 +1,7 @@
 <div id="items-container">
-    {{ formset.management_form }}
+    <div class="formset-management">
+        {{ formset.management_form }}
+    </div>
     <table class="table table-bordered" id="items-table">
         <thead>
         <tr>
@@ -49,7 +51,7 @@
                 </td>
                 <td class="subtotal">0.00</td>
                 <td>
-                    <button type="button" class="btn btn-danger btn-sm remove-item">Eliminar</button>
+                    <button type="button" class="btn btn-danger btn-sm btn-remove-item">Eliminar</button>
                 </td>
             </tr>
         {% endfor %}

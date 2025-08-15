@@ -11,8 +11,10 @@ class ItemRow {
     #currencyNode = null
     #quantityNode = null
     #supplierProductSelectorNode = null
-    #itemChangedEvents = []
+    #deleteButton = null
     #supplierProductSelectorChangedEvents = []
+    #rowDeleteEvents = []
+
 
     constructor(rowNode){
         this.#rowNode = rowNode
@@ -21,6 +23,17 @@ class ItemRow {
         this.#currencyNode = this.#rowNode.querySelector('.currency-field')
         this.#quantityNode = this.#rowNode.querySelector('.quantity-field')
         this.#supplierProductSelectorNode = this.#rowNode.querySelector('.supplier-product-selector')
+        this.#deleteButton = this.#rowNode.querySelector('.btn-remove-item')
+
+        this.#deleteButton.addEventListener('click', () => {
+            this.#rowNode.remove()
+            console.log("delete button clicked")
+            console.log(this.#rowNode)
+            console.log(this.#rowDeleteEvents)
+            this.#rowDeleteEvents.forEach(event => {
+                event(this)
+            })
+        })
 
         this.#priceNode.addEventListener('change', () => {
             this.updateSubTotal()
@@ -88,9 +101,39 @@ class ItemRow {
         this.#supplierProductSelectorChangedEvents.push(event)
     }
 
+    addDeleteEvent(event){
+        console.log("add delete event")
+        console.log(event)
+        console.log(this.#rowDeleteEvents)
+        this.#rowDeleteEvents.push(event)
+    }
+
 
     updateSubTotal(){
         this.#subtotalNode.innerHTML = this.subtotal.toFixed(2)
+    }
+
+    get node(){
+        return this.#rowNode
+    }
+
+    setIndex(index){
+        this.setIndexNode(this.#supplierProductSelectorNode, index, 'supplier?product')
+        this.setIndexNode(this.#priceNode, index, 'price')
+        this.setIndexNode(this.#currencyNode, index, 'currency')
+        this.setIndexNode(this.#quantityNode, index, 'quantity')
+
+    }
+
+    setIndexNode(node, index, field){
+        const attributes = {
+            name: `items-${index}-${field}`,
+            id: `id_items-${index}-${field}`
+        }
+        for  (const key in attributes ){
+            node.setAttribute(key, attributes[key])
+        }
+
     }
 
 }
@@ -98,20 +141,40 @@ class ItemRow {
 const products = []
 
 class ItemListManager {
+    #itemsBody = null
     #itemRows = []
     #total_soles = 0
     #total_usd = 0
     #total_eur = 0
     #selectedOptions = new Set()
-    constructor(itemRowsNodes){
+    #addButton = null
+    #formmanager = null
+    constructor(itemsBody, addButton, formmanager){
+
+        this.#formmanager = formmanager
+
+        this.#itemsBody = itemsBody
+
+        const itemRowsNodes = this.#itemsBody.querySelectorAll('.item-row')
+
         const nodes_array = Array.from(itemRowsNodes)
 
         this.#itemRows = nodes_array.map(itemRowNode => new ItemRow(itemRowNode))
         this.#itemRows.forEach(itemRow => {
+            this.addEventsToItemRow(itemRow)
+        })
+
+        this.#addButton = addButton
+        this.#addButton.addEventListener('click', () => {
+            this.addItemRow()
+        })
+
+    }
+
+    addEventsToItemRow(itemRow){
             itemRow.addSupplierProductSelectorChangedEvent(this.compute_totals.bind(this))
             itemRow.addSupplierProductSelectorChangedEvent(this.optionsUsedUpdate.bind(this, itemRow.supplierProductSelectorNode))
-        })
-        console.log(this.#itemRows)
+            itemRow.addDeleteEvent(this.removeItemRow.bind(this))
     }
 
     optionsUsedUpdate(selectorChanged){
@@ -145,11 +208,34 @@ class ItemListManager {
 
     }
 
+
+
     addItemRow(){
-        return this.#itemRows
+        const itemNode = this.#itemRows[0].node.cloneNode(true)
+        this.#itemsBody.appendChild(itemNode)
+        const itemRow = new ItemRow(itemNode)
+        this.#itemRows.push(itemRow)
+        this.addEventsToItemRow(itemRow)
+
+        this.reorder()
+    }
+
+    reorder(){
+        this.#itemRows.forEach((itemRow, index) => {
+            itemRow.setIndex(index)
+        })
     }
 
     removeItemRow(itemRow){
+        console.log("before remove item row")
+        console.log(this.#itemRows.length)
+        console.log(itemRow)
+        this.#itemRows.splice(this.#itemRows.indexOf(itemRow), 1)
+
+        console.log("after item row")
+        console.log(this.#itemRows.length)
+        this.reorder()
+        this.compute_totals()
 
     }
 
@@ -211,8 +297,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('items-container').innerHTML = data
-                    const itemRows = document.querySelectorAll('.item-row')
-                    const itemRowManager = new ItemListManager(itemRows)
+                    const addButton = document.getElementById('add-item')
+                    const itemsBody = document.getElementById('items-tbody')
+                    console.log(itemsBody)
+                    const itemRowManager = new ItemListManager(itemsBody, addButton)
 
                 })
 
