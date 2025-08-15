@@ -145,9 +145,14 @@ class ItemListManager {
 
     }
 
-    get itemRows(){
+    addItemRow(){
         return this.#itemRows
     }
+
+    removeItemRow(itemRow){
+
+    }
+
 
     compute_totals(){
         console.log("compute totals")
