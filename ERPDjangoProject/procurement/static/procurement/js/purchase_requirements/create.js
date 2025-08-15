@@ -3,96 +3,189 @@ const SOLES = 1
 const EURO = 2
 
 
-class Product {
-    #price = 0
-    #currency = ''
-    #quantity = 0
-    constructor(id, price, currency, subtotal_node){
-        this.id = id
-        this.subtotal_node = subtotal_node
-        this.#price = price
-        this.#currency = currency
-        this.#quantity = 1
-        this.subtotal_node.innerHTML = this.subtotal
+
+class ItemRow {
+    #rowNode = null
+    #subtotalNode = null
+    #priceNode = null
+    #currencyNode = null
+    #quantityNode = null
+    #supplierProductSelectorNode = null
+    #itemChangedEvents = []
+    #supplierProductSelectorChangedEvents = []
+
+    constructor(rowNode){
+        this.#rowNode = rowNode
+        this.#subtotalNode = this.#rowNode.querySelector('.subtotal')
+        this.#priceNode = this.#rowNode.querySelector('.price-field')
+        this.#currencyNode = this.#rowNode.querySelector('.currency-field')
+        this.#quantityNode = this.#rowNode.querySelector('.quantity-field')
+        this.#supplierProductSelectorNode = this.#rowNode.querySelector('.supplier-product-selector')
+
+        this.#priceNode.addEventListener('change', () => {
+            this.updateSubTotal()
+            this.#supplierProductSelectorChangedEvents.forEach(event => {
+                event()
+            })
+        })
+
+        this.#currencyNode.addEventListener('change', () => {
+            this.updateSubTotal()
+            this.#supplierProductSelectorChangedEvents.forEach(event => {
+                event()
+            })
+        })
+
+        this.#quantityNode.addEventListener('change', () => {
+            this.updateSubTotal()
+            this.#supplierProductSelectorChangedEvents.forEach(event => {
+                event()
+            })
+        })
+
+        this.#supplierProductSelectorNode.addEventListener('change', () => {
+            fetch(`/procurement/supplier-product/${this.#supplierProductSelectorNode.value}/`)
+                .then(response => response.json())
+                .then(data => {
+                    this.#priceNode.value = data.price
+                    this.#currencyNode.value = data.currency
+                    this.#quantityNode.value = 1
+                    this.updateSubTotal()
+                    console.log("event create a new item")
+                    this.#supplierProductSelectorChangedEvents.forEach(event => {
+                        event()
+                    })
+                })
+        })
     }
 
-    set quantity(value){
-        this.#quantity = Number(value)
-        this.subtotal_node.innerHTML = this.subtotal.toFixed(2)
+    get supplierProductId(){
+        return this.#supplierProductSelectorNode.value
     }
 
-    set price(value){
-        this.#price = Number(value)
-        this.subtotal_node.innerHTML = this.subtotal.toFixed(2)
-    }
-
-    get subtotal(){
-        return this.#price * this.#quantity
+    get price(){
+        return Number(this.#priceNode.value)
     }
 
     get currency(){
-        return this.#currency
+        return Number(this.#currencyNode.value)
     }
 
-    set currency(value){
-        this.#currency = Number(value)
+    get quantity(){
+        return Number(this.#quantityNode.value)
     }
+
+    get subtotal(){
+        return this.price * this.quantity
+    }
+
+
+    get supplierProductSelectorNode(){
+        return this.#supplierProductSelectorNode
+    }
+
+    addSupplierProductSelectorChangedEvent(event){
+        this.#supplierProductSelectorChangedEvents.push(event)
+    }
+
+
+    updateSubTotal(){
+        this.#subtotalNode.innerHTML = this.subtotal.toFixed(2)
+    }
+
 }
 
 const products = []
 
+class ItemListManager {
+    #itemRows = []
+    #total_soles = 0
+    #total_usd = 0
+    #total_eur = 0
+    #selectedOptions = new Set()
+    constructor(itemRowsNodes){
+        const nodes_array = Array.from(itemRowsNodes)
 
-function total(){
-    let total_soles =  0
-    let total_usd = 0
-    let total_eur = 0
-    products.forEach(product => {
-        console.log(`currency ${product.currency} ${product.subtotal} ${typeof product.currency}`)
-        if (product.currency === USD){
-            total_usd += product.subtotal
-        }
-        if (product.currency === SOLES){
-            total_soles += product.subtotal
-        }
-        if (product.currency === EURO){
-            total_eur += product.subtotal
-        }
-    })
-
-    const total_soles_object = document.getElementById("total-amount-soles")
-    const total_usd_object = document.getElementById("total-amount-usd")
-    const total_euros_object = document.getElementById("total-amount-euros")
-    total_soles_object.innerHTML = total_soles.toFixed(2)
-    total_usd_object.innerHTML = total_usd.toFixed(2)
-    total_euros_object.innerHTML = total_eur.toFixed(2)
-}
-
-
-function add_up_amounts(){
-    const prices_inputs = document.querySelectorAll('.price-field')
-    prices_inputs.forEach((price_input, index) => {
-        price_input.addEventListener('change', () => {
-            products[index].price = price_input.value
-            total()
+        this.#itemRows = nodes_array.map(itemRowNode => new ItemRow(itemRowNode))
+        this.#itemRows.forEach(itemRow => {
+            itemRow.addSupplierProductSelectorChangedEvent(this.compute_totals.bind(this))
         })
-    })
+        console.log(this.#itemRows)
+    }
 
-    const quantity_inputs = document.querySelectorAll('.quantity-field')
-    quantity_inputs.forEach((quantity_input, index) => {
-        quantity_input.addEventListener('change', () => {
-            products[index].quantity = quantity_input.value
-            total()
+    optionsUsedUpdate(selectorChanged){
+        console.log("options used update")
+        const selectedValues = new Set()
+        this.#itemRows.forEach(itemRow => {
+            console.log("item row selected values")
+            console.log(itemRow.item)
+            if (itemRow.supplierProductSelectorNode.value !== null){
+                const selector = itemRow.supplierProductSelectorNode
+                selectedValues.add(selector.value)
+                console.log(" item row selected values with items")
+                console.log(itemRow)
+            }
+
         })
-    })
 
-    const currency_inputs = document.querySelectorAll('.currency-field')
-    currency_inputs.forEach((currency_input, index) => {
-        currency_input.addEventListener('change', () => {
-            products[index].currency = currency_input.value
-            total()
+        console.log("itemrows")
+        console.log(this.#itemRows)
+        console.log("selected values")
+        console.log(this.#selectedOptions)
+
+        this.#itemRows.forEach(itemRow => {
+            const selector = itemRow.supplierProductSelectorNode
+            if (selector.id !== selectorChanged.id){
+                Array.from(selector.options).forEach(option => {
+                    option.disabled = selectedValues.has(option.value) && selector.value !== option.value;
+                })
+            }
         })
-    })
 
+    }
+
+    get itemRows(){
+        return this.#itemRows
+    }
+
+    compute_totals(){
+        console.log("compute totals")
+        this.#total_soles = 0
+        this.#total_usd = 0
+        this.#total_eur = 0
+        this.#itemRows.forEach(itemRow => {
+            console.log("item row supplierProduct")
+            console.log(itemRow.supplierProductId)
+            console.log(itemRow.subtotal)
+            console.log(itemRow.currency)
+            console.log(itemRow.supplierProductId === "")
+            if (itemRow.supplierProductId === null){
+                return
+            }
+            if (itemRow.currency === USD){
+                this.#total_usd += itemRow.subtotal
+            }
+            if (itemRow.currency === SOLES){
+                this.#total_soles += itemRow.subtotal
+            }
+            if (itemRow.currency === EURO){
+                this.#total_eur += itemRow.subtotal
+            }
+        })
+
+        this.update_total()
+
+    }
+
+    update_total(){
+        const total_soles_object = document.getElementById("total-amount-soles")
+        const total_usd_object = document.getElementById("total-amount-usd")
+        const total_euros_object = document.getElementById("total-amount-euros")
+        total_soles_object.innerHTML = this.#total_soles.toFixed(2)
+        total_usd_object.innerHTML = this.#total_usd.toFixed(2)
+        total_euros_object.innerHTML = this.#total_eur.toFixed(2)
+
+    }
 }
 
 
@@ -112,8 +205,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('items-container').innerHTML = data
-                    add_up_amounts()
-                    const selectors = document.querySelectorAll('.supplier-product-selector');
+                    const itemRows = document.querySelectorAll('.item-row')
+                    const itemRowManager = new ItemListManager(itemRows)
+                    /*const selectors = document.querySelectorAll('.supplier-product-selector');
+
                     selectors.forEach((selectorChanged, index) => {
                         selectorChanged.addEventListener('change', () => {
                             selectedValues.add(selectorChanged.value)
@@ -137,18 +232,19 @@ document.addEventListener('DOMContentLoaded', function () {
                                     const currency_input = document.getElementById(currency_id)
                                     const quantity_input = document.getElementById(quantity_id)
                                     quantity_input.value = 1
-                                    const subtotals = document.querySelectorAll('.subtotal')
                                     price_input.value = data.price
                                     currency_input.value = data.currency
-                                    products[index] = new Product(selectorChanged.value,
+                                    const itemRows = itemRowManager.itemRows
+                                    itemRows[index].item = new Item(
+                                        selectorChanged.value,
                                         data.price,
                                         data.currency,
-                                        subtotals[index]
+                                        quantity_input.value,
                                     )
-                                    total()
                                 })
+
                         })
-                    })
+                    })*/
 
                 })
 
