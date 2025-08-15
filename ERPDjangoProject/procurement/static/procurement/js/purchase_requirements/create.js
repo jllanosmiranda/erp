@@ -109,6 +109,7 @@ class ItemListManager {
         this.#itemRows = nodes_array.map(itemRowNode => new ItemRow(itemRowNode))
         this.#itemRows.forEach(itemRow => {
             itemRow.addSupplierProductSelectorChangedEvent(this.compute_totals.bind(this))
+            itemRow.addSupplierProductSelectorChangedEvent(this.optionsUsedUpdate.bind(this, itemRow.supplierProductSelectorNode))
         })
         console.log(this.#itemRows)
     }
@@ -119,7 +120,7 @@ class ItemListManager {
         this.#itemRows.forEach(itemRow => {
             console.log("item row selected values")
             console.log(itemRow.item)
-            if (itemRow.supplierProductSelectorNode.value !== null){
+            if (itemRow.supplierProductSelectorNode.value !== ""){
                 const selector = itemRow.supplierProductSelectorNode
                 selectedValues.add(selector.value)
                 console.log(" item row selected values with items")
@@ -207,44 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('items-container').innerHTML = data
                     const itemRows = document.querySelectorAll('.item-row')
                     const itemRowManager = new ItemListManager(itemRows)
-                    /*const selectors = document.querySelectorAll('.supplier-product-selector');
-
-                    selectors.forEach((selectorChanged, index) => {
-                        selectorChanged.addEventListener('change', () => {
-                            selectedValues.add(selectorChanged.value)
-
-                            const other_selectors = document.querySelectorAll('.supplier-product-selector')
-                            other_selectors.forEach(other_selector => {
-                                if (other_selector.id !== selectorChanged.id){
-                                    Array.from(other_selector.options).forEach(option => {
-                                        option.disabled = selectedValues.has(option.value) && other_selector.value !== option.value;
-                                    })
-                                }
-                            })
-
-                            fetch(`/procurement/supplier-product/${selectorChanged.value}/`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    const price_id = selectorChanged.id.replace(/supplier_product$/, 'price')
-                                    const currency_id = selectorChanged.id.replace(/supplier_product$/, 'currency')
-                                    const quantity_id = selectorChanged.id.replace(/supplier_product$/, 'quantity')
-                                    const price_input = document.getElementById(price_id)
-                                    const currency_input = document.getElementById(currency_id)
-                                    const quantity_input = document.getElementById(quantity_id)
-                                    quantity_input.value = 1
-                                    price_input.value = data.price
-                                    currency_input.value = data.currency
-                                    const itemRows = itemRowManager.itemRows
-                                    itemRows[index].item = new Item(
-                                        selectorChanged.value,
-                                        data.price,
-                                        data.currency,
-                                        quantity_input.value,
-                                    )
-                                })
-
-                        })
-                    })*/
 
                 })
 
