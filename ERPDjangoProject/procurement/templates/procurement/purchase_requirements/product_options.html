@@ -7,6 +7,7 @@
         <tr>
             <th>Producto</th>
             <th>Cantidad</th>
+            <th>Unidad</th>
             <th>Precio</th>
             <th>Moneda</th>
             <th>Subtotal</th>
@@ -31,6 +32,11 @@
                         <div class="alert alert-danger">
                             {{ form.quantity.errors }}
                         </div>
+                    {% endif %}
+                </td>
+                <td class="unit-field">
+                    {% if form.instance.pk and form.instance.supplier_product %}
+                        {{ form.instance.supplier_product.product.unit_of_measure }}
                     {% endif %}
                 </td>
                 <td>

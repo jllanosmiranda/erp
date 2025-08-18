@@ -5,7 +5,7 @@ from .models import Product, Supplier, SupplierProduct, SupplierProductPrice, Su
 from django.core.validators import MinValueValidator, RegexValidator
 from django.forms import inlineformset_factory
 import logging
-from .models.constants import CURRENCY_CHOICES
+from .models.constants import CURRENCY_CHOICES, UNIT_OF_MEASURE_CHOICES
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -132,10 +132,14 @@ class ProductForm(ModelForm):
     code = forms.CharField(required=False,
                            label="Codigo",
                            widget=forms.TextInput(attrs={'class': 'form-control'}))
+    unit_of_measure = forms.ChoiceField(required=False,
+                                      label="Unidad de medida",
+                                      choices=[('', '---------')] + UNIT_OF_MEASURE_CHOICES,
+                                      widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Product
-        fields = ['product_name', 'product_description', 'code']
+        fields = ['product_name', 'product_description', 'code', 'unit_of_measure']
 
     def clean_product_name(self):
         product_name = self.cleaned_data.get('product_name')
@@ -310,12 +314,13 @@ class SupplierAddProductForm(forms.ModelForm):
     product_name = forms.CharField(max_length=200)
     product_description = forms.CharField(widget=forms.Textarea)
     code = forms.CharField(required=False)
+    unit_of_measure = forms.ChoiceField(required=False, label="Unidad de medida", choices=[('', '---------')] + UNIT_OF_MEASURE_CHOICES)
     price = forms.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     currency = forms.ChoiceField(choices=CURRENCY_CHOICES, initial='soles', label="Moneda")
 
     class Meta:
         model = SupplierProduct
-        fields = ['product_name', 'product_description', 'code', 'price', 'currency']  # We'll handle the fields manually
+        fields = ['product_name', 'product_description', 'code', 'unit_of_measure', 'price', 'currency']  # We'll handle the fields manually
 
     def __init__(self, *args, supplier=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -330,7 +335,8 @@ class SupplierAddProductForm(forms.ModelForm):
         product = Product.objects.create(
             product_name=self.cleaned_data['product_name'],
             product_description=self.cleaned_data['product_description'],
-            code=self.cleaned_data['code']
+            code=self.cleaned_data['code'],
+            unit_of_measure=self.cleaned_data.get('unit_of_measure', '')
         )
 
         # Create the supplier product relationship

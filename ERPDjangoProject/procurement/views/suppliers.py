@@ -196,8 +196,10 @@ def create_supplier(request):
 
 def get_supplier_products(request, supplier_product_id):
     object = SupplierProduct.objects.get(id=supplier_product_id)
-    return JsonResponse({'name': object.product.product_name,
-                        'price': object.latest_price.price,
-                         'currency': object.latest_price.currency
-                         })
+    return JsonResponse({
+        'name': object.product.product_name,
+        'price': object.latest_price.price,
+        'currency': object.latest_price.currency,
+        'unit': getattr(object.product, 'unit_of_measure', '')
+    })
 

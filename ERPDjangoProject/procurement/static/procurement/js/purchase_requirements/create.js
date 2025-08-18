@@ -15,6 +15,7 @@ class ItemRow {
     #supplierProductSelectorChangedEvents = []
     #rowDeleteEvents = []
     #idNonde = null
+    #unitNode = null
 
 
     constructor(rowNode){
@@ -26,6 +27,7 @@ class ItemRow {
         this.#quantityNode = this.#rowNode.querySelector('.quantity-field')
         this.#supplierProductSelectorNode = this.#rowNode.querySelector('.supplier-product-selector')
         this.#deleteButton = this.#rowNode.querySelector('.btn-remove-item')
+        this.#unitNode = this.#rowNode.querySelector('.unit-field')
 
         this.#deleteButton.addEventListener('click', () => {
             this.#rowNode.remove()
@@ -65,6 +67,9 @@ class ItemRow {
                     this.#priceNode.value = data.price
                     this.#currencyNode.value = data.currency
                     this.#quantityNode.value = 1
+                    if (this.#unitNode){
+                        this.#unitNode.innerHTML = data.unit || ''
+                    }
                     this.updateSubTotal()
                     console.log("event create a new item")
                     this.#supplierProductSelectorChangedEvents.forEach(event => {

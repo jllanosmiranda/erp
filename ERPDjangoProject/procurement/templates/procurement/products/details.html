@@ -55,6 +55,16 @@
                                 <div class="edit-input">{{ product_form.code }}</div>
                             </div>
                         </div>
+
+                        <div class="row mt-3">
+                            <label for="{{ product_form.unit_of_measure.id_for_label }}" class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                                {{ product_form.unit_of_measure.label }}
+                            </label>
+                            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                                <div class="view-input active">{{ product_form.unit_of_measure.value }}</div>
+                                <div class="edit-input">{{ product_form.unit_of_measure }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="mt-4 text-end p-3">
