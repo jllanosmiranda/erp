@@ -200,6 +200,6 @@ def get_supplier_products(request, supplier_product_id):
         'name': object.product.product_name,
         'price': object.latest_price.price,
         'currency': object.latest_price.currency,
-        'unit': getattr(object.product, 'unit_of_measure', '')
+        'unit': object.product.get_unit_of_measure_display()
     })
 

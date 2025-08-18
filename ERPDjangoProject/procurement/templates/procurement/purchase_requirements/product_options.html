@@ -37,6 +37,8 @@
                 <td class="unit-field">
                     {% if form.instance.pk and form.instance.supplier_product %}
                         {{ form.instance.supplier_product.product.unit_of_measure }}
+                        this is a message
+                        {{ form.instance.supplier_product.product.get_unit_of_measure_display }}
                     {% endif %}
                 </td>
                 <td>
