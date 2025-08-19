@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 from ..models import PurchaseRequirement, PurchaseRequirementItems, Supplier, SupplierProduct
 from ..forms import PurchaseRequirementForm, purchase_requirement_items_formset
@@ -11,6 +12,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
+@login_required
 def purchase_requirement_list(request):
     """
     View to display a list of purchase requirements with filtering options
@@ -62,6 +64,7 @@ def purchase_requirement_list(request):
     return render(request, 'procurement/purchase_requirements/list.html', context)
 
 
+@login_required
 def purchase_requirement_create(request):
     """
     View to create a new purchase requirement
@@ -117,6 +120,7 @@ def purchase_requirement_create(request):
     return render(request, 'procurement/purchase_requirements/create.html', context)
 
 
+@login_required
 def purchase_requirement_detail(request, pk):
     """
     View to display details of a specific purchase requirement
@@ -136,6 +140,7 @@ def purchase_requirement_detail(request, pk):
     return render(request, 'procurement/purchase_requirements/detail.html', context)
 
 
+@login_required
 def get_supplier_products(request, supplier_id):
     """
     AJAX view to get products for a specific supplier

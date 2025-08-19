@@ -6,6 +6,7 @@ from django.urls import reverse
 from urllib.parse import urlencode
 from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 from ..filters import SupplierProductFilter
 from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet, ProductSupplierFormSet, SupplierAddProductForm
@@ -14,6 +15,7 @@ from ..models import Supplier, SupplierProduct
 log = logging.getLogger(__name__)
 
 
+@login_required
 def list(request):
 
     suppliers = Supplier.objects.all()
@@ -36,6 +38,7 @@ class SupplierDetails:
         self.objects = None
         self.filter_data = dict()
 
+    @login_required
     def __call__(self, request, supplier_id):
         self.supplier_id = supplier_id
         self.request = request
@@ -174,6 +177,7 @@ class SupplierDetails:
         return self._render()
 
 
+@login_required
 def create_supplier(request):
     if request.method == 'POST':
         supplier_form = SupplierForm(request.POST)
@@ -194,6 +198,7 @@ def create_supplier(request):
 
     return render(request, 'procurement/supplier/new.html', context=context)
 
+@login_required
 def get_supplier_products(request, supplier_product_id):
     object = SupplierProduct.objects.get(id=supplier_product_id)
     return JsonResponse({

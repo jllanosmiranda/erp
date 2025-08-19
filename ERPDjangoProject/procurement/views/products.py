@@ -8,8 +8,10 @@ from ..forms import ProductForm, SupplierProductPriceSet
 from ..models import Product, Supplier
 from urllib.parse import urlencode
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 
+@login_required()
 def products(request):
 
     products_list = Product.objects.all()
@@ -32,6 +34,7 @@ def products(request):
     return render(request, 'procurement/products/list.html', context=context)
 
 
+@login_required
 def new_product(request):
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
@@ -67,6 +70,7 @@ class ProductDetails:
         self.product_form = None
         self.formset = None
 
+    @login_required
     def __call__(self, request, product_id):
         self.product_id = product_id
         self.request = request
@@ -127,6 +131,7 @@ class ProductDetails:
 
 
 
+@login_required
 def new_product_from_supplier(request, supplier_id):
     supplier = Supplier.objects.get(id=supplier_id)
     if request.method == 'POST':
