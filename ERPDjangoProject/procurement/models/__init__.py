@@ -6,7 +6,7 @@ from .good_receipt_notes import *
 
 products = ['Product','']
 suppliers = ['Supplier', 'SupplierContact', 'Bank', 'SupplierBankAccount']
-supplier_product = ['SupplierProduct', 'SupplierProductPrice']
+supplier_product = ['SupplierProduct', 'SupplierProductEvent']
 purchase = ['PurchaseRequirement', 'PurchaseRequirementItem','PurchaseOrder']
 good_receipt_note = ['GoodReceiptNote', 'GoodReceiptNoteItem']
 __all__ = products + suppliers + supplier_product + purchase + good_receipt_note

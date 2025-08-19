@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 
 from ..models import PurchaseRequirement, PurchaseRequirementItems, Supplier, SupplierProduct
 from ..forms import PurchaseRequirementForm, purchase_requirement_items_formset
@@ -12,6 +13,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
+@permission_required('procurement.view_purchaserequirement')
 @login_required
 def purchase_requirement_list(request):
     """
@@ -50,7 +52,7 @@ def purchase_requirement_list(request):
     
     # Get all suppliers for the filter dropdown
     suppliers = Supplier.objects.all()
-    
+
     context = {
         'page_obj': page_obj,
         'suppliers': suppliers,
@@ -91,7 +93,9 @@ def purchase_requirement_create(request):
         if form.is_valid() and formset.is_valid():
             log.info("valid formset")
             # Save the main form
-            purchase_requirement = form.save()
+            purchase_requirement = form.save(commit=False)
+            purchase_requirement.user = request.user
+            purchase_requirement.save()
             
             # Save the formset
             formset.instance = purchase_requirement

@@ -1,15 +1,24 @@
+from random import choices
+
 from django.db import models
+from django.contrib.auth.models import User
 
 from .suppliers import Supplier
-from .constants import UNIT_OF_MEASURE_CHOICES
+from datetime import datetime
+from main.models import EntityBaseModel, EventBaseModel
 
 
-class Product(models.Model):
+class Product(EntityBaseModel):
     product_name = models.CharField(max_length=200, unique=True)
-    product_description = models.TextField()
+    product_description = models.TextField(blank=True, null=True)
     suppliers = models.ManyToManyField(Supplier, through="SupplierProduct", related_name="products")
-    code = models.CharField(default='')
-    unit_of_measure = models.CharField(max_length=50, blank=True, default='', choices=UNIT_OF_MEASURE_CHOICES)
+    code = models.CharField(default='', null=True, blank=True, max_length=20)
 
     def __str__(self):
         return self.product_name
+
+
+class ProductEvents(EventBaseModel):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="events")
+
+

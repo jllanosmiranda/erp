@@ -38,7 +38,6 @@ class SupplierDetails:
         self.objects = None
         self.filter_data = dict()
 
-    @login_required
     def __call__(self, request, supplier_id):
         self.supplier_id = supplier_id
         self.request = request
@@ -175,6 +174,12 @@ class SupplierDetails:
                                                   queryset=suppliers_objects)
 
         return self._render()
+
+
+@login_required
+def details(request, supplier_id):
+    supplier_details = SupplierDetails()
+    return supplier_details(request, supplier_id)
 
 
 @login_required

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 from ..models import SupplierProduct, Product, Supplier
 from ..models.constants import CURRENCY_CHOICES
@@ -20,6 +21,7 @@ class PurchaseRequirement(models.Model):
     payment_condition = models.IntegerField(choices=payment_condition, default=0)
     shipping_condition = models.TextField(default="", blank=True)
     comments = models.TextField(default="", blank=True)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default="")
 
 
 class PurchaseRequirementItems(models.Model):

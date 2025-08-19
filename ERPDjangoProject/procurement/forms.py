@@ -1,6 +1,6 @@
 from django.forms.models import ModelForm
 from django import forms
-from .models import Product, Supplier, SupplierProduct, SupplierProductPrice, SupplierContact, SupplierBankAccount, \
+from .models import Product, Supplier, SupplierProduct, SupplierContact, SupplierBankAccount, \
     GoodReceiptNote, GoodReceiptNoteItem, PurchaseRequirement, PurchaseRequirementItems
 from django.core.validators import MinValueValidator, RegexValidator
 from django.forms import inlineformset_factory
@@ -70,10 +70,14 @@ class SupplierProductForm(ModelForm):
 
     currency = forms.ChoiceField(choices=[('', '---------')] + CURRENCY_CHOICES,
                                  label="Moneda")
+    unit_of_measure = forms.ChoiceField(required=False,
+                                        label="Unidad de medida",
+                                        choices=[('', '---------')] + UNIT_OF_MEASURE_CHOICES,
+                                        widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
         model = SupplierProduct
-        fields = ['supplier', 'price', 'currency']
+        fields = ['supplier', 'price', 'currency', 'unit_of_measure']
 
     def __init__(self, *args, **kwargs):
         supplier_product = kwargs.get('instance')
@@ -85,20 +89,6 @@ class SupplierProductForm(ModelForm):
                 self.fields['price'].initial = supplier_product_price.price
                 self.fields['currency'].initial = supplier_product_price.currency
 
-    def save(self, commit=True):
-        supplier_product = super().save(commit=False)
-        supplier_product_price = SupplierProductPrice(
-            price=self.cleaned_data.get('price'),
-            currency=self.cleaned_data.get('currency')
-        )
-        supplier_product_price.supplier_product = supplier_product
-
-        if commit:
-            supplier_product.save()
-            supplier_product_price.save()
-            supplier_product.prices.add(supplier_product_price)
-
-        return supplier_product
 
 class BaseSupplierProductPriceSet(forms.BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -132,14 +122,10 @@ class ProductForm(ModelForm):
     code = forms.CharField(required=False,
                            label="Codigo",
                            widget=forms.TextInput(attrs={'class': 'form-control'}))
-    unit_of_measure = forms.ChoiceField(required=False,
-                                      label="Unidad de medida",
-                                      choices=[('', '---------')] + UNIT_OF_MEASURE_CHOICES,
-                                      widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Product
-        fields = ['product_name', 'product_description', 'code', 'unit_of_measure']
+        fields = ['product_name', 'product_description', 'code']
 
     def clean_product_name(self):
         product_name = self.cleaned_data.get('product_name')
@@ -255,34 +241,27 @@ def form_set(extra):
 class ProductSupplierForm(ModelForm):
     price = forms.DecimalField(max_digits=10, decimal_places=2, required=True, validators=[MinValueValidator(0)])
     currency = forms.ChoiceField(choices=[('','----------')] + CURRENCY_CHOICES, label="Moneda")
+    unit_of_measure = forms.ChoiceField(required=False,
+                                        label="Unidad de medida",
+                                        choices=[('', '---------')] + UNIT_OF_MEASURE_CHOICES,
+                                        widget=forms.Select(attrs={'class': 'form-control'}))
+
 
     class Meta:
         model = SupplierProduct
-        fields = ['product', 'price', 'currency']
+        fields = ['product', 'price', 'currency', 'unit_of_measure']
 
-    def __init__(self, *args, **kwargs):
-        supplier_product = kwargs.get('instance')
-        super().__init__(*args, **kwargs)
+    #def __init__(self, *args, **kwargs):
+    #    supplier_product = kwargs.get('instance')
+    #    super().__init__(*args, **kwargs)
 
-        if supplier_product:
-            supplier_product_price = supplier_product.prices.order_by('-effective_date').first()
-            if supplier_product_price:
-                self.fields['price'].initial = supplier_product_price.price
-                self.fields['currency'].initial = supplier_product_price.currency
-            self.fields['product'].initial = supplier_product.product
+    #    if supplier_product:
+    #        supplier_product_price = supplier_product.prices.order_by('-effective_date').first()
+    #        if supplier_product_price:
+    #            self.fields['price'].initial = supplier_product_price.price
+    #            self.fields['currency'].initial = supplier_product_price.currency
+    #        self.fields['product'].initial = supplier_product.product
 
-    def save(self, commit=True):
-        supplier_product = super().save(commit=False)
-        price = self.cleaned_data.get('price')
-        currency = self.cleaned_data.get('currency')
-        logging.info(f"price {price}")
-        supplier_product_price = SupplierProductPrice(price=price, currency=currency)
-        supplier_product_price.supplier_product = supplier_product
-
-        if commit:
-            supplier_product.save()
-            supplier_product_price.save()
-        return supplier_product
 
 class ProductSupplierPriceFormBase(forms.BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -344,14 +323,6 @@ class SupplierAddProductForm(forms.ModelForm):
         supplier_product.supplier = self.supplier
         supplier_product.product = product
         
-        if commit:
-            supplier_product.save()
-            # Create the price
-            SupplierProductPrice.objects.create(
-                supplier_product=supplier_product,
-                price=self.cleaned_data['price'],
-                currency=self.cleaned_data['currency']
-            )
 
         return supplier_product
 

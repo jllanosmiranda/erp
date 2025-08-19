@@ -9,6 +9,9 @@ from ..models import Product, Supplier
 from urllib.parse import urlencode
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+import logging
+
+log = logging.getLogger(__name__)
 
 
 @login_required()
@@ -39,11 +42,16 @@ def new_product(request):
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
         suppliers_formset = SupplierProductPriceSet(request.POST, prefix="supplier")
+        log.info(f"request {request.POST}")
+        log.info(f"suppliers {suppliers_formset}")
         if product_form.is_valid() and suppliers_formset.is_valid():
-            product = product_form.save()
+            product = product_form.save(commit=False)
+            product._changed_by = request.user
+            product.save()
             for form in suppliers_formset:
-                form.instance.product = product
-                form.save()
+                if form.has_changed():
+                    form.instance.product = product
+                    form.save()
             return redirect('product_details', product_id=product.id)
         else:
             logging.info(product_form.errors)
@@ -70,7 +78,6 @@ class ProductDetails:
         self.product_form = None
         self.formset = None
 
-    @login_required
     def __call__(self, request, product_id):
         self.product_id = product_id
         self.request = request
@@ -96,7 +103,9 @@ class ProductDetails:
         self.product_form = ProductForm(self.request.POST, instance=self.product_object)
         logging.info(self.product_form.is_valid())
         if self.product_form.is_valid():
-            self.product_form.save()
+            product = self.product_form.save(commit=False)
+            product._changed_by = self.request.user
+            product.save()
             return self.redirect()
 
         else:
