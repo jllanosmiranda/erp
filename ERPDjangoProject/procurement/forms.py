@@ -79,16 +79,6 @@ class SupplierProductForm(ModelForm):
         model = SupplierProduct
         fields = ['supplier', 'price', 'currency', 'unit_of_measure']
 
-    def __init__(self, *args, **kwargs):
-        supplier_product = kwargs.get('instance')
-        super().__init__(*args, **kwargs)
-
-        if supplier_product:
-            supplier_product_price = supplier_product.prices.order_by('-effective_date').first()
-            if supplier_product_price:
-                self.fields['price'].initial = supplier_product_price.price
-                self.fields['currency'].initial = supplier_product_price.currency
-
 
 class BaseSupplierProductPriceSet(forms.BaseInlineFormSet):
     def __init__(self, *args, **kwargs):

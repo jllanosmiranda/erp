@@ -58,6 +58,7 @@
             <thead>
             <tr>
                 <th>Proveedores</th>
+                <th>unidad de medidad</th>
                 <th>Precio</th>
                 <th>Moneda</th>
                 <th>Accion</th>
@@ -68,14 +69,20 @@
                 {{ form.id }}
                 <tr id="supplier-product-view-{{ form.instance.id }}" class="supplier-product active" data-type="view">
                     <td><div><a href="{% url 'supplier_details' supplier_id=form.instance.supplier.id%}">{{form.instance.supplier}}</a></div></td>
-                    <td><div>{{form.instance.prices.last.price}}</div></td>
-                    <td><div>{{form.instance.prices.last.currency}}</div></td>
+                    <td><div>{{form.instance.get_unit_of_measure_display}}</div></td>
+                    <td><div>{{form.instance.price}}</div></td>
+                    <td><div>{{form.instance.get_currency_display}}</div></td>
                     <td><button type="button" data-supplier-product-id="{{ form.instance.id }}" class="btn btn-primary edit-supplier-product-btn">Editar</button></td>
                 </tr>
                 <tr id="supplier-product-edit-{{ form.instance.id }}" class="supplier-product" data-type="edit">
                     <td><div>
                         {{ form.supplier }}
                     </div></td>
+                    <td>
+                        <div>
+                            {{ form.unit_of_measure }}
+                        </div>
+                    </td>
                     <td><div>
                         {{ form.price }}
                     </div></td>
