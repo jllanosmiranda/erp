@@ -21,4 +21,8 @@ class Product(EntityBaseModel):
 class ProductEvents(EventBaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="events")
 
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.pop('instance', None)
+        super().__init__(*args, product=instance, **kwargs)
+
 

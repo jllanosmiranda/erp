@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 
+from . import supplier_product
 from ..models import Supplier, Product
 from ..models.constants import CURRENCY_CHOICES, UNIT_OF_MEASURE_CHOICES
 from main.models import EntityBaseModel, EventBaseModel
@@ -21,3 +22,7 @@ class SupplierProduct(EntityBaseModel):
 
 class SupplierProductEvent(EventBaseModel):
     supplier_product = models.ForeignKey(SupplierProduct, on_delete=models.CASCADE, related_name="prices")
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.pop('instance', None)
+        super().__init__(*args, supplier_product=instance, **kwargs)

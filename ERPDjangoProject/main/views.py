@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from main.models import Business
-from main.form import BusinessForm
+from main.forms import BusinessForm
 
 # Create your views here.
 @login_required

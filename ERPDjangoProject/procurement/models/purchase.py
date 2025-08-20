@@ -3,9 +3,10 @@ from django.contrib.auth.models import User
 
 from ..models import SupplierProduct, Product, Supplier
 from ..models.constants import CURRENCY_CHOICES
+from main.models import EntityBaseModel, EventBaseModel
 
 
-class PurchaseRequirement(models.Model):
+class PurchaseRequirement(EntityBaseModel):
     status_choices = [
         (0, 'pending'),
         (1, 'approved'),
@@ -16,15 +17,13 @@ class PurchaseRequirement(models.Model):
         (1, 'credito'),
     ]
     supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING, null=True, blank=True)
-    date = models.DateField(auto_now=True)
     status = models.IntegerField(choices=status_choices)
     payment_condition = models.IntegerField(choices=payment_condition, default=0)
     shipping_condition = models.TextField(default="", blank=True)
     comments = models.TextField(default="", blank=True)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default="")
 
 
-class PurchaseRequirementItems(models.Model):
+class PurchaseRequirementItems(EntityBaseModel):
     supplier_product = models.ForeignKey(SupplierProduct, on_delete=models.DO_NOTHING)
     purchase_requirement = models.ForeignKey(PurchaseRequirement, on_delete=models.DO_NOTHING, related_name="items")
     quantity = models.IntegerField()
@@ -57,4 +56,19 @@ class PurchaseOrderItem(models.Model):
 class PurchaseInvoice(models.Model):
     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.DO_NOTHING)
 
+
+class PurchaseRequirementEvent(EventBaseModel):
+    purchase_requirement = models.ForeignKey(PurchaseRequirement, on_delete=models.CASCADE, related_name="events")
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.pop('instance', None)
+        super().__init__(*args, purchase_requirement=instance, **kwargs)
+
+
+class PurchaseRequirementItemEvent(EventBaseModel):
+    purchase_requirement_item = models.ForeignKey(PurchaseRequirementItems, on_delete=models.CASCADE, related_name="events")
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.pop('instance', None)
+        super().__init__(*args, purchase_requirement_item=instance, **kwargs)
 

@@ -26,7 +26,7 @@ def purchase_requirement_list(request):
     status = request.GET.get('status')
     
     # Start with all purchase requirements
-    purchase_requirements = PurchaseRequirement.objects.all().order_by('-date')
+    purchase_requirements = PurchaseRequirement.objects.all().order_by('-created_at')
     
     # Apply filters if provided
     if supplier_id:
@@ -94,7 +94,7 @@ def purchase_requirement_create(request):
             log.info("valid formset")
             # Save the main form
             purchase_requirement = form.save(commit=False)
-            purchase_requirement.user = request.user
+            purchase_requirement._changed_by = request.user
             purchase_requirement.save()
             
             # Save the formset

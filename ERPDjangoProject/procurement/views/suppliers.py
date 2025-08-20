@@ -188,7 +188,9 @@ def create_supplier(request):
         supplier_form = SupplierForm(request.POST)
 
         if supplier_form.is_valid():
-            supplier_object = supplier_form.save()
+            supplier_object = supplier_form.save(commit=False)
+            supplier_object._changed_by = request.user
+            supplier_object.save()
             return redirect('supplier_details', supplier_id=supplier_object.id)
 
         logging.info(supplier_form.errors)
@@ -208,8 +210,8 @@ def get_supplier_products(request, supplier_product_id):
     object = SupplierProduct.objects.get(id=supplier_product_id)
     return JsonResponse({
         'name': object.product.product_name,
-        'price': object.latest_price.price,
-        'currency': object.latest_price.currency,
-        'unit': object.product.get_unit_of_measure_display()
+        'price': object.price,
+        'currency': object.currency,
+        'unit': object.get_unit_of_measure_display()
     })
 
