@@ -11,6 +11,21 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link dropdown-toggle" href="#negocioSubmenu" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="comprasSubmenu">
+                    <i class="bi bi-briefcase"></i> Negocio
+                </a>
+                <div class="collapse" id="negocioSubmenu">
+                    <ul class="nav flex-column ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'business' %}">
+                                <i class="bi bi-gear"></i>
+                                Configuracion
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
                 <!-- Modified dropdown toggle to ensure it works on mobile -->
                 <a class="nav-link dropdown-toggle" href="#comprasSubmenu" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="comprasSubmenu">
                     <i class="bi bi-cart"></i> Compras
