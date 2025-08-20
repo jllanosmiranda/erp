@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 from ..filters import ProductFilter
 from ..forms import ProductForm, SupplierProductPriceSet
-from ..models import Product, Supplier
+from ..models import Product, Supplier, supplier_product
 from urllib.parse import urlencode
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -51,7 +51,9 @@ def new_product(request):
             for form in suppliers_formset:
                 if form.has_changed():
                     form.instance.product = product
-                    form.save()
+                    supplier_product_object = form.save(commit=False)
+                    supplier_product_object._changed_by = request.user
+                    supplier_product_object.save()
             return redirect('product_details', product_id=product.id)
         else:
             logging.info(product_form.errors)
@@ -68,6 +70,7 @@ def new_product(request):
                'suppliers_formset': suppliers_formset}
 
     return render(request, 'procurement/products/new.html', context=context)
+
 
 class ProductDetails:
     def __init__(self):
@@ -118,7 +121,13 @@ class ProductDetails:
         logging.info(self.formset.is_valid())
 
         if self.formset.is_valid():
-            self.formset.save()
+            formset = self.formset.save(commit=False)
+            for obj in formset:
+                obj._changed_by = self.request.user
+                obj.save()
+            logging.info(
+                f"formset {self.formset.save(commit=False)}"
+            )
             return self.redirect()
 
         else:

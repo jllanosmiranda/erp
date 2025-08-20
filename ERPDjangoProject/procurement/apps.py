@@ -6,4 +6,5 @@ class ProcurementConfig(AppConfig):
     name = 'procurement'
 
     def ready(self):
-        import procurement.signals.products
+        import procurement.signals.product
+        import procurement.signals.supplier_product
