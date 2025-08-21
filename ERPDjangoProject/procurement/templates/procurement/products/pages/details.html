@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Detalles de producto</h1>
+            <a href="{% url 'products' %}" class="btn btn-secondary">
+                Volver a la lista
+            </a>
+        </div>
+    </div>
+
+    <div class="tab">
+    {% if tab_name == 'details' or not tab_name %}
+        <button class="tab-button active" data-tab="details">Detalles</button>
+        <button class="tab-button" data-tab="suppliers">Proveedores</button>
+    {% endif %}
+    {% if tab_name == 'suppliers' %}
+        <button class="tab-button" data-tab="details">Detalles</button>
+        <button class="tab-button active" data-tab="suppliers">Proveedores</button>
+    {% endif %}
+    </div>
+
+
+    <div id="details" class="tabcontent">
+        {% include 'procurement/products/components/basicInformation.html' with product_form=product_form tab_name=tab_name %}
+    </div>
+
+    <div id="suppliers" class="tabcontent">
+        {% include 'procurement/products/components/suppliersOfProductTab.html' %}
+    </div>
+
+{% endblock %}
+{% block extra_js %}
+    <script type=module src="{% static 'procurement/js/common/tabs.js' %}"></script>
+    <script type=module src="{% static 'procurement/js/products/details.js' %}"></script>
+{% endblock %}

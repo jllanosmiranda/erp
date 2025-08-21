@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <h1 class="mb-4">{{ title }}</h1>
+
+    {% include 'components/filters.html' %}
+
+    <div class="card">
+        <div class="card-body">
+            {% block table %}
+            {% endblock %}
+        </div>
+    </div>
+
+    {% include 'components/pagination.html' %}
+    <a href="{% url 'create_supplier' %}" class="btn btn-success">agregar nuevo</a>
+
+{% endblock %}

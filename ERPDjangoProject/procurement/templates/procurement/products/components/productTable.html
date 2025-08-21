@@ -1,20 +1,12 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
-<h1 class="mb-4">Catalogo de productos de los proveedores</h1>
-
-
-    {% include 'components/filters.html' %}
-
 <div class="card">
     <div class="card-header">
         <h5 class="mb-0">Productos</h5>
     </div>
     <div class="card-body">
         <div class="mt-4 text-end p-3">
-        <a href="{% url 'product_new' %}" class="btn btn-success">
-            <i class="bi bi-plus-circle"></i> Agregar nuevo producto
-        </a>
+            <a href="{% url 'product_new' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Agregar nuevo producto
+            </a>
         </div>
 
         <div class="table-responsive">
@@ -42,10 +34,7 @@
                 </tbody>
             </table>
         </div>
-    {% include 'components/pagination.html' %}
+        {% include 'components/pagination.html' %}
 
     </div>
 </div>
-
-<script src="{% static 'procurement/js/clearFilter.js' %}?v=1.0"></script>
-{% endblock %}

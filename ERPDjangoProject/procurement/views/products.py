@@ -5,11 +5,12 @@ from django.shortcuts import render, redirect
 
 from ..filters import ProductFilter
 from ..forms import ProductForm, SupplierProductPriceSet
-from ..models import Product, Supplier, supplier_product
+from ..models import Product, Supplier, SupplierProduct
 from urllib.parse import urlencode
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import logging
+from procurement.filters import SupplierFilter
 
 log = logging.getLogger(__name__)
 
@@ -33,9 +34,10 @@ def list(request):
 
     context = {'page_obj': page_object,
                'filter': product_filter,
-               'extra_filters': extra_filters,}
+               'extra_filters': extra_filters,
+               'title': 'Productos'}
 
-    return render(request, 'procurement/products/list.html', context=context)
+    return render(request, 'procurement/products/pages/list.html', context=context)
 
 
 @login_required
@@ -62,7 +64,7 @@ def new_product(request):
             context = {'form': product_form,
                        'suppliers_formset': suppliers_formset}
             logging.info(f"context {context}")
-            return render(request, 'procurement/products/new.html', context=context)
+            return render(request, 'procurement/products/pages/new.html', context=context)
     else:
         product_form = ProductForm()
         suppliers_formset = SupplierProductPriceSet(prefix="supplier")
@@ -70,7 +72,7 @@ def new_product(request):
     context = {'form': product_form,
                'suppliers_formset': suppliers_formset}
 
-    return render(request, 'procurement/products/new.html', context=context)
+    return render(request, 'procurement/products/pages/new.html', context=context)
 
 
 class ProductDetails:
@@ -89,10 +91,13 @@ class ProductDetails:
 
         self.product_form = ProductForm(instance=self.product_object)
         self.formset = SupplierProductPriceSet(prefix="supplier", instance=self.product_object)
+        self.supplier_filter = SupplierFilter(request.GET, queryset=self.product_object.suppliers.all())
 
+        self.form_id = None
 
         if self.request.method == 'POST':
             self.tab_name = self.request.POST.get('tab-name')
+            self.form_id = self.request.POST.get('form_id')
             form_id = self.request.POST.get('form_id')
             if form_id == "product-details":
                 return self.post_product_details()
@@ -100,7 +105,10 @@ class ProductDetails:
                 return self.post_supplier_products()
         else:
             self.tab_name = self.request.GET.get('tab-name')
-            return self.render()
+            self.form_id = self.request.GET.get('form_id')
+            if self.form_id == "suppliers":
+                self.tab_name = "suppliers"
+            return self._get()
 
 
     def post_product_details(self):
@@ -137,10 +145,25 @@ class ProductDetails:
             return self.render()
 
     def render(self):
+        logging.info(f"tab name: {self.tab_name}")
         context = {'product_form': self.product_form,
                    'formset': self.formset,
-                   'tab_name': self.tab_name,}
-        return render(self.request, 'procurement/products/details.html', context=context)
+                   'tab_name': self.tab_name,
+                   'filter': self.supplier_filter,}
+        return render(self.request, 'procurement/products/pages/details.html', context=context)
+
+    def _get(self):
+        paginator = Paginator(self.supplier_filter.qs, 10)
+        page_number = self.request.GET.get('page')
+        page_object = paginator.get_page(page_number)
+        suppliers_products = SupplierProduct.objects.filter(product=self.product_object,
+                                                   supplier__in=page_object)
+        log.info(f"supplier products {suppliers_products}")
+
+        self.formset = SupplierProductPriceSet(prefix="supplier",
+                                               instance=self.product_object,
+                                               queryset=suppliers_products)
+        return self.render()
 
     def redirect(self):
         url = reverse('product_details', kwargs={'product_id': self.product_id})
@@ -172,7 +195,7 @@ def new_product_from_supplier(request, supplier_id):
             context = {'form': product_form,
                        'suppliers_formset': suppliers_formset}
             logging.info(f"context {context}")
-            return render(request, 'procurement/products/new.html', context=context)
+            return render(request, 'procurement/products/pages/new.html', context=context)
     else:
         product_form = ProductForm()
         initial_data = [{'supplier': supplier}]
@@ -182,4 +205,4 @@ def new_product_from_supplier(request, supplier_id):
     context = {'form': product_form,
                'suppliers_formset': suppliers_formset}
 
-    return render(request, 'procurement/products/new.html', context=context)
+    return render(request, 'procurement/products/pages/new.html', context=context)

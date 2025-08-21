@@ -5,6 +5,7 @@
     </div>
     <div class="card-body">
         <form method="get" id="filter-form" class="mb-3">
+            <input type="hidden" name="form_id" value="{{ form_id }}">
             <div class="row g-3">
                 {% for field in filter.form %}
                     <div class="col-12 col-md-6 col-lg-4">

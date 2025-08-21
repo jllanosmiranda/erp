@@ -1,6 +1,6 @@
 import django_filters
 from django_filters import FilterSet
-from .models import Product, Supplier
+from .models import Product, Supplier, SupplierProduct
 
 class ProductFilter(FilterSet):
     product_name = django_filters.CharFilter(lookup_expr='icontains',
@@ -51,3 +51,4 @@ class SupplierProductFilter(FilterSet):
         if not self.is_bound or not self.is_valid():
             return False
         return any(bool(value) for name, value in self.form.cleaned_data.items() if value is not None)
+
