@@ -3,30 +3,8 @@
 {% block content %}
 <h1 class="mb-4">Catalogo de productos de los proveedores</h1>
 
-<div class="card mb-4">
-    <div class="card-header">
-        <h5 class="mb-0">Filtros</h5>
-    </div>
-    <div class="card-body">
-        <form method="get" id="filter-form" class="mb-3">
-            <div class="row g-3">
-                {% for field in filter.form %}
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <div class="form-group">
-                            {{ field.label_tag }}
-                            <div class="form-control-wrapper">{{ field }}</div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="mt-3">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-filter"></i> Filtrar
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+
+    {% include 'components/filters.html' %}
 
 <div class="card">
     <div class="card-header">
@@ -64,7 +42,7 @@
                 </tbody>
             </table>
         </div>
-    {% include 'main/pagination.html' %}
+    {% include 'components/pagination.html' %}
 
     </div>
 </div>
