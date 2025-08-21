@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from ..models import SupplierProduct, Product, Supplier
-from ..models.constants import CURRENCY_CHOICES
+from ..models.constants import CURRENCY_CHOICES, UNIT_OF_MEASURE_CHOICES
 from main.models import EntityBaseModel, EventBaseModel
 
 
@@ -29,6 +29,7 @@ class PurchaseRequirementItems(EntityBaseModel):
     quantity = models.IntegerField()
     price = models.FloatField()
     currency = models.IntegerField(choices=CURRENCY_CHOICES)
+    unit_of_measure = models.CharField(max_length=50, blank=True, default='', choices=[('', '---------')] + UNIT_OF_MEASURE_CHOICES)
     def __str__(self):
         return self.supplier_product.product.product_name
 

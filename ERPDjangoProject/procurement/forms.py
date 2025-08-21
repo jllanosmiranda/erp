@@ -326,12 +326,13 @@ class PurchaseRequirementForm(ModelForm):
 class PurchaseRequirementItemsForm(ModelForm):
     class Meta:
         model = PurchaseRequirementItems
-        fields = ['supplier_product', 'quantity', 'price', 'currency']
+        fields = ['supplier_product', 'quantity', 'price', 'currency', 'unit_of_measure']
         labels = {
             'supplier_product': 'Producto',
             'quantity': 'Cantidad',
             'price': 'Precio',
-            'currency': 'Moneda'
+            'currency': 'Moneda',
+            'unit_of_measure': 'Unidad de medida'
         }
     
     def __init__(self, *args, supplier=None, **kwargs):
@@ -347,6 +348,7 @@ class PurchaseRequirementItemsForm(ModelForm):
         self.fields['price'].widget.attrs['class'] += ' price-field'
         self.fields['quantity'].widget.attrs['class'] += ' quantity-field'
         self.fields['currency'].widget.attrs['class'] += ' currency-field'
+        self.fields['unit_of_measure'].widget.attrs['class'] += ' unit-of-measure-field'
 
 
 class BasePurchaseRequirementItemsFormSet(forms.BaseInlineFormSet):

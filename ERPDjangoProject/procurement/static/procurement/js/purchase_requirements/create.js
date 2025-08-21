@@ -15,7 +15,7 @@ class ItemRow {
     #supplierProductSelectorChangedEvents = []
     #rowDeleteEvents = []
     #idNonde = null
-    #unitNode = null
+    #unitOfMeasureNode = null
 
 
     constructor(rowNode){
@@ -27,7 +27,7 @@ class ItemRow {
         this.#quantityNode = this.#rowNode.querySelector('.quantity-field')
         this.#supplierProductSelectorNode = this.#rowNode.querySelector('.supplier-product-selector')
         this.#deleteButton = this.#rowNode.querySelector('.btn-remove-item')
-        this.#unitNode = this.#rowNode.querySelector('.unit-field')
+        this.#unitOfMeasureNode = this.#rowNode.querySelector('.unit-of-measure-field')
 
         this.#deleteButton.addEventListener('click', () => {
             this.#rowNode.remove()
@@ -67,9 +67,8 @@ class ItemRow {
                     this.#priceNode.value = data.price
                     this.#currencyNode.value = data.currency
                     this.#quantityNode.value = 1
-                    if (this.#unitNode){
-                        this.#unitNode.innerHTML = data.unit || ''
-                    }
+                    this.#unitOfMeasureNode.value = data.unit_of_measure
+                    console.log(data.unit_of_measure)
                     this.updateSubTotal()
                     console.log("event create a new item")
                     this.#supplierProductSelectorChangedEvents.forEach(event => {
@@ -125,10 +124,12 @@ class ItemRow {
     }
 
     setIndex(index){
+        // method to update the index of the forms relate to one product in the formset
         this.setIndexNode(this.#supplierProductSelectorNode, index, 'supplier_product')
         this.setIndexNode(this.#priceNode, index, 'price')
         this.setIndexNode(this.#currencyNode, index, 'currency')
         this.setIndexNode(this.#quantityNode, index, 'quantity')
+        this.setIndexNode(this.#unitOfMeasureNode, index, 'unit_of_measure')
         this.setIndexNode(this.#idNonde, index, 'id')
 
     }

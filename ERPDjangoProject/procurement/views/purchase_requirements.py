@@ -99,8 +99,13 @@ def purchase_requirement_create(request):
             
             # Save the formset
             formset.instance = purchase_requirement
-            formset.save()
-            
+            purchase_items = formset.save(commit=False)
+            for purchase_item in purchase_items:
+                purchase_item._changed_by = request.user
+                purchase_item.save()
+
+
+
             messages.success(request, 'Requerimiento de compra creado exitosamente.')
             return redirect('purchase_requirement_list')
         else:

@@ -212,6 +212,6 @@ def get_supplier_products(request, supplier_product_id):
         'name': object.product.product_name,
         'price': object.price,
         'currency': object.currency,
-        'unit': object.get_unit_of_measure_display()
+        'unit_of_measure': object.unit_of_measure
     })
 

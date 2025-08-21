@@ -34,11 +34,12 @@
                         </div>
                     {% endif %}
                 </td>
-                <td class="unit-field">
-                    {% if form.instance.pk and form.instance.supplier_product %}
-                        {{ form.instance.supplier_product.product.unit_of_measure }}
-                        this is a message
-                        {{ form.instance.supplier_product.product.get_unit_of_measure_display }}
+                <td>
+                    {{ form.unit_of_measure }}
+                    {% if form.unit_of_measure.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.unit_of_measure.errors }}
+                        </div>
                     {% endif %}
                 </td>
                 <td>
