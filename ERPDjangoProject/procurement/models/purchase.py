@@ -22,6 +22,11 @@ class PurchaseRequirement(EntityBaseModel):
     shipping_condition = models.TextField(default="", blank=True)
     comments = models.TextField(default="", blank=True)
 
+    @property
+    def date(self):
+        print(self.created_at)
+        return self.created_at.strftime("%d/%m/%Y")
+
 
 class PurchaseRequirementItems(EntityBaseModel):
     supplier_product = models.ForeignKey(SupplierProduct, on_delete=models.DO_NOTHING)
@@ -36,6 +41,7 @@ class PurchaseRequirementItems(EntityBaseModel):
     @property
     def subtotal(self):
         return self.quantity * self.price
+
 
 
 class PurchaseOrder(models.Model):
