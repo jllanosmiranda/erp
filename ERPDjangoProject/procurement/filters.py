@@ -1,14 +1,19 @@
+import django_filters
 from django_filters import FilterSet
-from .models import Product
+from .models import Product, Supplier
 
 class ProductFilter(FilterSet):
+    product_name = django_filters.CharFilter(lookup_expr='icontains',
+                                             label="Nombre de producto")
+    code = django_filters.CharFilter(lookup_expr='icontains',
+                                     label="Codigo de producto")
+
+    suppliers = django_filters.ModelChoiceFilter(queryset=Supplier.objects.all(),
+                                                        label="Proveedores",
+                                                         empty_label="----Todos----")
     class Meta:
         model = Product
-        fields = {
-            "product_name": ["icontains"],
-            "suppliers": ["exact"],
-            "code": ["icontains"]
-        }
+        fields = ['product_name', 'code', 'suppliers']
 
     @property
     def has_active_filter(self):

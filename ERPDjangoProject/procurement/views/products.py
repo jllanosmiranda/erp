@@ -15,24 +15,25 @@ log = logging.getLogger(__name__)
 
 
 @login_required()
-def products(request):
+def list(request):
 
     products_list = Product.objects.all()
     product_filter = ProductFilter(request.GET,
                                     queryset=products_list)
+    log.info(f"product filter {product_filter}")
 
     paginator = Paginator(product_filter.qs, 10)
-    page = request.GET.get('page')
-    try:
-        objects = paginator.page(page)
-    except PageNotAnInteger:
-        objects = paginator.page(1)
+    page_number = request.GET.get('page')
+    page_object = paginator.get_page(page_number)
+    log.info(f"filter {product_filter.form.cleaned_data}")
+    filters_for_url = {
+        k: v for k,v in product_filter.form.cleaned_data.items() if v not in [None, '']
+    }
+    extra_filters =urlencode(filters_for_url)
 
-    except EmptyPage:
-        objects = paginator.page(paginator.num_pages)
-
-    context = {'products': objects,
-               'filter': product_filter}
+    context = {'page_obj': page_object,
+               'filter': product_filter,
+               'extra_filters': extra_filters,}
 
     return render(request, 'procurement/products/list.html', context=context)
 

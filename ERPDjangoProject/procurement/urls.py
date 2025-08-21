@@ -4,7 +4,7 @@ from django.urls import path
 from .views import products, suppliers, good_receipt_notes, purchase_requirements
 
 urlpatterns = [
-    path('products/', products.products, name="products"),
+    path('products/', products.list, name="products"),
     path('products/new', products.new_product, name='product_new'),
     path('products/<int:product_id>', products.ProductDetails(), name='product_details'),
     path('suppliers/', suppliers.list, name='suppliers'),
