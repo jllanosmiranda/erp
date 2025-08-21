@@ -11,15 +11,28 @@ from django.contrib.auth.decorators import login_required
 from ..filters import SupplierProductFilter
 from ..forms import SupplierForm, SupplierContactSet, SupplierBankSet, ProductSupplierFormSet, SupplierAddProductForm
 from ..models import Supplier, SupplierProduct
+from procurement.filters import SupplierFilter
 
 log = logging.getLogger(__name__)
 
 
 @login_required
 def list(request):
+    supplier_list = Supplier.objects.all()
+    supplier_filter = SupplierFilter(request.GET,
+                                   queryset=supplier_list)
 
-    suppliers = Supplier.objects.all()
-    context = {'suppliers': suppliers}
+    paginator = Paginator(supplier_filter.qs, 10)
+    page_number = request.GET.get('page')
+    page_object = paginator.get_page(page_number)
+    filters_for_url = {
+        k: v for k,v in supplier_filter.form.cleaned_data.items() if v not in [None, '']
+    }
+    extra_filters =urlencode(filters_for_url)
+
+    context = {'page_obj': page_object,
+               'filter': supplier_filter,
+               'extra_filters': extra_filters}
     return render(request, 'procurement/supplier/list.html', context=context)
 
 

@@ -3,6 +3,7 @@
 
 {% block content %}
 <h1>Provedores</h1>
+    {% include 'components/filters.html' %}
     <div class="table-responsive">
         <table class="table table-striped table-hover table-to-cards">
             <thead>
@@ -14,16 +15,17 @@
                 </tr>
             </thead>
             <tbody>
-            {% for supplier in suppliers %}
+            {% for supplier in page_obj %}
                 <tr>
                     <td data-label="Nombre"><a href="{% url 'supplier_details' supplier_id=supplier.id %}">{{ supplier.name }} <i class="bi bi-eye"></i></a></td>
-                    <td data-label="RUC">{{ supplier.ruc }}</td>
-                    <td data-label="Email">{{ supplier.email }}</td>
-                    <td data-label="Telefono">{{ supplier.phone }}</td>
+                    <td data-label="RUC">{{ supplier.ruc|default:"-" }}</td>
+                    <td data-label="Email">{{ supplier.email|default:"-" }}</td>
+                    <td data-label="Telefono">{{ supplier.phone|default:"_" }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+        {% include 'components/pagination.html' %}
 
     </div>
     <a href="{% url 'create_supplier' %}" class="btn btn-success">agregar nuevo</a>

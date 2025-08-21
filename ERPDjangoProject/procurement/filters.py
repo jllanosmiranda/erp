@@ -21,6 +21,23 @@ class ProductFilter(FilterSet):
             return False
         return any(bool(value) for name, value in self.form.cleaned_data.items() if value is not None)
 
+class SupplierFilter(FilterSet):
+    name = django_filters.CharFilter(lookup_expr='icontains',
+                                     label="Nombre")
+    ruc = django_filters.CharFilter(lookup_expr='icontains',
+                                     label="RUC")
+
+    class Meta:
+        model = Supplier
+        fields = ['name', 'ruc']
+
+    @property
+    def has_active_filter(self):
+        if not self.is_bound or not self.is_valid():
+            return False
+        return any(bool(value) for name, value in self.form.cleaned_data.items() if value is not None)
+
+
 class SupplierProductFilter(FilterSet):
     class Meta:
         model = Product

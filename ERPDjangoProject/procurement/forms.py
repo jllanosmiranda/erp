@@ -31,7 +31,7 @@ class SupplierForm(ModelForm):
                           ],
                           label="RUC",
                           widget=forms.TextInput(attrs={'class': 'form-control'}))
-    name = forms.CharField(required=False,
+    name = forms.CharField(
                            label="Nombre",
                            widget=forms.TextInput(attrs={'class': 'form-control'})
                            )
@@ -49,6 +49,24 @@ class SupplierForm(ModelForm):
         if not website:
             return None
         return website
+
+    def clean_ruc(self):
+        ruc = self.cleaned_data.get("ruc")
+        if not ruc:
+            return None
+        return ruc
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if not email:
+            return None
+        return email
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone")
+        if not phone:
+            return None
+        return phone
 
     def set_fields_readonly(self):
         for field in self.fields.values():
