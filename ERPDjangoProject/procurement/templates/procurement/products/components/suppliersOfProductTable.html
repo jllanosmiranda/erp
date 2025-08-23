@@ -1,12 +1,18 @@
 <div class="card">
     <div class="card-header">
         <h5 class="mb-0">Precios de Proveedores</h5>
+</div>
+    <div class="mt-4 text-end p-3">
+        <button type="button" id="add-supplier-product-btn" class="btn btn-success">Agregar Nuevo Proveedor</button>
+        <button type="button" id="cancel-add-supplier-product-btn" class="btn btn-danger">Cancelar</button>
     </div>
 <form method="post">
     {% csrf_token %}
     <input type="hidden" name="form_id" value="update-supplier-products">
     <input type="hidden" name="tab-name" value="suppliers">
-    {{ formset.management_form }}
+    <div id="supplier-manager">
+        {{ formset.management_form }}
+    </div>
     <table>
         <thead>
         <tr>
@@ -17,15 +23,15 @@
             <th>Accion</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="supplier-products">
         {% for form in formset.forms_with_data %}
             {{ form.id }}
-            <tr id="supplier-product-view-{{ form.instance.id }}" class="supplier-product active" data-type="view">
+            <tr class="supplier-product">
                 <td><div><a href="{% url 'supplier_details' supplier_id=form.instance.supplier.id%}">{{form.instance.supplier}}</a></div></td>
                 <td><div>{{form.instance.get_unit_of_measure_display}}</div></td>
                 <td><div>{{form.instance.price}}</div></td>
                 <td><div>{{form.instance.get_currency_display}}</div></td>
-                <td><button type="button" data-supplier-product-id="{{ form.instance.id }}" class="btn btn-primary edit-supplier-product-btn">Editar</button></td>
+                <td><button type="button" class="btn btn-primary edit-supplier-product-btn">Editar</button></td>
             </tr>
             <tr id="supplier-product-edit-{{ form.instance.id }}" class="supplier-product" data-type="edit">
                 <td><div>
@@ -43,26 +49,38 @@
                     {{ form.currency }}
                 </div></td>
                 <td><button type="submit" class="btn btn-success">Guardar</button>
-                    <button type="button" class="btn btn-danger cancel-edit-supplier-product-btn" data-supplier-product-id="{{ form.instance.id }}">Cancelar</button>
+                    <button type="button" class="btn btn-danger cancel-edit-supplier-product-btn">Cancelar</button>
                 </td>
             </tr>
         {% endfor %}
+        </tbody>
+        <tbody id="supplier-product-new">
         {% for form in formset.forms_extra %}
             {{ form.id }}
-            <tr id="supplier-product-add" class="supplier-product" data-type="add">
-                <td><div>
+            <tr class="supplier-product-new" data-type="add">
+                <td>
                     {{ form.supplier }}
-                </div></td>
-                <td><div>
+                </td>
+                <td>
+                    {{ form.unit_of_measure }}
+                </td>
+                <td>
                     {{ form.price }}
-                </div></td>
-                <td><div>
+                </td>
+                <td>
                     {{ form.currency }}
-                </div></td>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <div class="mt-4 text-end p-3">
+        <button type="button" id="add-supplier-product-btn" class="btn btn-primary">Agregar Proveedor</button>
+        <button type="button" id="add-supplier-product-btn" class="btn btn-success">Guardar</button>
+    </div>
 </form>
     {% include 'components/pagination.html' %}
 </div>

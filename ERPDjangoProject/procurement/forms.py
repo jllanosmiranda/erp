@@ -97,6 +97,13 @@ class SupplierProductForm(ModelForm):
         model = SupplierProduct
         fields = ['supplier', 'price', 'currency', 'unit_of_measure']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['supplier'].widget.attrs['class'] = 'supplier-field'
+        self.fields['price'].widget.attrs['class'] = 'price-field'
+        self.fields['currency'].widget.attrs['class'] = 'currency-field'
+        self.fields['unit_of_measure'].widget.attrs['class'] = 'unit_of_measure-field'
+
 
 class BaseSupplierProductPriceSet(forms.BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -306,20 +313,21 @@ class SupplierAddProductForm(forms.ModelForm):
             field.widget.attrs['disabled'] = True
             field.widget.attrs['class'] = 'new-product-field'
 
-    def save(self, commit=True):
+    def save(self, changed_by, commit=True):
         # Create the product first
         product = Product.objects.create(
             product_name=self.cleaned_data['product_name'],
             product_description=self.cleaned_data['product_description'],
             code=self.cleaned_data['code'],
-            unit_of_measure=self.cleaned_data.get('unit_of_measure', '')
+            _changed_by=changed_by
         )
 
         # Create the supplier product relationship
         supplier_product = super().save(commit=False)
         supplier_product.supplier = self.supplier
         supplier_product.product = product
-        
+        supplier_product.unit_of_measure = self.cleaned_data.get('unit_of_measure', '')
+        supplier_product._changed_by = changed_by
 
         return supplier_product
 

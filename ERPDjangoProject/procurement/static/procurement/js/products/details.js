@@ -57,6 +57,17 @@ document.addEventListener('DOMContentLoaded', function() {
             cancel_edit_supplier_product(button.getAttribute('data-supplier-product-id'))
         })
     })
+
+    const add_button = document.getElementById('add-supplier-product')
+    add_button.addEventListener('click', () => {
+        const row = document.querySelectorAll('.supplier-product-new')
+        row.style.display = "";
+        const inputs = row.querySelectorAll(".supplier-product-field");
+        inputs.forEach(input => {
+            input.readOnly = false;
+            console.log("input to readonly")
+        })
+    })
 })
 
 

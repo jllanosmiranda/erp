@@ -148,7 +148,7 @@ class SupplierDetails:
         new_product_form = SupplierAddProductForm(self.request.POST, supplier=self.supplier_object)
         if new_product_form.is_valid():
             logging.info("valid product form set")
-            new_product_form.save()
+            new_product_form.save(changed_by=self.request.user)
             return self._redirect()
         else:
             logging.info("invalid product form set")
