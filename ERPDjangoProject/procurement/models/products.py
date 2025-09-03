@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from .suppliers import Supplier
 from datetime import datetime
-from main.models import EntityBaseModel, EventBaseModel
+from core.models import EntityBaseModel, EventBaseModel
 
 
 class Product(EntityBaseModel):

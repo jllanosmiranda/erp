@@ -6,7 +6,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
-from main.signals import update_event, create_event
+from core.signals import create_event, update_event
 
 
 @receiver(post_save, sender=PurchaseRequirement)

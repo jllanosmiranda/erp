@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 from ..models import SupplierProduct, Product, Supplier
 from ..models.constants import CURRENCY_CHOICES, UNIT_OF_MEASURE_CHOICES
-from main.models import EntityBaseModel, EventBaseModel
+from core.models import EntityBaseModel, EventBaseModel
 
 
 class PurchaseRequirement(EntityBaseModel):
@@ -21,6 +21,7 @@ class PurchaseRequirement(EntityBaseModel):
     payment_condition = models.IntegerField(choices=payment_condition, default=0)
     shipping_condition = models.TextField(default="", blank=True)
     comments = models.TextField(default="", blank=True)
+    vat = models.FloatField(default=0)
 
     @property
     def date(self):

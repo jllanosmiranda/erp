@@ -89,7 +89,7 @@ class ProductDetails:
         self.request = request
         self.product_object = Product.objects.get(id=product_id)
 
-        self.product_form = ProductForm(instance=self.product_object)
+        self.product_form = ProductForm(instance=self.product_object, user=request.user)
         self.formset = SupplierProductPriceSet(prefix="supplier", instance=self.product_object)
         self.supplier_filter = SupplierFilter(request.GET, queryset=self.product_object.suppliers.all())
 
@@ -170,6 +170,11 @@ class ProductDetails:
         params = {'tab-name': self.tab_name }
         url = f"{url}?{urlencode(params)}"
         return redirect(url)
+
+@login_required
+def details(request, product_id):
+    product_details = ProductDetails()
+    return product_details(request, product_id)
 
 
 

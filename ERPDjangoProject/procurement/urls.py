@@ -6,7 +6,7 @@ from .views import products, suppliers, good_receipt_notes, purchase_requirement
 urlpatterns = [
     path('products/', products.list, name="products"),
     path('products/new', products.new_product, name='product_new'),
-    path('products/<int:product_id>', products.ProductDetails(), name='product_details'),
+    path('products/<int:product_id>', products.details, name='product_details'),
     path('suppliers/', suppliers.list, name='suppliers'),
     path('suppliers/<int:supplier_id>', suppliers.details, name='supplier_details'),
 

@@ -2,7 +2,7 @@ from ..models.products import ProductEvents, Product
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 import logging
-from main.signals import update_event, create_event
+from core.signals import create_event, update_event
 
 log = logging.getLogger(__name__)
 

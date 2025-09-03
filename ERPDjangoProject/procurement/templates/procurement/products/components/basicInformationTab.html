@@ -1,30 +1,25 @@
-<form method="post">
-    {% csrf_token %}
-    <input type="hidden" name="form_id" value="product-details">
-    <input type="hidden" name="tab-name" value="details">
-    <div id="detalles" class="card mb-4 mx-auto">
-        <div class="card-header">
-            <h3>Informacion basica</h3>
-        </div>
-        <div class="card-body">
-            <div class="basic-info">
-                {%  for field in product_form %}
-                    <div class="row mt-3">
-                        <label for="{{ field.id_for_label }}" class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
-                            {{ field.label }}
-                        </label>
-                        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
-                            <div class="view-input active">{{ field.value }}</div>
-                            <div class="edit-input">{{ field }}</div>
-                        </div>
+<div id="detalles" class="card mb-4 mx-auto">
+    <div class="card-header">
+        <h3>Informacion basica</h3>
+    </div>
+    <div class="card-body">
+        <div class="basic-info">
+            {%  for object in objects %}
+                <div class="row mt-3">
+                    <label for="{{ field.id_for_label }}" class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                        {{ field.label }}
+                    </label>
+                    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                        <div class="view-input active">{{ field.value }}</div>
+                        <div class="edit-input">{{ field }}</div>
                     </div>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="mt-4 text-end p-3">
-            <button id="edit-product" class="btn btn-primary hide-button active" type="button">Editar</button>
-            <button id="save-product" class="btn btn-success hide-button" type="submit">Guardar</button>
-            <button id="cancel-edit" class="btn btn-danger hide-button" type="button">Cancelar</button>
+                </div>
+            {% endfor %}
         </div>
     </div>
-</form>
+    <div class="mt-4 text-end p-3">
+        <button id="edit-product" class="btn btn-primary hide-button active" type="button">Editar</button>
+        <button id="save-product" class="btn btn-success hide-button" type="submit">Guardar</button>
+        <button id="cancel-edit" class="btn btn-danger hide-button" type="button">Cancelar</button>
+    </div>
+</div>

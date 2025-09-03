@@ -4,7 +4,7 @@ from django.utils.timezone import now
 from . import supplier_product
 from ..models import Supplier, Product
 from ..models.constants import CURRENCY_CHOICES, UNIT_OF_MEASURE_CHOICES
-from main.models import EntityBaseModel, EventBaseModel
+from core.models import EntityBaseModel, EventBaseModel
 
 
 class SupplierProduct(EntityBaseModel):

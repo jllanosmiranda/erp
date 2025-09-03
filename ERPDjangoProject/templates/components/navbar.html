@@ -12,14 +12,24 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link dropdown-toggle" href="#negocioSubmenu" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="comprasSubmenu">
-                    <i class="bi bi-briefcase"></i> Negocio
+                    <i class="bi bi-briefcase"></i> Configuracion
                 </a>
                 <div class="collapse" id="negocioSubmenu">
                     <ul class="nav flex-column ms-3">
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'business' %}">
+                            <a class="nav-link" href="{% url 'settings_business' %}">
                                 <i class="bi bi-gear"></i>
-                                Configuracion
+                                Negocio
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapse" id="negocioSubmenu">
+                    <ul class="nav flex-column ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'settings_purchase' %}">
+                                <i class="bi bi-gear"></i>
+                                Impuestos
                             </a>
                         </li>
                     </ul>
@@ -51,6 +61,30 @@
                             <a class="nav-link" href="{% url 'purchase_requirement_list' %}">
                                 <i class="bi bi-clipboard-check"></i> Ordenes de compra
                             </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link dropdown-toggle" href="#settingsSubmenu" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="settingsSubmenu">
+                                <i class="bi bi-clipboard-check"></i> Ordenes de compra
+                            </a>
+                            <div class="collapse" id="settingsSubmenu">
+                                <ul class="nav flex-column ms-3">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'purchase_requirement_create' %}">
+                                            <i class="bi bi-gear"></i> Nuevo
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'product_new' %}">
+                                            <i class="bi bi-gear"></i> Configuracion
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'purchase_requirement_list' %}">
+                                            <i class="bi bi-search"></i> buscar
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                     </ul>
                 </div>

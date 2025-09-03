@@ -6,11 +6,12 @@ from django.core.validators import MinValueValidator, RegexValidator
 from django.forms import inlineformset_factory
 import logging
 from .models.constants import CURRENCY_CHOICES, UNIT_OF_MEASURE_CHOICES
+from core.forms import EntityBaseModelForm
 
 logging.basicConfig(level=logging.DEBUG)
 
 
-class SupplierForm(ModelForm):
+class SupplierForm(EntityBaseModelForm):
     website = forms.URLField(required=False,
                              label="Sitio Web",
                              widget=forms.URLInput(attrs={'class': 'form-control'}))
@@ -38,7 +39,7 @@ class SupplierForm(ModelForm):
 
     class Meta:
         model = Supplier
-        fields = '__all__'
+        fields = ['name', 'ruc', 'address', 'phone', 'email', 'website']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -106,8 +107,10 @@ class SupplierProductForm(ModelForm):
 
 
 class BaseSupplierProductPriceSet(forms.BaseInlineFormSet):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.user = user
 
     @property
     def forms_with_data(self):
@@ -128,7 +131,7 @@ SupplierProductPriceSet = inlineformset_factory(Product,
                                                 )
 
 
-class ProductForm(ModelForm):
+class ProductForm(EntityBaseModelForm):
     product_name = forms.CharField(max_length=200,
                                    label="Nombre",
                                    widget=forms.TextInput(attrs={'class': 'form-control'}))

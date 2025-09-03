@@ -131,7 +131,7 @@ class SupplierDetails:
             return self._render()
 
     def _basic_information(self):
-        supplier_form = SupplierForm(self.request.POST, instance=self.supplier_object)
+        supplier_form = SupplierForm(self.request.POST, instance=self.supplier_object, user=self.request.user)
         if supplier_form.is_valid():
             supplier_form.save()
             return self._redirect()
@@ -202,7 +202,6 @@ def create_supplier(request):
 
         if supplier_form.is_valid():
             supplier_object = supplier_form.save(commit=False)
-            supplier_object._changed_by = request.user
             supplier_object.save()
             return redirect('supplier_details', supplier_id=supplier_object.id)
 

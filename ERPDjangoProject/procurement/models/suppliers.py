@@ -1,5 +1,5 @@
 from django.db import models
-from main.models import EntityBaseModel, EventBaseModel
+from core.models import EntityBaseModel, EventBaseModel
 
 
 class Supplier(EntityBaseModel):
