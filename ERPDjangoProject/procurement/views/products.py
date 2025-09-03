@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 
 from ..filters import ProductFilter
-from ..forms import ProductForm, SupplierProductSet, SupplierProductForm
+from ..forms import ProductForm, SupplierProductSet, SupplierProductUpdateForm
 from ..models import Product, Supplier, SupplierProduct
 from urllib.parse import urlencode
 from django.urls import reverse
@@ -169,6 +169,9 @@ def details(request, product_id):
     if form_id == "suppliers":
         tab_name = "suppliers"
 
+    log.info(f"tab name: {tab_name}")
+    log.info(f"form id {form_id}")
+
     supplier_filter = SupplierFilter(request.GET, queryset=product_object.suppliers.all())
     paginator = Paginator(supplier_filter.qs, 10)
     page_number = request.GET.get('page')
@@ -224,6 +227,28 @@ def add_new_supplier(request, product_id):
     context = {'formset': supplier_product_set_form,
                'product': product,}
     return render(request, template_name='procurement/products/pages/assignSupplierToProduct.html', context=context)
+
+@login_required
+def edit_supplier_of_products(request, supplier_product_id):
+    supplier_product_object = SupplierProduct.objects.get(id=supplier_product_id)
+    if request.method == 'POST':
+        supplier_product_form = SupplierProductUpdateForm(request.POST, instance=supplier_product_object)
+        if supplier_product_form.is_valid():
+            log.info("valid supplier product set form")
+            supplier_product = supplier_product_form.save(commit=False)
+            supplier_product.updated_by = request.user
+            supplier_product.save()
+            return redirect('product_details', product_id=supplier_product_object.product.id)
+        else:
+            log.info(supplier_product_form.errors)
+            context = {'form': supplier_product_form,
+                       'product': supplier_product_object.product,}
+            return render(request, template_name='procurement/products/pages/editSupplierOfProduct.html', context=context)
+
+    supplier_product_form = SupplierProductUpdateForm(instance=supplier_product_object)
+    context = {'form': supplier_product_form,
+               'product': supplier_product_object.product,}
+    return render(request, template_name='procurement/products/pages/editSupplierOfProduct.html', context=context)
 
 
 @login_required

@@ -25,7 +25,9 @@
                     <td><div>{{supplier_product.get_unit_of_measure_display}}</div></td>
                     <td><div>{{supplier_product.price}}</div></td>
                     <td><div>{{supplier_product.get_currency_display}}</div></td>
-                    <td><button type="button" class="btn btn-primary edit-supplier-product-btn">Editar</button></td>
+                    <td>
+                        <a href="{% url 'edit_supplier_of_product' supplier_product_id=supplier_product.id %}" class="btn btn-primary">Editar</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
