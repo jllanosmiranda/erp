@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div id="detalles" class="card mb-4 mx-auto">
+            <div class="card-header">
+                <h3>Asignar Producto a Proveedor </h3>
+            </div>
+            {{ formset.management_form }}
+            {% for form in formset.extra_forms %}
+                <div class="card-body">
+                    <div class="row mt-3">
+                        <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                            {{ form.supplier.label_tag }}
+                        </div>
+                        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                            {{ form.supplier }}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                            {{ form.unit_of_measure.label_tag }}
+                        </div>
+                        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                                {{ form.unit_of_measure }}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                        {{ form.price.label_tag }}
+                        </div>
+                        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                                {{ form.price }}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                        {{ form.currency.label_tag }}
+                        </div>
+                        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                            {{ form.currency }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="mt-4 text-end p-3">
+                <button id="save-product" class="btn btn-success" type="submit">Guardar</button>
+                <a href="{% url 'product_details' product_id=product.id %}" class="btn btn-danger">Cancelar</a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

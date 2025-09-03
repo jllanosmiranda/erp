@@ -1,25 +1,36 @@
-<div id="detalles" class="card mb-4 mx-auto">
+<div class="card mb-4 mx-auto">
     <div class="card-header">
         <h3>Informacion basica</h3>
     </div>
     <div class="card-body">
         <div class="basic-info">
-            {%  for object in objects %}
                 <div class="row mt-3">
-                    <label for="{{ field.id_for_label }}" class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
-                        {{ field.label }}
-                    </label>
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
-                        <div class="view-input active">{{ field.value }}</div>
-                        <div class="edit-input">{{ field }}</div>
+                        <div class="view-input active"> Nombre </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                        <div class="view-input active">{{ product.product_name }}</div>
                     </div>
                 </div>
-            {% endfor %}
+            <div class="row mt-3">
+                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                    <div class="view-input active"> Codigo </div>
+                </div>
+                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                    <div class="view-input active">{{ object.code }}</div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                    <div class="view-input active"> Descripcion </div>
+                </div>
+                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                    <div class="view-input active">{{ product.product_description }}</div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="mt-4 text-end p-3">
-        <button id="edit-product" class="btn btn-primary hide-button active" type="button">Editar</button>
-        <button id="save-product" class="btn btn-success hide-button" type="submit">Guardar</button>
-        <button id="cancel-edit" class="btn btn-danger hide-button" type="button">Cancelar</button>
+        <a href="{% url 'product_edit_basic_information' product_id=product.id %}" class="btn btn-primary">Editar</a>
     </div>
 </div>

@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 
 from ..filters import ProductFilter
-from ..forms import ProductForm, SupplierProductPriceSet
+from ..forms import ProductForm, SupplierProductSet, SupplierProductForm
 from ..models import Product, Supplier, SupplierProduct
 from urllib.parse import urlencode
 from django.urls import reverse
@@ -44,33 +44,21 @@ def list(request):
 def new_product(request):
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
-        suppliers_formset = SupplierProductPriceSet(request.POST, prefix="supplier")
         log.info(f"request {request.POST}")
-        log.info(f"suppliers {suppliers_formset}")
-        if product_form.is_valid() and suppliers_formset.is_valid():
+        if product_form.is_valid():
             product = product_form.save(commit=False)
-            product._changed_by = request.user
+            product.created_by = request.user
+            product.updated_by = request.user
             product.save()
-            for form in suppliers_formset:
-                if form.has_changed():
-                    form.instance.product = product
-                    supplier_product_object = form.save(commit=False)
-                    supplier_product_object._changed_by = request.user
-                    supplier_product_object.save()
             return redirect('product_details', product_id=product.id)
         else:
             logging.info(product_form.errors)
-            logging.info(suppliers_formset.errors)
-            context = {'form': product_form,
-                       'suppliers_formset': suppliers_formset}
+            context = {'form': product_form}
             logging.info(f"context {context}")
             return render(request, 'procurement/products/pages/new.html', context=context)
-    else:
-        product_form = ProductForm()
-        suppliers_formset = SupplierProductPriceSet(prefix="supplier")
+    product_form = ProductForm()
 
-    context = {'form': product_form,
-               'suppliers_formset': suppliers_formset}
+    context = {'form': product_form}
 
     return render(request, 'procurement/products/pages/new.html', context=context)
 
@@ -147,6 +135,7 @@ class ProductDetails:
     def render(self):
         logging.info(f"tab name: {self.tab_name}")
         context = {'product_form': self.product_form,
+                   'object': self.product_object,
                    'formset': self.formset,
                    'tab_name': self.tab_name,
                    'filter': self.supplier_filter,}
@@ -173,9 +162,68 @@ class ProductDetails:
 
 @login_required
 def details(request, product_id):
-    product_details = ProductDetails()
-    return product_details(request, product_id)
+    product_object = Product.objects.get(id=product_id)
 
+    tab_name = request.GET.get('tab-name')
+    form_id = request.GET.get('form_id')
+    if form_id == "suppliers":
+        tab_name = "suppliers"
+
+    supplier_filter = SupplierFilter(request.GET, queryset=product_object.suppliers.all())
+    paginator = Paginator(supplier_filter.qs, 10)
+    page_number = request.GET.get('page')
+    page_object = paginator.get_page(page_number)
+    supplier_products = SupplierProduct.objects.filter(product=product_object,
+                                                        supplier__in=page_object)
+    context = {'product': product_object,
+               'supplier_products': supplier_products,
+               'tab_name': tab_name,
+               'filter': supplier_filter}
+    return render(request, 'procurement/products/pages/details.html', context=context)
+
+@login_required
+def edit_basic_information(request, product_id):
+    product = Product.objects.get(id=product_id)
+    if request.method == 'POST':
+        product_form = ProductForm(request.POST, instance=product)
+        if product_form.is_valid():
+            product = product_form.save(commit=False)
+            product.updated_by = request.user
+            product.save()
+            return redirect('product_details', product_id=product.id)
+        else:
+            logging.info(product_form.errors)
+            context = {'form': product_form}
+            return render(request, template_name='procurement/products/pages/editBasicInformation.html', context=context)
+
+    product_form = ProductForm(instance=product)
+    context = {'form': product_form}
+    return render(request, template_name='procurement/products/pages/editBasicInformation.html', context=context)
+
+@login_required
+def add_new_supplier(request, product_id):
+    product = Product.objects.get(id=product_id)
+    if request.method == 'POST':
+        supplier_product_set_form = SupplierProductSet(request.POST, instance=product)
+        if supplier_product_set_form.is_valid():
+            log.info("valid supplier product set form")
+            supplier_product_set = supplier_product_set_form.save(commit=False)
+            for supplier_product in supplier_product_set:
+                supplier_product.created_by = request.user
+                supplier_product.updated_by = request.user
+                supplier_product.save()
+            return redirect('product_details', product_id=product.id)
+        else:
+            log.info(supplier_product_set_form.errors)
+            context = {'formset': supplier_product_set_form,
+                       'product': product}
+            return render(request, template_name='procurement/products/pages/assignSupplierToProduct.html', context=context)
+
+    supplier_product_set_form = SupplierProductSet(instance=product,
+                                                   queryset=SupplierProduct.objects.none())
+    context = {'formset': supplier_product_set_form,
+               'product': product,}
+    return render(request, template_name='procurement/products/pages/assignSupplierToProduct.html', context=context)
 
 
 @login_required
@@ -183,7 +231,7 @@ def new_product_from_supplier(request, supplier_id):
     supplier = Supplier.objects.get(id=supplier_id)
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
-        suppliers_formset = SupplierProductPriceSet(request.POST, prefix="supplier")
+        suppliers_formset = SupplierProductSet(request.POST, prefix="supplier")
 
         logging.info(f"supplier {suppliers_formset}")
 
@@ -204,7 +252,7 @@ def new_product_from_supplier(request, supplier_id):
     else:
         product_form = ProductForm()
         initial_data = [{'supplier': supplier}]
-        suppliers_formset = SupplierProductPriceSet(prefix="supplier",
+        suppliers_formset = SupplierProductSet(prefix="supplier",
                                                     initial=initial_data)
 
     context = {'form': product_form,

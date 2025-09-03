@@ -107,27 +107,20 @@ class SupplierProductForm(ModelForm):
 
 
 class BaseSupplierProductPriceSet(forms.BaseInlineFormSet):
-    def __init__(self, *args, user=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for form in self.forms:
+            form.fields['supplier'].queryset = Supplier.objects.exclude(id__in=self.instance.suppliers.all())
 
-        self.user = user
-
-    @property
-    def forms_with_data(self):
-        logging.info(f"forms with data {self.forms}")
-        return [form for form in self.forms if form.instance.pk]
-
-    @property
-    def forms_extra(self):
+    def form_extra(self):
         return [form for form in self.forms if form.instance.pk is None]
 
 
-
-SupplierProductPriceSet = inlineformset_factory(Product,
-                                                SupplierProduct,
-                                                form=SupplierProductForm,
-                                                formset=BaseSupplierProductPriceSet,
-                                                extra=1
+SupplierProductSet = inlineformset_factory(Product,
+                                           SupplierProduct,
+                                           form=SupplierProductForm,
+                                           formset=BaseSupplierProductPriceSet,
+                                           extra=1
                                                 )
 
 

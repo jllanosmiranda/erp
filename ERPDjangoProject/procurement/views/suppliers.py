@@ -202,6 +202,8 @@ def create_supplier(request):
 
         if supplier_form.is_valid():
             supplier_object = supplier_form.save(commit=False)
+            supplier_object.created_by = request.user
+            supplier_object.updated_by = request.user
             supplier_object.save()
             return redirect('supplier_details', supplier_id=supplier_object.id)
 

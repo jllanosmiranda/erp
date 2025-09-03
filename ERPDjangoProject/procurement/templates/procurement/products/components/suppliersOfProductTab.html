@@ -1,3 +1,34 @@
 
 {% include 'components/filters.html'  with form_id='suppliers'%}
-{% include 'procurement/products/components/suppliersOfProductTable.html'%}
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Precios de Proveedores</h5>
+    </div>
+    <div class="mt-4 text-end p-3">
+        <a href="{% url 'add_supplier_to_product' product_id=product.id %}" class="btn btn-success">Agregar Nuevo Proveedor</a>
+    </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Proveedor</th>
+                <th>Unidad de medidad</th>
+                <th>Precio</th>
+                <th>Moneda</th>
+                <th>Accion</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for supplier_product in supplier_products %}
+                <tr>
+                    <td><div><a href="{% url 'supplier_details' supplier_id=supplier_product.supplier.id%}">{{supplier_product.supplier}}</a></div></td>
+                    <td><div>{{supplier_product.get_unit_of_measure_display}}</div></td>
+                    <td><div>{{supplier_product.price}}</div></td>
+                    <td><div>{{supplier_product.get_currency_display}}</div></td>
+                    <td><button type="button" class="btn btn-primary edit-supplier-product-btn">Editar</button></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% include 'components/pagination.html' %}
+</div>
