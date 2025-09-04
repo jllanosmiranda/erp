@@ -105,6 +105,32 @@ class SupplierProductForm(ModelForm):
         self.fields['currency'].widget.attrs['class'] = 'currency-field'
         self.fields['unit_of_measure'].widget.attrs['class'] = 'unit_of_measure-field'
 
+class AssignSupplierToProductForm(ModelForm):
+    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), label="Proveedor")
+    price = forms.DecimalField(max_digits=10,
+                               min_value=0.01,
+                               decimal_places=2,
+                               required=True,
+                               validators=[MinValueValidator(0)],
+                               label="Precio")
+
+    currency = forms.ChoiceField(choices=[('', '---------')] + CURRENCY_CHOICES,
+                                 label="Moneda")
+    unit_of_measure = forms.ChoiceField(required=False,
+                                        label="Unidad de medida",
+                                        choices=[('', '---------')] + UNIT_OF_MEASURE_CHOICES,
+                                        widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = SupplierProduct
+        fields = ['supplier', 'price', 'currency', 'unit_of_measure']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['unit_of_measure'].widget.attrs['class'] = 'unit_of_measure-field'
+        if self.instance:
+            self.fields['supplier'].queryset = Supplier.objects.exclude(id__in=self.instance.product.suppliers.all())
+
 
 class BaseSupplierProductPriceSet(forms.BaseInlineFormSet):
     def __init__(self, *args, **kwargs):

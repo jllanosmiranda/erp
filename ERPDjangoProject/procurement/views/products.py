@@ -4,8 +4,8 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 
 from ..filters import ProductFilter
-from ..forms import ProductForm, SupplierProductSet, SupplierProductUpdateForm
-from ..models import Product, Supplier, SupplierProduct
+from ..forms import ProductForm, SupplierProductSet, SupplierProductUpdateForm, AssignSupplierToProductForm
+from procurement.models import Product, Supplier, SupplierProduct
 from urllib.parse import urlencode
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -109,25 +109,25 @@ def edit_basic_information(request, product_id):
 @login_required
 def add_new_supplier(request, product_id):
     product = Product.objects.get(id=product_id)
+    supplier_product = SupplierProduct(product=product)
     if request.method == 'POST':
-        supplier_product_set_form = SupplierProductSet(request.POST, instance=product)
-        if supplier_product_set_form.is_valid():
+        assign_supplier_to_product_form = AssignSupplierToProductForm(request.POST, instance=supplier_product)
+        if assign_supplier_to_product_form.is_valid():
             log.info("valid supplier product set form")
-            supplier_product_set = supplier_product_set_form.save(commit=False)
-            for supplier_product in supplier_product_set:
-                supplier_product.created_by = request.user
-                supplier_product.updated_by = request.user
-                supplier_product.save()
+            supplier_product = assign_supplier_to_product_form.save(commit=False)
+            supplier_product.product = product
+            supplier_product.created_by = request.user
+            supplier_product.updated_by = request.user
+            supplier_product.save()
             return redirect('product_details', product_id=product.id)
         else:
-            log.info(supplier_product_set_form.errors)
-            context = {'formset': supplier_product_set_form,
+            log.info(assign_supplier_to_product_form.errors)
+            context = {'form': assign_supplier_to_product_form,
                        'product': product}
             return render(request, template_name='procurement/products/pages/assignSupplierToProduct.html', context=context)
 
-    supplier_product_set_form = SupplierProductSet(instance=product,
-                                                   queryset=SupplierProduct.objects.none())
-    context = {'formset': supplier_product_set_form,
+    assign_supplier_to_product_form = AssignSupplierToProductForm(instance=supplier_product)
+    context = {'form': assign_supplier_to_product_form,
                'product': product,}
     return render(request, template_name='procurement/products/pages/assignSupplierToProduct.html', context=context)
 
