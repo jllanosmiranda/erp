@@ -33,7 +33,7 @@ def list(request):
     context = {'page_obj': page_object,
                'filter': supplier_filter,
                'extra_filters': extra_filters}
-    return render(request, 'procurement/supplier/list.html', context=context)
+    return render(request, 'procurement/supplier/pages/list.html', context=context)
 
 
 class SupplierDetails:
@@ -116,7 +116,7 @@ class SupplierDetails:
             'tab_name': self.tab_name,
         }
 
-        return render(self.request, 'procurement/supplier/details.html', context=context)
+        return render(self.request, 'procurement/supplier/pages/details.html', context=context)
 
     def _product_list(self):
         product_form_set = ProductSupplierFormSet(self.request.POST, instance=self.supplier_object)
@@ -217,7 +217,7 @@ def create_supplier(request):
 
     context = {'form': supplier_form}
 
-    return render(request, 'procurement/supplier/new.html', context=context)
+    return render(request, 'procurement/supplier/pages/new.html', context=context)
 
 @login_required
 def get_supplier_products(request, supplier_product_id):

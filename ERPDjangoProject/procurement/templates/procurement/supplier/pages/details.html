@@ -33,10 +33,10 @@
         {% endif %}
     </div>
     <div id="details" class="tabcontent">
-        {% include 'procurement/supplier/basicInformation.html' with form=supplier_form tab_name='details'%}
+        {% include 'procurement/supplier/components/basicInformation.html' with form=supplier_form tab_name='details'%}
     </div>
     <div id="contact-list" class="tabcontent">
-        {% include 'procurement/supplier/contactList.html' with forms_set=contacts_form_set tab_name='contact-list'%}
+        {% include 'procurement/supplier/components/contactList.html' with forms_set=contacts_form_set tab_name='contact-list'%}
     </div>
     <div id="bank-list" class="tabcontent">
         <h3>Cuenta Bancarias</h3>
@@ -53,7 +53,7 @@
     <div id="product-list" class="tabcontent">
         {% url 'new_product_from_supplier' supplier_id=supplier.id as new_url%}
 
-        {% include 'procurement/supplier/productList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=products product_form_set=products_forms new_url=new_url tab_name='product-list'%}
+        {% include 'procurement/supplier/components/productList.html' with title='Productos' new_product_url=new_url add_enable=False supplier_products=products product_form_set=products_forms new_url=new_url tab_name='product-list'%}
     </div>
 {% endblock %}
 {% block extra_js %}
