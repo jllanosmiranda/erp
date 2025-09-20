@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Detalles de proveedor</h1>
+        <a href="{% url 'suppliers' %}" class="btn btn-secondary">
+            Volver a la lista
+        </a>
+    </div>
+</div>
+<div class="tab">
+    {% if not tab_name  or tab_name == 'basic_information'%}
+        <a class="tab-button active" href="{% url 'supplier_basic_information' supplier_id=supplier.id %}">Detalles</a>
+    {% else %}
+        <a class="tab-button" href="{% url 'supplier_basic_information' supplier_id=supplier.id %}">Detalles</a>
+    {% endif %}
+
+    {% if tab_name == 'contact-list'%}
+        <a class="tab-button active" href="{% url 'supplier_contacts' supplier_id=supplier.id %}">Contactos</a>
+    {% else %}
+        <a class="tab-button" href="{% url 'supplier_contacts' supplier_id=supplier.id %}">Contactos</a>
+    {% endif %}
+
+    {% if tab_name == 'product-list'%}
+        <a class="tab-button active" href="{% url 'supplier_products' supplier_id=supplier.id %}">Productos</a>
+    {% else %}
+        <a class="tab-button" href="{% url 'supplier_products' supplier_id=supplier.id %}">Productos</a>
+    {% endif %}
+</div>

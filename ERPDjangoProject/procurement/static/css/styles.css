@@ -210,7 +210,7 @@ th {
     transition: all 0.2s ease-in-out;
 }
 
-.tab button:hover {
+.tab a:hover {
     border-color: #e9ecef #e9ecef #dee2e6;
 }
 
@@ -221,7 +221,6 @@ th {
 }
 
 .tabcontent {
-    display: none;
     padding: 1rem;
     border: 1px solid #dee2e6;
     border-top: none;

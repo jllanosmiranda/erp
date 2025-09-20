@@ -1,0 +1,65 @@
+{% extends 'procurement/supplier/components/details.html' %}
+{% load static %}
+{% block tabcontent %}
+
+<div id="detalles" class="card mb-4 mx-auto">
+    <div class="card-header">
+        <h3>Informacion basica</h3>
+    </div>
+    <div class="card-body">
+        <div class="row mt-3">
+            <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                Nombre
+            </div>
+            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                <div>{{ supplier.name }}</div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                ruc
+            </div>
+            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                <div>{{ supplier.ruc }}</div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                Direccion
+            </div>
+            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                <div>{{ supplier.address }}</div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                Telefono
+            </div>
+            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                <div>{{ supplier.phone }}</div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                email
+            </div>
+            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                <div>{{ supplier.email }}</div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-form-label col-xs-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                sitio web
+            </div>
+            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-6 col-xl-6 col-xxl-6">
+                <div>{{ supplier.web }}</div>
+            </div>
+        </div>
+
+            <div class="mt-4 text-end p-3">
+                <a href="{% url 'supplier_edit_basic_information' supplier_id=supplier.id %}" class="btn btn-primary">Editar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

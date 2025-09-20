@@ -36,163 +36,82 @@ def list(request):
     return render(request, 'procurement/supplier/pages/list.html', context=context)
 
 
-class SupplierDetails:
-    def __init__(self):
-        self.request = None
-        self.supplier_id = None
-        self.supplier_object = None
-        self.tab_name = None
-        self.supplier_form = None
-        self.formset = None
-        self.product_form = None
-        self.product_formset = None
-        self.products_filter = None
-        self.suppliers_objects = None
-        self.objects = None
-        self.filter_data = dict()
+@login_required
+def view_basic_information(request, supplier_id):
+        supplier_id = supplier_id
+        request = request
+        supplier_object = Supplier.objects.get(id=supplier_id)
+        tab_name = "basic-information"
 
-    def __call__(self, request, supplier_id):
-        self.supplier_id = supplier_id
-        self.request = request
-        self.supplier_object = Supplier.objects.get(id=supplier_id)
-
-        print("request get", request.GET, flush=True)
-        log.info(f"supplier id {supplier_id}")
-        products = self.supplier_object.products.all()
-        self.products_filter = SupplierProductFilter(request.GET, queryset=products)
-        logging.info(f"products filter {self.products_filter.data}")
-
-        if self.products_filter.data:
-            self.filter_data = self.products_filter.data.dict()
-
-        self.supplier_form = SupplierForm(instance=self.supplier_object)
-        self.product_form_set = ProductSupplierFormSet(instance=self.supplier_object)
-        self.new_product_form = SupplierAddProductForm(supplier=self.supplier_object)
-        self.contacts_form_set = SupplierContactSet(instance=self.supplier_object)
-
-        if self.request.method == 'POST':
-            self.tab_name = self.request.POST.get('tab-name')
-            self.form_id = self.request.POST.get('form_id')
-            print("request post",request.POST, flush=True)
-            if self.form_id == "supplier-basic-information":
-                return self._basic_information()
-
-            if self.form_id == "update-products":
-                return self._product_list()
-
-            if self.form_id == "create-new-product":
-                return self._create_new_product()
-
-            if self.form_id == "update-supplier-contacts":
-                return self._contacts()
-
-
-        else:
-            self.form_id = request.GET.get('form_id')
-            self.tab_name = request.GET.get('tab-name')
-            return self._get()
-
-    def _redirect(self):
-        url = reverse('supplier_details', kwargs={'supplier_id': self.supplier_id})
-        params = {'form_id': self.form_id,
-                  'tab-name': self.tab_name, }
-        self.filter_data.update(params)
-        url = f"{url}?{urlencode(self.filter_data)}"
-        log.info(url)
-
-        return redirect(url)
-
-    def _render(self):
         context = {
-            "supplier": self.supplier_object,
-            "supplier_form": self.supplier_form,
-            "filter": self.products_filter,
-            "products": self.suppliers_objects,
-            'products_forms': self.product_form_set,
-            'contacts_form_set': self.contacts_form_set,
-            'product_pages': self.objects,
-            'new_product_form': self.new_product_form,
-            'form_id': self.form_id,
-            'tab_name': self.tab_name,
+            "supplier": supplier_object,
+            'tab_name': tab_name,
         }
 
-        return render(self.request, 'procurement/supplier/pages/details.html', context=context)
-
-    def _product_list(self):
-        product_form_set = ProductSupplierFormSet(self.request.POST, instance=self.supplier_object)
-        if product_form_set.is_valid():
-            logging.info("valid product form set")
-            product_form_set.save()
-            return self._redirect()
-        else:
-            logging.info("invalid product form set")
-            logging.info(product_form_set.errors)
-            logging.info(product_form_set.non_form_errors())
-            return self._render()
-
-    def _basic_information(self):
-        supplier_form = SupplierForm(self.request.POST, instance=self.supplier_object, user=self.request.user)
-        if supplier_form.is_valid():
-            supplier_form.save()
-            return self._redirect()
-        else:
-            messages.error(self.request, 'Supplier updated error')
-            log.info("invalid supplier form")
-            log.info(supplier_form.errors)
-            return self._render()
-
-    def _bank_account(self):
-        pass
-
-    def _create_new_product(self):
-        new_product_form = SupplierAddProductForm(self.request.POST, supplier=self.supplier_object)
-        if new_product_form.is_valid():
-            logging.info("valid product form set")
-            new_product_form.save(changed_by=self.request.user)
-            return self._redirect()
-        else:
-            logging.info("invalid product form set")
-            logging.info(new_product_form.errors)
-            return self._render()
-
-    def _contacts(self):
-        contacts_form_set = SupplierContactSet(self.request.POST, instance=self.supplier_object)
-        if contacts_form_set.is_valid():
-            logging.info("valid contacts form set")
-            contacts_form_set.save()
-            return self._redirect()
-        else:
-            logging.error("invalid contacts form set")
-            logging.error(self.request.POST)
-            logging.error(contacts_form_set.errors)
-            return self._render()
-
-    def _get(self):
-        log.info(f"tab name: {self.tab_name}")
-        log.info(f"form id {self.form_id}")
-        log.info(f"form supplier {self.supplier_form.errors}")
-        paginator = Paginator(self.products_filter.qs, 10)
-        page = self.request.GET.get('page')
-
-        try:
-            objects = paginator.page(page)
-        except PageNotAnInteger:
-            objects = paginator.page(1)
-
-        suppliers_objects = SupplierProduct.objects.filter(
-            supplier=self.supplier_object,
-            product__in=objects)
-
-        self.product_form_set = ProductSupplierFormSet(instance=self.supplier_object,
-                                                  queryset=suppliers_objects)
-
-        return self._render()
-
+        return render(request, 'procurement/supplier/pages/basicInformation.html', context=context)
 
 @login_required
-def details(request, supplier_id):
-    supplier_details = SupplierDetails()
-    return supplier_details(request, supplier_id)
+def view_products(request, supplier_id):
+    supplier_id = supplier_id
+    supplier_object = Supplier.objects.get(id=supplier_id)
+
+    products_objects = supplier_object.products.all()
+    products_filter = SupplierProductFilter(request.GET, queryset=products_objects)
+    supplier_products = SupplierProduct.objects.filter(supplier=supplier_object,
+                                                       product__in=products_filter.qs)
+    logging.info(f"products filter {products_filter.data}")
+
+    paginator = Paginator(supplier_products, 10)
+    page_number = request.GET.get('page')
+    page_object = paginator.get_page(page_number)
+
+    tabname = "products"
+
+    context = {
+        "supplier": supplier_object,
+        "supplier_products": page_object,
+        'tab_name': tabname,
+    }
+
+    return render(request, 'procurement/supplier/pages/productList.html', context=context)
+
+@login_required
+def view_contacts(request, supplier_id):
+    supplier_object = Supplier.objects.get(id=supplier_id)
+    tabname = "products"
+
+    context = {
+        "supplier": supplier_object,
+        "contacts": [],
+        'tab_name': tabname,
+    }
+
+    return render(request, 'procurement/supplier/pages/contactList.html', context=context)
+
+@login_required
+def edit_supplier_basic_information(request, supplier_id):
+    supplier = Supplier.objects.get(id=supplier_id)
+    if request.method == 'POST':
+        supplier_form = SupplierForm(request.POST, instance=supplier)
+        if supplier_form.is_valid():
+            log.info("valid supplier form")
+            supplier_object = supplier_form.save(commit=False)
+            supplier_object.updated_by = request.user
+            supplier_object.save()
+            return redirect('supplier_basic_information', supplier_id=supplier_id)
+        else:
+            log.info("invalid supplier form")
+            log.info(supplier_form.errors)
+            context = {'form': supplier_form,
+                       'supplier': supplier}
+            return render(request, template_name='procurement/supplier/pages/editBasicInformation.html', context=context)
+
+    supplier_form = SupplierForm(instance=supplier)
+    context = {'form': supplier_form,
+               'supplier': supplier}
+
+    return render(request, template_name='procurement/supplier/pages/editBasicInformation.html', context=context)
+
 
 
 @login_required

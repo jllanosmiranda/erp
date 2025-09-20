@@ -24,7 +24,7 @@ class SupplierForm(EntityBaseModelForm):
     email = forms.EmailField(required=False,
                              label="Email",
                              widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    ruc = forms.CharField(required=False,
+    ruc = forms.CharField(required=True,
                           max_length=15,
                           validators=[
                               RegexValidator(regex=r'^[0-9]+$',

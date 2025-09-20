@@ -11,7 +11,10 @@ urlpatterns = [
     path('products/<int:product_id>/supplier', products.add_new_supplier, name='add_supplier_to_product'),
     path('supplier_products/<int:supplier_product_id>/', products.edit_supplier_of_products, name='edit_supplier_of_product'),
     path('suppliers/', suppliers.list, name='suppliers'),
-    path('suppliers/<int:supplier_id>', suppliers.details, name='supplier_details'),
+    path('suppliers/<int:supplier_id>/basic-information', suppliers.view_basic_information, name='supplier_basic_information'),
+    path('suppliers/<int:supplier_id>/contacts', suppliers.view_contacts, name='supplier_contacts'),
+    path('suppliers/<int:supplier_id>/products', suppliers.view_products, name='supplier_products'),
+    path('suppliers/<int:supplier_id>/edit', suppliers.edit_supplier_basic_information, name='supplier_edit_basic_information'),
 
     path('suppliers/new', suppliers.create_supplier, name='create_supplier'),
     path('suppliers/<int:supplier_id>/product', products.new_product_from_supplier, name='new_product_from_supplier'),

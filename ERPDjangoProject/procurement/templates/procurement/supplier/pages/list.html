@@ -17,7 +17,7 @@
             <tbody>
             {% for supplier in page_obj %}
                 <tr>
-                    <td data-label="Nombre"><a href="{% url 'supplier_details' supplier_id=supplier.id %}">{{ supplier.name }} <i class="bi bi-eye"></i></a></td>
+                    <td data-label="Nombre"><a href="{% url 'supplier_basic_information' supplier_id=supplier.id %}">{{ supplier.name }} <i class="bi bi-eye"></i></a></td>
                     <td data-label="RUC">{{ supplier.ruc|default:"-" }}</td>
                     <td data-label="Email">{{ supplier.email|default:"-" }}</td>
                     <td data-label="Telefono">{{ supplier.phone|default:"_" }}</td>

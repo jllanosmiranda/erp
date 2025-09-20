@@ -1,0 +1,31 @@
+{% extends 'procurement/supplier/components/details.html' %}
+{% load static %}
+{% block tabcontent %}
+<h3>Contactos</h3>
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-to-cards">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Telefono</th>
+            <th>Accion</th>
+        </tr>
+        </thead>
+        <tbody id="contact-list-table">
+        {% for contact in contacts %}
+            <tr>
+                <td>{{ contact.name }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.phone }}</td>
+                <td>
+                    <a href="{% url '' supplier_id=supplier.id %}" class="btn btn-primary">Editar</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<button id="add-contact-btn">Agregar contacto</button>
+{% endblock %}
