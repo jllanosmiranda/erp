@@ -8,10 +8,9 @@ RUN apk update \
 RUN addgroup -S appgroup && \
     adduser -S appuser -G appgroup
 
-COPY requirements.txt .
+COPY ERPDjangoProject/requirements.txt .
 RUN pip install -r requirements.txt
-COPY ERPDjangoProject ERPDjangoProject
-COPY start.sh .
+COPY ERPDjangoProject/ .
 RUN chmod +x start.sh
 
 RUN chown -R appuser:appgroup /app
@@ -19,4 +18,4 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 ENTRYPOINT ["sh", "start.sh"]
-CMD ["python","ERPDjangoProject/manage.py","runserver","0.0.0.0:8000"]
+CMD ["python","manage.py","runserver","0.0.0.0:8000"]
