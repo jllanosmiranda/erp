@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="tab">
-        {% if not tab_name  or tab_name == 'basic_information'%}
+        {% if not tab_name  or tab_name == 'basic-information'%}
             <a class="btn tab-button active" href="{% url 'supplier_basic_information' supplier_id=supplier.id %}">Detalles</a>
         {% else %}
             <a class="btn tab-button" href="{% url 'supplier_basic_information' supplier_id=supplier.id %}">Detalles</a>

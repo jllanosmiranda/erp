@@ -65,7 +65,7 @@ def view_products(request, supplier_id):
     page_number = request.GET.get('page')
     page_object = paginator.get_page(page_number)
 
-    tabname = "products"
+    tabname = "product-list"
 
     context = {
         "supplier": supplier_object,
@@ -78,7 +78,7 @@ def view_products(request, supplier_id):
 @login_required
 def view_contacts(request, supplier_id):
     supplier_object = Supplier.objects.get(id=supplier_id)
-    tabname = "products"
+    tabname = "contact-list"
 
     context = {
         "supplier": supplier_object,
