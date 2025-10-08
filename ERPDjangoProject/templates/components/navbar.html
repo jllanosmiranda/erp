@@ -22,10 +22,6 @@
                                 Negocio
                             </a>
                         </li>
-                    </ul>
-                </div>
-                <div class="collapse" id="negocioSubmenu">
-                    <ul class="nav flex-column ms-3">
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'settings_purchase' %}">
                                 <i class="bi bi-gear"></i>
@@ -43,23 +39,46 @@
                 <div class="collapse" id="comprasSubmenu">
                     <ul class="nav flex-column ms-3">
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'products' %}">
+                            <a class="nav-link dropdown-toggle" href="#productsSubmenu" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="settingsSubmenu">
                                 <i class="bi bi-box"></i> Productos
                             </a>
+                            <div class="collapse" id="productsSubmenu">
+                                <ul class="nav flex-column ms-3">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'product_new' %}">
+                                                <i class="bi bi-file-plus"></i> Nuevo
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'products' %}">
+                                            <i class="bi bi-card-list"></i> Lista
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'suppliers' %}">
+                            <a class="nav-link dropdown-toggle" href="#supplierSubmenu" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="settingsSubmenu">
                                 <i class="bi bi-people"></i> Proveedores
                             </a>
+                            <div class="collapse" id="supplierSubmenu">
+                                <ul class="nav flex-column ms-3">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'create_supplier' %}">
+                                            <i class="bi bi-file-plus"></i> Nuevo
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'suppliers' %}">
+                                            <i class="bi bi-card-list"></i> Lista
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'good_receipt_note_new' %}">
                                 <i class="bi bi-file-text"></i> Guias de remision
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'purchase_requirement_list' %}">
-                                <i class="bi bi-clipboard-check"></i> Ordenes de compra
                             </a>
                         </li>
                         <li class="nav-item">
