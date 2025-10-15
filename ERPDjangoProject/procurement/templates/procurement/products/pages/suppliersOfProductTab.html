@@ -1,4 +1,7 @@
 
+{% extends 'procurement/products/pages/base.html' %}
+{% load static %}
+{% block tabcontent %}
 {% include 'components/filters.html'  with form_id='suppliers'%}
 
 <div class="card">
@@ -34,3 +37,7 @@
         </table>
     {% include 'components/pagination.html' %}
 </div>
+{% endblock %}
+{% block extra_js %}
+<script type=module src="{% static 'procurement/js/common/tabs.js' %}"></script>
+{% endblock %}

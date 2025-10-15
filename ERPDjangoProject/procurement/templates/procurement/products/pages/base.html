@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Detalles de producto</h1>
+        <a href="{% url 'products' %}" class="btn btn-secondary">
+            Volver a la lista
+        </a>
+    </div>
+</div>
+<div class="tab">
+    {% if tab_name == 'details' or not tab_name %}
+    <a class="tab-button active" data-tab="details" href="{% url 'product_details' product_id=product.id%}">Detalles</a>
+    <a class="tab-button" data-tab="details" href="{% url 'product_details' product_id=product.id%}">Detalles</a>
+    {% endif %}
+    {% if tab_name == 'suppliers' %}
+    <a class="tab-button active" data-tab="details" href="{% url 'product_details' product_id=product.id%}">Detalles</a>
+    <a class="tab-button" data-tab="details" href="{% url 'product_details' product_id=product.id%}">Detalles</a>
+    {% endif %}
+</div>
+<div id="details" class="tabcontent">
+    {% block tabcontent %}
+    {% endblock %}
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,10 @@
+<div class="tab">
+    {% if tab_name == 'details' or not tab_name %}
+    <a class="tab-button active" data-tab="details" href="{% url %}">Detalles</a>
+    <button class="tab-button" data-tab="suppliers">Proveedores</button>
+    {% endif %}
+    {% if tab_name == 'suppliers' %}
+    <button class="tab-button" data-tab="details">Detalles</button>
+    <button class="tab-button active" data-tab="suppliers">Proveedores</button>
+    {% endif %}
+</div>

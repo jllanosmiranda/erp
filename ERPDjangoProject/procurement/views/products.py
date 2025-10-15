@@ -75,17 +75,21 @@ def details(request, product_id):
     log.info(f"tab name: {tab_name}")
     log.info(f"form id {form_id}")
 
+    context = {'product': product_object,
+               'tab_name': tab_name}
+    return render(request, 'procurement/products/pages/details.html', context=context)
+
+def suppliers_of_product(request, product_id):
+    product_object = Product.objects.get(id=product_id)
     supplier_filter = SupplierFilter(request.GET, queryset=product_object.suppliers.all())
     paginator = Paginator(supplier_filter.qs, 10)
     page_number = request.GET.get('page')
     page_object = paginator.get_page(page_number)
-    supplier_products = SupplierProduct.objects.filter(product=product_object,
-                                                        supplier__in=page_object)
     context = {'product': product_object,
-               'supplier_products': supplier_products,
-               'tab_name': tab_name,
-               'filter': supplier_filter}
-    return render(request, 'procurement/products/pages/details.html', context=context)
+               'supplier_products': page_object,
+    }
+
+    return render(request, 'procurement/products/pages/supplierOfProduct.html', context=context)
 
 @login_required
 def edit_basic_information(request, product_id):
